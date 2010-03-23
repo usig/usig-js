@@ -55,6 +55,7 @@
 	<source src="src/dev/usig.core.js"/>
 	<source src="src/dev/usig.InputController.js"/>
 	<source src="src/dev/usig.AutoCompleter.js"/>
+	<source src="src/dev/usig.AutoCompleterView.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>

@@ -4,7 +4,8 @@ if (typeof (usig) == "undefined")
 	
 /**
  * @class AutoCompleter
- * Esta clase implementa un autocompleter de lugares y direcciones para inputs de texto.
+ * Esta clase implementa un autocompleter de lugares y direcciones para inputs de texto.<br/>
+ * Requiere: jQuery-1.3.2+, usig.core 1.0+
  * @namespace usig
  * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
