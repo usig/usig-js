@@ -53,6 +53,8 @@
 	<!--<source src="ext/source" match="*.js"/>
         <source src="ext" match="Ext*.js"/>-->
 	<source src="src/dev/usig.core.js"/>
+	<source src="src/dev/usig.InputController.js"/>
+	<source src="src/dev/usig.AutoCompleter.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>

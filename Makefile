@@ -17,6 +17,7 @@ prepare:
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaEstatico.js -o $(REL)/usig.MapaEstatico.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.FotosParcela.js -o $(REL)/usig.FotosParcela.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.tabla.min.js
+	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.InputController.min.js
 	java -jar ../ext-doc-1.0.131/ext-doc.jar -p ext-doc.xml -o doc/www -t ../ext-doc-1.0.131/template/ext/template.xml -verbose
 	cp doc/index.html doc/www/
 	

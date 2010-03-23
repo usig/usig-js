@@ -449,7 +449,7 @@ Date.prototype.getElapsed = function(date) {
 if (typeof (usig) == "undefined")
 	usig = {};
 /**
- * @class Usig-JS.usig
+ * @class usig
  * This class defines common public methods for USIG applications
  */
 
