@@ -463,6 +463,55 @@ usig.debug = function(object) {
 };
 
 /**
+ Loads the specified script dynamically on the current page
+ @param {String} filename Url of the js script to load
+ */
+usig.loadJs = function(filename) {
+	var fileref=document.createElement('script')
+	fileref.setAttribute("type","text/javascript")
+	fileref.setAttribute("src", filename)
+	if (typeof fileref!="undefined")
+		document.getElementsByTagName("head")[0].appendChild(fileref)
+};
+
+/**
+ Loads the specified css script dynamically on the current page
+ @param {String} filename Url of the css script to load
+ */
+usig.loadCss = function(filename) {
+	var fileref=document.createElement("link")
+	fileref.setAttribute("rel", "stylesheet")
+	fileref.setAttribute("type", "text/css")
+	fileref.setAttribute("href", filename)	
+	if (typeof fileref!="undefined")
+		document.getElementsByTagName("head")[0].appendChild(fileref)
+};
+
+/**
+ Remove the specified js script from the current page
+ @param {String} filename Url of the script to remove
+ */
+usig.removeJs = function(filename) {
+	var allsuspects=document.getElementsByTagName("script");
+	for (var i=allsuspects.length; i>=0; i--) { //search backwards within nodelist for matching elements to remove
+		  if (allsuspects[i] && allsuspects[i].getAttribute("src")!=null && allsuspects[i].getAttribute("src").indexOf(filename)!=-1)
+			   allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
+	}
+};
+
+/**
+ Remove the specified css script from the current page
+ @param {String} filename Url of the script to remove
+ */
+usig.removeCss = function(filename) {
+	var allsuspects=document.getElementsByTagName("link");
+	for (var i=allsuspects.length; i>=0; i--) { //search backwards within nodelist for matching elements to remove
+		  if (allsuspects[i] && allsuspects[i].getAttribute("href")!=null && allsuspects[i].getAttribute("href").indexOf(filename)!=-1)
+			   allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
+	}
+};
+
+/**
  Starts an animation by applying <b>procedure</b> to each element of <b>inputArray</b> using <b>stepDelay</b>
  as a delay time between steps. If the optional parameter <b>callback</b> is provided it is called at the 
  end of the animation process.
