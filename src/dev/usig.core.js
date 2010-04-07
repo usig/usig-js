@@ -277,6 +277,22 @@ var s = String.format('&lt;div class="{0}">{1}&lt;/div>', cls, text);
 });
 
 /**
+ * Checks whether or not the current string can be converted to an Integer.
+ * @return {Boolean} True if the string can be converted to an integer
+ */
+String.prototype.isInteger = function() {
+	return !isNaN(parseInt(this));
+};
+
+/**
+ * Checks whether or not the current string can be converted to a Float.
+ * @return {Boolean} True if the string can be converted to a Float
+ */
+String.prototype.isFloat = function() {
+   	return !isNaN(parseFloat(this));
+};
+
+/**
  * Utility function that allows you to easily switch a string between two alternating values.  The passed value
  * is compared to the current string, and if they are equal, the other value that was passed in is returned.  If
  * they are already different, the first value passed in is returned.  Note that this method returns the new value
@@ -370,6 +386,22 @@ $.extendIf(Number.prototype, {
      */
     constrain : function(min, max){
         return Math.min(Math.max(this, min), max);
+    },
+    
+    /**
+     * Checks whether or not the current number is an Integer.
+     * @return {Boolean} True if the number is an integer
+     */
+    isInteger : function() {
+    	return !isNaN(parseInt(this));
+    },
+    
+    /**
+     * Checks whether or not the current number is a Float.
+     * @return {Boolean} True if the number is a float
+     */
+    isFloat : function() {
+    	return !isNaN(parseFloat(this));
     }
 });
 /**

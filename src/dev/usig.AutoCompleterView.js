@@ -172,6 +172,9 @@ usig.AutoCompleterView = function(idField, options) {
 	/**
 	 * Muestra nuevas opciones de sugerencias
      * @param {Array} options Un array conteniendo las nuevas sugerencias a mostrar  
+     * @param {Boolean-Integer} append (optional) Si es TRUE agrega las nuevas opciones al final de la lista.
+     * Si es un entero (entre 0 y el nro de elementos de la lista) reemplaza el contenido de la lista a partir
+     * de ese numero en adelante.   
     */	
 	this.show = function(options, append) {
 		var htmlList = '';

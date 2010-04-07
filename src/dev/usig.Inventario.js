@@ -73,8 +73,8 @@ usig.Inventario = function(options) {
 
 usig.Inventario.defaults = {
 	debug: false,
-	// server: 'http://inventario.usig.buenosaires.gob.ar/mapabsas/',
-	server: 'http://trucha.usig.gcba.gov.ar:8081/mapabsas/',
+	server: 'http://inventario.usig.buenosaires.gob.ar/mapabsas/',
+	// server: 'http://trucha.usig.gcba.gov.ar:8081/mapabsas/',
 	searchOptions: {
 		start: 0,
 		limit: 20,

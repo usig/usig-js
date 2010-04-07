@@ -56,6 +56,9 @@
 	<source src="src/dev/usig.InputController.js"/>
 	<source src="src/dev/usig.AutoCompleter.js"/>
 	<source src="src/dev/usig.AutoCompleterView.js"/>
+	<source src="src/dev/usig.Inventario.js"/>
+	<source src="src/dev/usig.Punto.js"/>
+	<source src="src/dev/usig.GeoCoder.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>
