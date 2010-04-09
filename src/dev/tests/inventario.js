@@ -84,7 +84,9 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		});
         	}, { limit: 5 });
         	this.wait();
-        }/*,
+        }
+        
+        /*,
                       
         "Filtering by class should only return results from that class" : function () {
         	var test = this;

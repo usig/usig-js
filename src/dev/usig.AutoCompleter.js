@@ -133,9 +133,22 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 	}
 	
 	function selectionHandler(option) {
+		if (opts.debug) usig.debug('selection');
 		abortIfNecessary();
 		if (typeof(opts.afterSelection) == "function") {
 			opts.afterSelection(option);
+		}
+		if (typeof(opts.afterGeoCoding) == "function") {
+			if (option instanceof usig.Direccion) {
+				if (opts.debug) usig.debug('geoCoding usig.Direccion');	
+				try {
+					opts.geoCoder.geoCodificarDireccion(option, opts.afterGeoCoding, (function(error) {
+						if (opts.debug) usig.debug(error);
+					}).createDelegate(this));
+				} catch(error) {
+					if (opts.debug) usig.debug(error);
+				}
+			}
 		}
 	}
 	
@@ -172,6 +185,10 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 	
 	if (!opts.inventario) {
 		opts.inventario = new usig.Inventario();
+	}
+	
+	if (!opts.geoCoder) {
+		opts.geoCoder = new usig.GeoCoder();
 	}
 	
 	view.onSelection(selectionHandler.createDelegate(this));

@@ -20,6 +20,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.ac = new usig.AutoCompleter('inputText', {onSelection: function() {}}, {
         		normalizadorDirecciones: {},
         		inventario: {},
+        		geoCoder: {},
         		debug: true
         	});
         },
@@ -351,6 +352,65 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		inputPause: 200
         	});
         	this.simulateType('inputText', 'ciudad');
+        	this.wait();        	
+        },        
+            
+        "User selection should trigger callback with the real NormalizadorDirecciones" : function () {
+        	var test = this;
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscarLugar', callCount: 1 });
+        	mockInv.expect({ method: 'abort', callCount: 1 });
+        	this.ac.setViewControl({
+        		update: function() {},
+        		show: function() {},
+        		keyUp: function() {},
+        		onSelection: function(callback) {
+        			callback.defer(300);
+        		}
+        	});
+        	this.ac.setOptions({
+        		normalizadorDirecciones: new usig.NormalizadorDirecciones(),
+        		inventario: mockInv,
+        		afterSelection: function() {
+	        		test.resume(function() {
+	        			mockInv.verify();
+	        		});        			
+        		},
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+        	this.wait();        	
+        },        
+            
+        "If afterGeoCoding is set, user selection of an address should try to geocode it" : function () {
+        	var test = this;
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscarLugar', callCount: 1 });
+        	mockInv.expect({ method: 'abort', callCount: 1 });
+        	this.ac.setViewControl({
+        		update: function() {},
+        		show: function() {},
+        		keyUp: function() {},
+        		onSelection: function(callback) {
+        			callback.defer(300, this, [new usig.Direccion(new usig.Calle(3174, 'CORRIENTES AV.'), 1234)]);
+        		}
+        	});
+        	this.ac.setOptions({
+        		normalizadorDirecciones: new usig.NormalizadorDirecciones(),
+        		inventario: mockInv,
+        		geoCoder: {
+        			geoCodificarDireccion: function(dir, success, error, metodo) {
+        				success(new usig.Punto(100000, 100000));
+        			}
+        		},
+        		inputPause: 200,
+        		afterGeoCoding: function(res) {
+	        		test.resume(function() {
+	        			Y.Assert.isInstanceOf(usig.Punto, res);
+	        		});        			        			
+        		}
+        	});
+        	this.simulateType('inputText', 'ciudad 2849');
         	this.wait();        	
         }        
 
