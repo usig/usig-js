@@ -9,7 +9,7 @@ APPD=/d/usig/www/servicios/Usig-JS
 
 all: prepare
 
-prepare: 
+prepare: docs
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.core.js -o $(REL)/usig.core.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.ajax.js -o $(REL)/usig.ajax.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.DataManager.js -o $(REL)/usig.DataManager.min.js
@@ -18,11 +18,9 @@ prepare:
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.FotosParcela.js -o $(REL)/usig.FotosParcela.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.tabla.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.InputController.min.js
-	java -jar ../ext-doc-1.0.131/ext-doc.jar -p ext-doc.xml -o doc/www -t ../ext-doc-1.0.131/template/ext/template.xml -verbose
-	cp doc/index.html doc/www/
-
+	
 docs:
-	java -jar ../ext-doc-1.0.131/ext-doc.jar -p ext-doc.xml -o doc/www -t ../ext-doc-1.0.131/template/ext/template.xml -verbose
+	java -jar ext-doc/ext-doc.jar -p ext-doc.xml -o doc/www -t ext-doc/template/ext/template.xml -verbose
 	cp doc/index.html doc/www/
 	
 install:

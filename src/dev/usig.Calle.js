@@ -8,8 +8,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Integer} cod Codigo de calle
  * @param {String} nom Nombre oficial de la calle
- * @param {Array} alturas Array conteniendo los rangos de altura validos para esta calle
- * @param {Array} cruces Array conteniendo los id de las calles que se cruzan con esta
+ * @param {Array} alturas (optional) Array conteniendo los rangos de altura validos para esta calle
+ * @param {Array} cruces (optional) Array conteniendo los id de las calles que se cruzan con esta
 */
 usig.Calle = function(cod, nom, alturas, cruces) {
 	/**

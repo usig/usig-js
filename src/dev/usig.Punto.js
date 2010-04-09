@@ -16,7 +16,7 @@ usig.Punto = function(x, y) {
 	 * Devuelve la coordenada x del punto
 	 * @returns {Float} La coordenada x del punto
 	 */
-	this.getX() = function() {
+	this.getX = function() {
 		return x;
 	}
 	
@@ -24,7 +24,7 @@ usig.Punto = function(x, y) {
 	 * Devuelve la coordenada y del punto
 	 * @returns {Float} La coordenada y del punto
 	 */
-	this.getY() = function() {
+	this.getY = function() {
 		return y;
 	}
 	

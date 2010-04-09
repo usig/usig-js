@@ -57,7 +57,12 @@
 	<source src="src/dev/usig.AutoCompleter.js"/>
 	<source src="src/dev/usig.AutoCompleterView.js"/>
 	<source src="src/dev/usig.Inventario.js"/>
+	<source src="src/dev/usig.inventario.Objeto.js"/>
+	<source src="src/dev/usig.inventario.Clase.js"/>
+	<source src="src/dev/usig.inventario.Ubicacion.js"/>
 	<source src="src/dev/usig.Punto.js"/>
+	<source src="src/dev/usig.Calle.js"/>
+	<source src="src/dev/usig.Direccion.js"/>
 	<source src="src/dev/usig.GeoCoder.js"/>
     </sources>
     <tags>
