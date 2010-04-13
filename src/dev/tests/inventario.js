@@ -15,7 +15,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Sets up data that is needed by each test.
          */
         setUp : function () {
-        	this.inv = new usig.Inventario();
+        	this.inv = new usig.Inventario({ debug: true });
         },
         
         /*
@@ -58,31 +58,38 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.wait();
         },
                       
-        "By calling getFeatureInfo one should be able to find additional information about a feature" : function () {
+        "Searching with returnObjects enabled should return a list of inventario objects" : function () {
         	var test = this;
-        	this.inv.buscar('hospital gutierrez', function(result) {
-        		if (result.total > 0) {
-	        		test.inv.getFeatureInfo(result.instancias[0].id, function(result) {
-		        		test.resume(function() {
-		        			usig.debug(result);
-		        			Y.assert(true);
-		        			// Y.Assert.areEqual(5, result.instancias.length);
-		        		});        		
-	        		}, function(msg) {
-		        		test.resume(function(msg) {
-		        			Y.fail();
-		        		});
-	        		});
-        		} else {
-	        		test.resume(function(msg) {
-	        			Y.fail('Not enough results');
-	        		});        			
-        		}
+        	this.inv.buscar('san martin', function(result) {
+        		test.resume(function() {
+        			Y.Assert.areEqual(5, result.length);
+        			Y.Assert.isInstanceOf(usig.inventario.Objeto, result[0]);
+        		});
         	}, function() {
         		test.resume(function(msg) {
         			Y.fail();
         		});
-        	}, { limit: 5 });
+        	}, { limit: 5, returnObjects: true });
+        	this.wait();
+        },
+                      
+        "Calling getObjeto with a result should return a full object" : function () {
+        	var test = this;
+        	this.inv.buscar('hospital gutierrez', function(result) {
+        		usig.debug(result);
+        		test.inv.getObjeto(result[0], function(obj) {
+	        		test.resume(function() {
+	        			Y.Assert.isInstanceOf(usig.inventario.Objeto, obj);
+	        			Y.Assert.isInstanceOf(usig.Direccion, obj.direccionAsociada);
+	        			Y.Assert.isInstanceOf(usig.Punto, obj.direccionAsociada.getCoordenadas());
+	        			usig.debug(obj);
+	        		});
+        		});
+        	}, function() {
+        		test.resume(function(msg) {
+        			Y.fail();
+        		});
+        	}, { limit: 5, returnObjects: true });
         	this.wait();
         }
         

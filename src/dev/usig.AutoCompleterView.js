@@ -146,9 +146,9 @@ usig.AutoCompleterView = function(idField, options) {
 	
 	var selectionHandler = function(item) {
 		if (typeof(opts.onSelection) == "function") {
-			opts.onSelection(item);
 			killTimeout();
 			hideSuggestions();
+			opts.onSelection(item);
 		}
 	}
 

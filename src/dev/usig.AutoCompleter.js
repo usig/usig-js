@@ -21,10 +21,10 @@ if (typeof (usig) == "undefined")
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
- * @param {Object} viewCtrl Controlador de la vista para mostrar las sugerencias del autocompleter
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
+ * @param {Object} viewCtrl (optional) Controlador de la vista para mostrar las sugerencias del autocompleter
 */	
-usig.AutoCompleter = function(idField, viewCtrl, options) {
+usig.AutoCompleter = function(idField, options, viewCtrl) {
 	var field = document.getElementById(idField);
 	var view = viewCtrl;
 	var opts = $.extend({}, usig.AutoCompleter.defaults, options);
@@ -41,6 +41,7 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 			clearTimeout(inputTimer);
 		if (serverTimeout)
 			clearTimeout(serverTimeout);
+		view.remove();
 		ic.unbind();
 	}
 	
@@ -75,26 +76,26 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 			var res = opts.normalizadorDirecciones.normalizar(str);
 			if (opts.debug) usig.debug('view.show');
 			view.show(res);
-			if (opts.debug) usig.debug('inventario.buscarLugar');
-			opts.inventario.buscarLugar(str, mostrarLugares.createDelegate(this, [str], 1), function(){});
-			serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
-			if (typeof(opts.afterServerRequest) == "function") {
-				if (opts.debug) usig.debug('afterServerRequest');
-				opts.afterServerRequest();
-			}
 			if (typeof(opts.afterSuggest) == "function") {
 				if (opts.debug) usig.debug('afterSuggest');
 				opts.afterSuggest();
 			}
 		} catch(error) {
 			if (opts.debug) usig.debug(error);
-			if (opts.debug) usig.debug('view.showError');
-			view.showError(error);
+			// if (opts.debug) usig.debug('view.showError');
+			// view.showError(error);
 		}		
+		if (opts.debug) usig.debug('inventario.buscar');
+		opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { returnObjects: true });
+		serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
+		if (typeof(opts.afterServerRequest) == "function") {
+			if (opts.debug) usig.debug('afterServerRequest');
+			opts.afterServerRequest();
+		}
 	}
 	
 	function retry(str) {
-		opts.inventario.buscarLugar(str);
+		opts.inventario.buscar(str);
 		numRetries++;
 		if (numRetries < opts.maxRetries) { 
 			serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
@@ -111,8 +112,12 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 	function mostrarLugares(lugares, inputStr) {
 		clearTimeout(serverTimeout);
 		if (lugares instanceof Array && lugares.length > 0) {
-			if (opts.debug) usig.debug('view.showLugares');
-			view.showLugares(lugares);			
+			if (opts.debug) usig.debug('view.show');
+			view.show(lugares);			
+			if (typeof(opts.afterSuggest) == "function") {
+				if (opts.debug) usig.debug('afterSuggest');
+				opts.afterSuggest();
+			}
 		}
 		if (typeof(opts.afterServerResponse) == "function") {
 			if (opts.debug) usig.debug('afterServerResponse');
@@ -133,14 +138,17 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 	}
 	
 	function selectionHandler(option) {
-		if (opts.debug) usig.debug('selection');
+		if (opts.debug) usig.debug('usig.AutoCompleter: selection');
 		abortIfNecessary();
+		var newValue = option.toString()+((option instanceof usig.Calle)?' ':'');
+		ic.setValue(newValue);
 		if (typeof(opts.afterSelection) == "function") {
+			if (opts.debug) usig.debug('usig.AutoCompleter: calling afterSelection');
 			opts.afterSelection(option);
 		}
 		if (typeof(opts.afterGeoCoding) == "function") {
 			if (option instanceof usig.Direccion) {
-				if (opts.debug) usig.debug('geoCoding usig.Direccion');	
+				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.Direccion');	
 				try {
 					opts.geoCoder.geoCodificarDireccion(option, opts.afterGeoCoding, (function(error) {
 						if (opts.debug) usig.debug(error);
@@ -184,11 +192,15 @@ usig.AutoCompleter = function(idField, viewCtrl, options) {
 	}
 	
 	if (!opts.inventario) {
-		opts.inventario = new usig.Inventario();
+		opts.inventario = new usig.Inventario({ debug: opts.debug });
 	}
 	
 	if (!opts.geoCoder) {
-		opts.geoCoder = new usig.GeoCoder();
+		opts.geoCoder = new usig.GeoCoder({ debug: opts.debug });
+	}
+	
+	if (!view) {
+		view = new usig.AutoCompleterView(idField, { rootUrl: opts.rootUrl, debug: opts.debug });
 	}
 	
 	view.onSelection(selectionHandler.createDelegate(this));
@@ -200,5 +212,6 @@ usig.AutoCompleter.defaults = {
 	serverTimeout: 5000,
 	maxRetries: 10,
 	maxOptions: 10,
+	rootUrl: '',
 	debug: false
 }

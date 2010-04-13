@@ -25,38 +25,41 @@ usig.inventario.Objeto = function(data, clase) {
 	this.fechaUltimaModificacion = null;	
 	this.datos = {};
 	
-	if (data.id) {
-		this.id = data.id;
-	}
-	
-	if (data.nombre) {
-		this.nombre = data.nombre;
-	}
-	
-	if (data.ubicacion) {
-		this.ubicacion = new usig.inventario.Ubicacion(data.ubicacion);
-	}
-	
-	if (data.fechaAlta) {
-		this.fechaAlta = new Date(data.fechaAlta);
-	}
-	
-	if (data.fechaUltimaModificacion) {
-		this.fechaUltimaModificacion = new Date(data.fechaUltimaModificacion);
-	}
-	
-	if (data.direccionAsociada) {
-		this.direccionAsociada = usig.Direccion.fromObj(data.direccionAsociada);
-	}
-	
-	if (data.contenido) {
-		$.each(data.contenido, function(i, dato) {
-			this.datos[dato.nombreId] = {
-				alias: dato.nombre,
-				valor: dato.valor,
-				pos: dato.posicion
-			}
-		});
+	this.fill = function(data) {
+		if (data.id) {
+			this.id = data.id;
+		}
+		
+		if (data.nombre) {
+			this.nombre = data.nombre;
+		}
+		
+		if (data.ubicacion) {
+			this.ubicacion = new usig.inventario.Ubicacion(data.ubicacion);
+		}
+		
+		if (data.fechaAlta) {
+			this.fechaAlta = new Date(data.fechaAlta);
+		}
+		
+		if (data.fechaUltimaModificacion) {
+			this.fechaUltimaModificacion = new Date(data.fechaUltimaModificacion);
+		}
+		
+		if (data.direccionAsociada) {
+			this.direccionAsociada = usig.Direccion.fromObj(data.direccionAsociada);
+		}
+		
+		if (data.contenido) {
+			var datosPtr = this.datos;
+			$.each(data.contenido, function(i, dato) {
+				datosPtr[dato.nombreId] = {
+					alias: dato.nombre,
+					valor: dato.valor,
+					pos: dato.posicion
+				}
+			});
+		}
 	}
 	
 	/**
@@ -66,6 +69,8 @@ usig.inventario.Objeto = function(data, clase) {
 	this.toString = function() {
 		return this.nombre;
 	}
+	
+	this.fill(data);
 }
 
 usig.inventario.Objeto.defaults = {

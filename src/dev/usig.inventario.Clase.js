@@ -13,7 +13,7 @@ if (typeof (usig.inventario) == "undefined")
  * @param {Integer} id Id de la clase 
  * @param {String} nombre Nombre de la clase 
 */	
-usig.inventario.Clase = function(id, nombre) {
+usig.inventario.Clase = function(id, nombre, nombreId, nombreNormalizado) {
 	
 	/**
 	 * Devuelve el id de la clase
@@ -29,5 +29,21 @@ usig.inventario.Clase = function(id, nombre) {
 	 */
 	this.getNombre = function() {
 		return nombre;
+	}
+	
+	/**
+	 * Devuelve una cadena identificatoria de la clase
+	 * @return {String} Cadena identificatoria de la clase
+	 */
+	this.getNombreId = function() {
+		return nombreId;
+	}
+	
+	/**
+	 * Devuelve el nombre de la clase normalizado
+	 * @return {String} Nombre de la clase normalizado
+	 */
+	this.getNombreNormalizado = function() {
+		return nombreNormalizado;
 	}
 }

@@ -15,7 +15,8 @@ if (typeof (usig) == "undefined")
 usig.Inventario = function(options) {
 	
 	var opts = $.extend({}, usig.Inventario.defaults, options);
-
+	var lastRequest = null;
+	
 	jQuery.jsonp.setup({
 		callbackParameter: 'callback',
 		pageCache: true,
@@ -25,7 +26,7 @@ usig.Inventario = function(options) {
 	});
 	
 	var mkRequest = function(url, data, success, error) {
-		$.jsonp({
+		lastRequest = $.jsonp({
 			url: url,
 			data: data,
 			success: success,
@@ -33,17 +34,32 @@ usig.Inventario = function(options) {
 		});		
 	};
 	
-	var results2Objects = function(results, callback) {
+	var buscarResultsHandler = function(results, callback) {
 		var clases = {};
 		var objetos = [];
 		
 		$.each(results.clasesEncontradas, function(i, clase) {
-			clases[clase.claseId] = new usig.inventario.Clase(clase.claseId, clase.clase);
+			clases[clase.id] = new usig.inventario.Clase(clase.id, clase.nombre, clase.nombreId, clase.nombreNorm);
 		});
 		
 		$.each(results.instancias, function(i, obj) {
 			objetos.push(new usig.inventario.Objeto(obj, clases[obj.claseId]));
 		});
+		
+		if (typeof(callback) == "function") {
+			callback(objetos);
+		}
+	}
+	
+	var getObjetoResultsHandler = function(result, callback, obj) {
+		if (obj instanceof usig.inventario.Objeto) {
+			if (opts.debug) usig.debug('Completando el objeto recibido');
+			obj.fill(result);
+			callback(obj);
+		} else {
+			if (opts.debug) usig.debug('Creando objeto nuevo');
+			callback(new usig.inventario.Objeto(result));
+		}
 	}
 	
 	this.getCategorias = function(success, error) {
@@ -72,20 +88,28 @@ usig.Inventario = function(options) {
 		var onSuccess = success;
 		
 		if (ops.returnObjects) {
-			onSuccess = results2Objects.createDelegate(this, [success], 1); 
+			onSuccess = buscarResultsHandler.createDelegate(this, [success], 1); 
 		}
 		
 		mkRequest(opts.server + 'buscar/', data, onSuccess, error);
 	}	
 	
-	this.getFeatureInfo = function(id, success, error) {
-		if (parseInt(id)) {
-			mkRequest(opts.server + 'getObjectContent/', { id: id }, success, error);
+	this.getObjeto = function(obj, success, error) {
+		var id = parseInt(obj)?parseInt(obj):parseInt(obj.id);
+		if (id > 0) {
+			mkRequest(opts.server + 'getObjectContent/', { id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error);						
 		}
 	}
 		
 	this.getGeom = function(objectId, success, error) {
 		mkRequest(opts.server + 'getGeometria/', {id:objectId}, success, error);
+	}
+	
+	this.abort = function() {
+		if (lastRequest) {
+			lastRequest.abort();
+			lastRequest = null;
+		}
 	}
 	
 }

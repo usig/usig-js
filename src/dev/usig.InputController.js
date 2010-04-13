@@ -53,6 +53,15 @@ usig.InputController = function(idField, options) {
 	this.setOptions = function(options) {
 		opts = $.extend({}, opts, options);
 	}
+		
+	/**
+	 * Setea un nuevo valor en el control
+     * @param {String} newValue Nuevo valor para setear en el control 
+    */	
+	this.setValue = function(newValue) {
+		field.value = newValue;
+		previousValue = newValue;
+	}
 	
 	if (!field) {
 		throw "InvalidField";
