@@ -28,7 +28,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Cleans up everything that was created by setUp().
          */
         tearDown : function () {
-        	// this.acv.remove();
+        	this.acv.remove();
         	delete this.acv;
         },
         
@@ -50,8 +50,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var msg = 'Un mensaje es una cadena de texto plano.';
         	this.acv.showMessage('Un mensaje es una cadena de texto plano.');
         	Y.Assert.areEqual(1, $('div.usig_acv').length);
-        	Y.Assert.areEqual(1, $('div.usig_acv div.content p').length);
-        	Y.Assert.areEqual(msg, $('div.usig_acv div.content p').text());
+        	Y.Assert.areEqual(1, $('div.usig_acv div.content div.message').length);
+        	Y.Assert.areEqual(msg, $('div.usig_acv div.content div.message').text());
         },
         
         "Showing a short list of objects should display them all" : function() {
@@ -285,7 +285,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	Y.Assert.areEqual(1, $('div.usig_acv div.content ul.options li.message').length);
   			Y.one('div.usig_acv ul.options li a').simulate("mouseover");
         	Y.Assert.areEqual(1, $('div.usig_acv div.content ul.options li.highlight').length);
-  			Y.one('div.usig_acv ul.options li a').simulate("click");
+  			Y.one('div.usig_acv ul.options li a span').simulate("click");
         	Y.assert(obj1.selected);
         },
         

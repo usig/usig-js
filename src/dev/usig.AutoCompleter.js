@@ -18,6 +18,10 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de sugerencias.
+ * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar seleccionado.
+ * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica.
+ * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
+ * @cfg {Boolean} useInventario Usar el inventario para buscar lugares de interes.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
@@ -25,24 +29,37 @@ if (typeof (usig) == "undefined")
  * @param {Object} viewCtrl (optional) Controlador de la vista para mostrar las sugerencias del autocompleter
 */	
 usig.AutoCompleter = function(idField, options, viewCtrl) {
-	var field = document.getElementById(idField);
-	var view = viewCtrl;
-	var opts = $.extend({}, usig.AutoCompleter.defaults, options);
-	var ic = null;
-	var inputTimer = null;
-	var serverTimeout = null;
-	var numRetries = 0;
+	var field = document.getElementById(idField), 
+		view = viewCtrl,
+		opts = $.extend({}, usig.AutoCompleter.defaults, options),
+		ic = null,
+		inputTimer = null,
+		inputTimerServerSearch = null,
+		serverTimeout = null,
+		numRetries = 0,
+		errorNormalizacion = null,
+		resNormalizacion = [],
+		cleanList = [];
+		
+	field.setAttribute("autocomplete","off");
 		
 	/**
 	 * Elimina los manejadores de eventos del control 
     */		
 	this.unbind = function() {
+		ic.unbind();
+		delete ic;
 		if (inputTimer)
 			clearTimeout(inputTimer);
-		if (serverTimeout)
+		if (inputTimerServerSearch)
+			clearTimeout(inputTimerServerSearch);
+		if (serverTimeout) {
 			clearTimeout(serverTimeout);
+			opts.inventario.abort();
+		}
 		view.remove();
-		ic.unbind();
+		for (var i=0; i<cleanList.length; i++)
+			delete cleanList[i];
 	}
 	
 	/**
@@ -68,56 +85,97 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
     */	
 	this.setOptions = function(options) {
 		opts = $.extend({}, opts, options);
+		view.setOptions(options);
+		opts.inventario.setOptions({ debug: opts.debug });
+		opts.geoCoder.setOptions({ debug: opts.debug });
+	}
+	
+	/**
+	 * Cambia el skin actual del control
+	 */
+	this.changeSkin = function(newSkin) {
+		view.changeSkin(newSkin);
+	}
+	
+	/**
+	 * Devuelve las opciones vigentes en el componente
+     * @return {Object} Objeto conteniendo las opciones vigentes en el componente  
+    */	
+	this.getOptions = function() {
+		return opts;
+	}
+	
+	function buscarEnInventario(str) {
+		if (opts.useInventario) {
+			// Solo busca en el inventario si hay lugar para mostrar mas opciones
+			var limit = opts.maxOptions;
+			if (resNormalizacion && resNormalizacion.length) {
+				limit = opts.maxOptions - resNormalizacion.length;
+			} 
+			if (limit > 0) {
+				if (opts.debug) usig.debug('inventario.buscar');
+				opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { limit: limit });
+				serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
+				if (typeof(opts.afterServerRequest) == "function") {
+					if (opts.debug) usig.debug('afterServerRequest');
+					opts.afterServerRequest();
+				}
+			}
+		}		
 	}
 	
 	function normalizar(str) {
 		try {
 			if (opts.debug) if (opts.debug) usig.debug('normalizar("'+str+'")');
-			var res = opts.normalizadorDirecciones.normalizar(str);
+			errorNormalizacion = null;
+			resNormalizacion = opts.normalizadorDirecciones.normalizar(str);
 			if (opts.debug) usig.debug('view.show');
-			view.show(res);
+			view.show(resNormalizacion);
 			if (typeof(opts.afterSuggest) == "function") {
 				if (opts.debug) usig.debug('afterSuggest');
 				opts.afterSuggest();
 			}
 		} catch(error) {
 			if (opts.debug) usig.debug(error);
-			// if (opts.debug) usig.debug('view.showError');
-			// view.showError(error);
-		}		
-		if (opts.debug) usig.debug('inventario.buscar');
-		opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { returnObjects: true });
-		serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
-		if (typeof(opts.afterServerRequest) == "function") {
-			if (opts.debug) usig.debug('afterServerRequest');
-			opts.afterServerRequest();
+			errorNormalizacion = error;
+			mostrarErrorNormalizacion();
 		}
 	}
 	
 	function retry(str) {
-		opts.inventario.buscar(str);
-		numRetries++;
-		if (numRetries < opts.maxRetries) { 
-			serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
-		} else {
-			if (opts.debug) usig.debug('maxRetries reached. stopping.');
-			numRetries = 0;
+		if (opts.debug) usig.debug('retrying...');
+		if (typeof(opts.inventario.abort) == "function") {
+			abort();
+			opts.inventario.buscar(str);
+			numRetries++;
+			if (numRetries < opts.maxRetries) { 
+				serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
+			} else {
+				if (opts.debug) usig.debug('maxRetries reached. stopping.');
+				numRetries = 0;
+			}
+			if (typeof(opts.afterRetry) == "function") {
+				if (opts.debug) usig.debug('afterRetry');
+				opts.afterRetry();
+			}
 		}
-		if (typeof(opts.afterRetry) == "function") {
-			if (opts.debug) usig.debug('afterRetry');
-			opts.afterRetry();
-		}		
 	}
 	
 	function mostrarLugares(lugares, inputStr) {
 		clearTimeout(serverTimeout);
 		if (lugares instanceof Array && lugares.length > 0) {
 			if (opts.debug) usig.debug('view.show');
-			view.show(lugares);			
+			if (errorNormalizacion) 
+				view.update(inputStr);
+			view.show(lugares, true);			
 			if (typeof(opts.afterSuggest) == "function") {
 				if (opts.debug) usig.debug('afterSuggest');
 				opts.afterSuggest();
 			}
+		} else if (errorNormalizacion != null) {
+			// El error en la normalizacion solo se muestra si no 
+			// se encuentra ningun lugar
+			mostrarErrorNormalizacion();
 		}
 		if (typeof(opts.afterServerResponse) == "function") {
 			if (opts.debug) usig.debug('afterServerResponse');
@@ -125,15 +183,31 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		}
 	}
 	
+	function mostrarErrorNormalizacion() {
+		try {
+			view.showMessage(errorNormalizacion.getErrorMessage());
+		} catch(e) {
+			view.showMessage(opts.texts.nothingFound);
+		}
+		if (typeof(opts.afterSuggest) == "function") {
+			if (opts.debug) usig.debug('afterSuggest');
+			opts.afterSuggest();
+		}		
+	}
+	
 	function abortIfNecessary() {
 		if (serverTimeout) {
 			clearTimeout(serverTimeout);
-			if (opts.debug) usig.debug('inventario.abort');					
-			opts.inventario.abort();
-			if (typeof(opts.afterAbort) == "function") {
-				if (opts.debug) usig.debug('afterAbort');
-				opts.afterAbort();
-			}
+			abort();
+		}		
+	}
+	
+	function abort() {
+		if (opts.debug) usig.debug('inventario.abort');					
+		opts.inventario.abort();
+		if (typeof(opts.afterAbort) == "function") {
+			if (opts.debug) usig.debug('afterAbort');
+			opts.afterAbort();
 		}		
 	}
 	
@@ -141,6 +215,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		if (opts.debug) usig.debug('usig.AutoCompleter: selection');
 		abortIfNecessary();
 		var newValue = option.toString()+((option instanceof usig.Calle)?' ':'');
+		if (opts.debug) usig.debug('usig.AutoCompleter: setting new value');
 		ic.setValue(newValue);
 		if (typeof(opts.afterSelection) == "function") {
 			if (opts.debug) usig.debug('usig.AutoCompleter: calling afterSelection');
@@ -156,7 +231,30 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 				} catch(error) {
 					if (opts.debug) usig.debug(error);
 				}
+			} else if (option instanceof usig.inventario.Objeto) {
+				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.inventario.Objeto');	
+				opts.inventario.getObjeto(option, afterObjGeoCoding.createDelegate(this), (function(error) {
+						if (opts.debug) usig.debug(error);
+					}).createDelegate(this));
 			}
+		}
+	}
+	
+	function afterObjGeoCoding(obj) {
+		if (obj.direccionAsociada) {
+			opts.afterGeoCoding(obj.direccionAsociada.getCoordenadas());
+		} else if (obj.ubicacion) {
+			opts.afterGeoCoding(obj.ubicacion.getCentroide());
+		}
+	}
+	
+	function optionsFormatter(item, linkName, wordMarker) {
+		if (item instanceof usig.inventario.Objeto) {
+			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.clase.getNombre()+')</span></li>';
+		} else if (item instanceof usig.Calle) {
+			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';
+		} else {
+			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';			
 		}
 	}
 	
@@ -178,8 +276,12 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 				if (inputTimer) {
 					clearTimeout(inputTimer);
 				}
-				if (newValue.length > opts.minTextLength) {
+				if (inputTimerServerSearch) {
+					clearTimeout(inputTimerServerSearch);
+				}
+				if (newValue.length >= opts.minTextLength) {
 					inputTimer = normalizar.defer(opts.inputPause, this, [newValue]);
+					inputTimerServerSearch = buscarEnInventario.defer(opts.inputPauseBeforeServerSearch, this, [newValue]);
 				}
 			}
 		});
@@ -189,18 +291,22 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	
 	if (!opts.normalizadorDirecciones) {
 		opts.normalizadorDirecciones = new usig.NormalizadorDirecciones();
+		cleanList.push(opts.normalizadorDirecciones);
 	}
 	
-	if (!opts.inventario) {
+	if (!opts.inventario && opts.useInventario) {
 		opts.inventario = new usig.Inventario({ debug: opts.debug });
+		cleanList.push(opts.inventario);
 	}
 	
 	if (!opts.geoCoder) {
 		opts.geoCoder = new usig.GeoCoder({ debug: opts.debug });
+		cleanList.push(opts.geoCoder);
 	}
 	
 	if (!view) {
-		view = new usig.AutoCompleterView(idField, { rootUrl: opts.rootUrl, debug: opts.debug });
+		view = new usig.AutoCompleterView(idField, { rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter });
+		cleanList.push(view);
 	}
 	
 	view.onSelection(selectionHandler.createDelegate(this));
@@ -208,10 +314,18 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 
 usig.AutoCompleter.defaults = {
 	minTextLength: 3,
-	inputPause: 1000,
+	inputPause: 100,
+	inputPauseBeforeServerSearch: 500,
 	serverTimeout: 5000,
-	maxRetries: 10,
+	useInventario: true,
+	autoSelect: true,
+	autoHideTimeout: 5000,
+	maxRetries: 5,
 	maxOptions: 10,
 	rootUrl: '',
-	debug: false
+	skin: 'usig',
+	debug: false,
+	texts: {
+		nothingFound: 'No se hallaron resultados coincidentes con su búsqueda.'
+	}
 }

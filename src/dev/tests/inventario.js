@@ -54,11 +54,11 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		test.resume(function(msg) {
         			Y.fail();
         		});
-        	}, { limit: 5 });
+        	}, { limit: 5, returnRawData: true });
         	this.wait();
         },
                       
-        "Searching with returnObjects enabled should return a list of inventario objects" : function () {
+        "Searching should return a list of inventario objects" : function () {
         	var test = this;
         	this.inv.buscar('san martin', function(result) {
         		test.resume(function() {
@@ -69,7 +69,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		test.resume(function(msg) {
         			Y.fail();
         		});
-        	}, { limit: 5, returnObjects: true });
+        	}, { limit: 5 });
         	this.wait();
         },
                       
@@ -89,7 +89,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		test.resume(function(msg) {
         			Y.fail();
         		});
-        	}, { limit: 5, returnObjects: true });
+        	}, { limit: 5 });
         	this.wait();
         }
         

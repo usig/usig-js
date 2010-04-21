@@ -97,7 +97,7 @@ div.usig_acv ul.options li.highlight a:hover
 div.usig_acv ul.options li a span
 {
 	display: block;
-	padding: 3px 6px;
+	padding: 3px 6px 2px 6px;
 	font-weight: bold;
 }
 
@@ -158,9 +158,12 @@ div.usig_acv ul.options li.highlight a .tr
 	background-image: url(img-dark/hl_corner_tr.gif);
 	background-position: bottom right;
 }
-
-
-
+div.usig_acv ul.options li span.clase {
+	padding-left: 6px;
+	font-size: xx-small;
+}
+div.usig_acv ul.options li span.clase em {
+}
 div.usig_acv ul.options li.warning
 {
 	font-weight: bold;
@@ -171,4 +174,19 @@ div.usig_acv ul.options em
 {
 	font-style: normal;
 	color: #6EADE7;
+}
+
+div.usig_acv div.content div.message
+{
+	color: #ccc;
+	margin: 4px;
+}
+div.usig_acv div.content div.message ul {
+	padding-left: 20px;
+}
+div.usig_acv div.content div.message ul li
+{
+	color: #6EADE7;
+	margin: 0 4px 4px;
+	font-size: 80%;
 }

@@ -459,7 +459,7 @@ $.extendIf(Array.prototype, {
      * @return {Object} the resulting accumulator
      */
     inject : function (acc, it) { 
-            for (i=0; i< this.length; i++)
+            for (var i=0; i< this.length; i++)
                 acc = it(acc, this[i], i);
             return acc;
         }    

@@ -3,10 +3,10 @@ if (typeof (usig) == "undefined")
 	usig = {};
 
 usig.Mock = function(Y) {
-	var mock = {
-		expect: function (expectation) {
-			if (!mock.__expectations)
-				mock.__expectations = {};
+	var mock = {};
+	mock.__expectations = {};
+	
+	mock.expect = function (expectation) {
 			var name = expectation.method;
 			mock.__expectations[name] = expectation;
 			expectation.actualCallCount = 0;
@@ -28,8 +28,9 @@ usig.Mock = function(Y) {
 					return expectation.returns[expectation.actualCallCount - 1]; 
 				}
 			}
-		}, 
-		verify: function() {
+		};
+		
+	mock.verify = function() {
 			if (Y) {
 		        try {
 		            Y.Object.each(mock.__expectations, function(expectation){
@@ -53,7 +54,7 @@ usig.Mock = function(Y) {
 				}
 				return ok;
 			}
-		}
-	};
+		};
+
 	return mock;
 }

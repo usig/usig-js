@@ -14,8 +14,8 @@ if (typeof (usig) == "undefined")
 */	
 usig.Inventario = function(options) {
 	
-	var opts = $.extend({}, usig.Inventario.defaults, options);
-	var lastRequest = null;
+	var opts = $.extend({}, usig.Inventario.defaults, options),
+		lastRequest = null;
 	
 	jQuery.jsonp.setup({
 		callbackParameter: 'callback',
@@ -25,7 +25,7 @@ usig.Inventario = function(options) {
     	}
 	});
 	
-	var mkRequest = function(url, data, success, error) {
+	function mkRequest (url, data, success, error) {
 		lastRequest = $.jsonp({
 			url: url,
 			data: data,
@@ -34,9 +34,8 @@ usig.Inventario = function(options) {
 		});		
 	};
 	
-	var buscarResultsHandler = function(results, callback) {
-		var clases = {};
-		var objetos = [];
+	function buscarResultsHandler (results, callback) {
+		var clases = {}, objetos = [];
 		
 		$.each(results.clasesEncontradas, function(i, clase) {
 			clases[clase.id] = new usig.inventario.Clase(clase.id, clase.nombre, clase.nombreId, clase.nombreNorm);
@@ -51,7 +50,7 @@ usig.Inventario = function(options) {
 		}
 	}
 	
-	var getObjetoResultsHandler = function(result, callback, obj) {
+	function getObjetoResultsHandler (result, callback, obj) {
 		if (obj instanceof usig.inventario.Objeto) {
 			if (opts.debug) usig.debug('Completando el objeto recibido');
 			obj.fill(result);
@@ -60,6 +59,14 @@ usig.Inventario = function(options) {
 			if (opts.debug) usig.debug('Creando objeto nuevo');
 			callback(new usig.inventario.Objeto(result));
 		}
+	}
+	
+	/**
+	 * Setea las opciones del componente
+     * @param {Object} options Un objeto conteniendo overrides para las opciones disponibles 
+    */	
+	this.setOptions = function(options) {
+		opts = $.extend({}, opts, options);
 	}
 	
 	this.getCategorias = function(success, error) {
@@ -71,9 +78,8 @@ usig.Inventario = function(options) {
 	}
 	
 	this.buscar = function(text, success, error, options) {	
-		var ops = $.extend({}, usig.Inventario.defaults.searchOptions, options);
-	
-		var data = { start:ops.start, limit: ops.limit, texto: text, tipo:ops.tipoBusqueda };
+		var ops = $.extend({}, usig.Inventario.defaults.searchOptions, options),
+			data = { start:ops.start, limit: ops.limit, texto: text, tipo:ops.tipoBusqueda };
 		
 		if(ops.categoria != undefined)
 			data['categoria'] = ops.categoria;
@@ -85,10 +91,11 @@ usig.Inventario = function(options) {
 			data['bbox'] = [ops.extent.left,ops.extent.bottom,ops.extent.right,ops.extent.top].join(",");
 		}
 		
-		var onSuccess = success;
 		
-		if (ops.returnObjects) {
-			onSuccess = buscarResultsHandler.createDelegate(this, [success], 1); 
+		var onSuccess = buscarResultsHandler.createDelegate(this, [success], 1); 
+		
+		if (ops.returnRawData) {
+			onSuccess = success;
 		}
 		
 		mkRequest(opts.server + 'buscar/', data, onSuccess, error);
@@ -116,8 +123,8 @@ usig.Inventario = function(options) {
 
 usig.Inventario.defaults = {
 	debug: false,
-	// server: 'http://inventario.usig.buenosaires.gob.ar/mapabsas/',
-	server: 'http://inventario.asi.buenosaires.gov.ar/publico/',
+	server: 'http://inventario.usig.buenosaires.gob.ar/publico/',
+	// server: 'http://inventario.asi.buenosaires.gov.ar/publico/',
 	searchOptions: {
 		start: 0,
 		limit: 20,
@@ -126,6 +133,6 @@ usig.Inventario.defaults = {
 		clase: undefined,
 		bbox: false,
 		extent: undefined,
-		returnObjects: false
+		returnRawData: false
 	}
 }

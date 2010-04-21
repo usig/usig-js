@@ -11,46 +11,48 @@ if (typeof (usig) == "undefined")
  * @cfg {Integer} maxOptions Maximo numero de sugerencias a mostrar por vez. Por defecto: 10.
  * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
  * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
- * @cfg {Integer} timeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 2500.
+ * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {String} rootUrl Url del servidor donde reside el control.
  * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'dark' y 'mapabsas'. Por defecto: 'usig'.
  * @cfg {Function} onSelection Callback que es llamada cada vez que se selecciona un elemento de la lista.
+ * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica. Por defecto: true.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log. Por defecto: false.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles
 */	
 usig.AutoCompleterView = function(idField, options) {
-	var field = document.getElementById(idField);
-	var fieldValue = field.value;
-	var opts = $.extend({}, usig.AutoCompleterView.defaults, options);
-	var id = 'usig_acv_'+idField;
-	var hideTimeout = null;
-	var highlighted = -1;
-	var numOptions = 0;
-	var $div = null;
-	var itemsRef = {};
-	var keyCodes = {
-		arrUp: 38,
-		arrDn: 40,
-		enter: 13,
-		esc: 27
-	}
-	
-	var killTimeout = function() {
+	var field = document.getElementById(idField),
+		fieldValue = field.value,
+		opts = $.extend({}, usig.AutoCompleterView.defaults, options),
+		id = 'usig_acv_'+idField,
+		hideTimeout = null,
+		highlighted = -1,
+		numOptions = 0,
+		$div = null,
+		itemsRef = {},
+		keyCodes = {
+			arrUp: 38,
+			arrDn: 40,
+			enter: 13,
+			esc: 27
+		};
+		
+	function killTimeout() {
 		clearTimeout(hideTimeout);	
 	};
 	
-	var resetTimeout = function() {
+	function resetTimeout() {
+		if (opts.debug) usig.debug('AutoCompleterView: resetting hideTimeout');
 		killTimeout();
-		hideTimeout = hideSuggestions.defer(opts.timeout, this);
+		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);
 	};
 	
-	var hideSuggestions = function() {
+	function hideSuggestions() {
  		$div.fadeOut('slow');
 	};
 	
-	var createHoldingDiv = function(content) {		
+	function createHoldingDiv(content) {		
 		// get rid of old list
 		// and clear the list removal timeout
 		$('#'+id).remove();
@@ -95,21 +97,21 @@ usig.AutoCompleterView = function(idField, options) {
 		highlighted = -1;
 		
 		// hide dialog after an interval
-		hideTimeout = hideSuggestions.defer(opts.timeout, this);		
+		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);		
 	}
 	
-	var highlight = function(n) {
+	function highlight(n) {
 		if ($div) {
 			$('ul.options li.highlight').removeClass('highlight');
 			if (typeof(n) == "string") {
-				$('ul.options li a[name="'+n+'"]').parent('li').addClass('highlight');				
+				$('ul.options li:has(a[name="'+n+'"])').addClass('highlight');				
 			} else {
-				$('ul.options li a').parent('li').slice(n, n+1).addClass('highlight');
+				$('ul.options li:has(a)').slice(n, n+1).addClass('highlight');
 			}
 		}
 	}
 	
-	var markWords = function(sug) {		
+	function markWords(sug) {		
 		// format output with the input enclosed in a EM element
 		// (as HTML, not DOM)
 		var val = new sug.constructor(sug);
@@ -144,12 +146,24 @@ usig.AutoCompleterView = function(idField, options) {
 		return output;
 	}
 	
-	var selectionHandler = function(item) {
+	function selectionHandler(item) {
 		if (typeof(opts.onSelection) == "function") {
 			killTimeout();
 			hideSuggestions();
 			opts.onSelection(item);
 		}
+	}
+	
+	function reset() {
+		killTimeout();
+		if ($div) {
+			if (opts.debug) usig.debug('AutoCompleterView: destroying current list...');
+			$div.remove();
+		}
+		highlighted = -1;
+		numOptions = 0;
+		$div = null;
+		itemsRef = {};
 	}
 
 	/**
@@ -167,6 +181,15 @@ usig.AutoCompleterView = function(idField, options) {
     */	
 	this.update = function(newValue) {
 		fieldValue = newValue;
+		reset();
+	}
+	
+	/**
+	 * Devuelve las opciones vigentes en el componente
+     * @return {Object} Objeto conteniendo las opciones vigentes en el componente  
+    */	
+	this.getOptions = function() {
+		return opts;
 	}
 
 	/**
@@ -194,21 +217,37 @@ usig.AutoCompleterView = function(idField, options) {
 				return false;
 			if (typeof(item) == "string") {
 				htmlList+='<li class="message">'+item+'</li>';
+			} else if (typeof(opts.optionsFormatter) == "function") { 
+				htmlList+=opts.optionsFormatter(item, id+numOptions, ptrMarkWords);
+				itemsRef[id+numOptions] = item;
+				numOptions++;
 			} else if (typeof(item.toString) == "function") {
-				htmlList+='<li><a href="#" name="'+id+numOptions+'"><span class="tl"/><span class="tr"/><span>'+ptrMarkWords(item.toString())+'</span></a></li>';
+				htmlList+='<li><a href="#" class="acv_op" name="'+id+numOptions+'"><span class="tl"/><span class="tr"/><span>'+ptrMarkWords(item.toString())+'</span></a></li>';
 				itemsRef[id+numOptions] = item;
 				numOptions++;
 			}
 		});
+		if (opts.debug) usig.debug('AutoCompleterView: showing '+numOptions+' options');
 		if (append === true && $div) {
+			if (opts.debug) usig.debug('AutoCompleterView: appending to the end of existing list...');
 			$('ul.options', $div).append(htmlList);
 		} else if (!isNaN(parseInt(append)) && $div) {
+			if (opts.debug) usig.debug('AutoCompleterView: appending at position '+parseInt(append)+' of existing list...');
 			$('ul.options', $div).append(htmlList);
 		} else {
+			if (opts.debug) usig.debug('AutoCompleterView: creating suggestions list...');
 			createHoldingDiv('<ul class="options">'+htmlList+'</ul>');
 		}
 		$('ul.options li a', $div).mouseover((function(ev, highlight) { highlight(ev.target.name); }).createDelegate(this, [highlight], 1));
-		$('ul.options li a', $div).click((function(ev) { selectionHandler(itemsRef[ev.target.name]); }).createDelegate(this));
+		$('ul.options li a', $div).click((function(ev) { 
+			var target = ev.target?ev.target:ev.srcElement;
+			var name = $(target).parents('a.acv_op').attr('name');
+			selectionHandler(itemsRef[name]); 
+		}).createDelegate(this));
+		if (opts.autoSelect && numOptions == 1) {
+			highlighted = 0;
+			highlight(highlighted);
+		}
 	}
 	
 	/**
@@ -216,7 +255,7 @@ usig.AutoCompleterView = function(idField, options) {
      * @param {String} message Un string de texto plano para mostrar  
     */	
 	this.showMessage = function(message) {
-		createHoldingDiv('<p>'+message+'</p>');
+		createHoldingDiv('<div class="message">'+message+'</div>');
 	}
 
 	/**
@@ -224,10 +263,15 @@ usig.AutoCompleterView = function(idField, options) {
      * @param {Integer} keyCode Codigo de la tecla presionada. 
     */	
 	this.keyUp = function(keyCode) {
-		if (keyCode == keyCodes.arrDn || keyCode == keyCodes.arrUp) {
-			resetTimeout();
-			highlighted = keyCode == keyCodes.arrDn?(highlighted+1).constrain(0, numOptions-1):(highlighted-1).constrain(0, numOptions-1);
-			highlight(highlighted);
+		if ((keyCode == keyCodes.arrDn || keyCode == keyCodes.arrUp) && numOptions > 0) {
+			if ($div.css('display') != 'block') {
+				$div.show();
+			} else {
+				resetTimeout();
+				highlighted = keyCode == keyCodes.arrDn?(highlighted+1).constrain(0, numOptions-1):(highlighted-1).constrain(0, numOptions-1);
+				if (opts.debug) usig.debug('AutoCompleterView: highlighting '+highlighted+'...');
+				highlight(highlighted);
+			}
 		}
 		if (keyCodes.enter == keyCode && highlighted >= 0) {
 			selectionHandler(itemsRef[id+highlighted]);
@@ -257,6 +301,15 @@ usig.AutoCompleterView = function(idField, options) {
 		}
 	}
 	
+	/**
+	 * Cambia el skin actual del control
+	 */
+	this.changeSkin = function(newSkin) {
+		usig.removeCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
+		opts.skin = newSkin;
+		usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
+	}
+	
 	// Inicializacion
 	usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
 }
@@ -266,7 +319,8 @@ usig.AutoCompleterView.defaults = {
 	debug: false,
 	offsetY: -5,
 	zIndex: 10000,
-	timeout: 2500,
+	autoHideTimeout: 5000,
+	autoSelect: true,
 	rootUrl: '',
 	skin: 'usig'
 }

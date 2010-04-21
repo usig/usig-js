@@ -5,7 +5,7 @@ if (typeof (usig) == "undefined")
 /**
  * @class GeoCoder
  * Esta clase implementa una interfaz Javascript con el servicio de GeoCoding de USIG<br/>
- * Requiere: jQuery-1.3.2+, usig.core, usig.Punto
+ * Requiere: jQuery-1.3.2+, usig.core, usig.Punto, usig.Calle, usig.Direccion
  * @namespace usig
  * @cfg {String} server Url del servicio de GeoCoding de USIG. Por defecto: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
@@ -18,11 +18,10 @@ if (typeof (usig) == "undefined")
 */	
 usig.GeoCoder = function(options) {
 	
-	var opts = $.extend({}, usig.GeoCoder.defaults, options);
+	var opts = $.extend({}, usig.GeoCoder.defaults, options),
+		metodos = ['interpolacion', 'puertas', 'centroide'];
 	
-	var metodos = ['interpolacion', 'puertas', 'centroide'];
-	
-	var mkRequest = function(data, success, error) {
+	function mkRequest(data, success, error) {
 		$.ajax({
 			type: 'GET',
 			url: opts.server,
@@ -39,7 +38,7 @@ usig.GeoCoder = function(options) {
 		});		
 	}
 	
-	var validarMetodo = function(metodo) {
+	function validarMetodo(metodo) {
 		if (metodo != undefined) {
 			if (metodos.indexOf(metodo) >= 0) {
 				return metodo;
@@ -48,6 +47,14 @@ usig.GeoCoder = function(options) {
 			return opts.metodo;
 		}		
 		return undefined;
+	}
+
+	/**
+	 * Setea las opciones del componente
+     * @param {Object} options Un objeto conteniendo overrides para las opciones disponibles 
+    */	
+	this.setOptions = function(options) {
+		opts = $.extend({}, opts, options);
 	}
 	
 	/**

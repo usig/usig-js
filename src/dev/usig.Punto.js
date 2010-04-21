@@ -44,7 +44,7 @@ usig.Punto = function(x, y) {
 		return '('+x+', '+y+')';
 	}
 	
-}
+};
 
 /**
  * Devuelve un nuevo punto creado a partir de su representacion como String WKT
@@ -54,7 +54,7 @@ usig.Punto = function(x, y) {
 usig.Punto.fromWkt = function(wkt) {
 	var splited = wkt.split(/POINT\s*\((\d*.\d*)\s(\d*.\d*)\)/);
 	return new usig.Punto(splited[1], splited[2]);
-}
+};
 
 /**
  * Devuelve un nuevo punto creado a partir de otro
@@ -63,4 +63,4 @@ usig.Punto.fromWkt = function(wkt) {
  */
 usig.Punto.fromPunto = function(pt) {
 	return new usig.Punto(pt.getX(), pt.getY());
-}
+};

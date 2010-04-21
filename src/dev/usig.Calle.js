@@ -44,6 +44,14 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 	}
 	
 	/**
+	 * Devuelve la lista de tramos de alturas validas para esta calle
+	 * @return {Array} Listado de tramos de alturas validas para esta calle
+	 */
+	this.getTramos = function() {
+		return alturas;
+	}
+	
+	/**
 	 * Devuelve un string con el nombre de la calle 
      * @return {String} Nombre de la calle
     */	
