@@ -64,6 +64,7 @@
 	<source src="src/dev/usig.Calle.js"/>
 	<source src="src/dev/usig.Direccion.js"/>
 	<source src="src/dev/usig.GeoCoder.js"/>
+	<source src="src/dev/usig.MapaEstatico.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>
