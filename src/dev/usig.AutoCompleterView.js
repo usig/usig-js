@@ -321,6 +321,6 @@ usig.AutoCompleterView.defaults = {
 	zIndex: 10000,
 	autoHideTimeout: 5000,
 	autoSelect: true,
-	rootUrl: '',
+	rootUrl: 'http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/',
 	skin: 'usig'
 }

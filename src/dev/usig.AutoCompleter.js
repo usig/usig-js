@@ -322,7 +322,7 @@ usig.AutoCompleter.defaults = {
 	autoHideTimeout: 5000,
 	maxRetries: 5,
 	maxOptions: 10,
-	rootUrl: '',
+	rootUrl: 'http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/',
 	skin: 'usig',
 	debug: false,
 	texts: {
