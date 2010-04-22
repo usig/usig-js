@@ -29,7 +29,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Cleans up everything that was created by setUp().
          */
         tearDown : function () {
-        	this.ac.unbind();
+        	this.ac.destroy();
         	delete this.ac;
         },
         
@@ -494,7 +494,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Cleans up everything that was created by setUp().
          */
         tearDown : function () {
-	      	this.ac.unbind();
+	      	this.ac.destroy();
     	  	delete this.ac;
         },
         

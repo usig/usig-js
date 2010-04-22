@@ -48,7 +48,6 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
     */		
 	this.unbind = function() {
 		ic.unbind();
-		delete ic;
 		if (inputTimer)
 			clearTimeout(inputTimer);
 		if (inputTimerServerSearch)
@@ -58,8 +57,6 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			opts.inventario.abort();
 		}
 		view.remove();
-		for (var i=0; i<cleanList.length; i++)
-			delete cleanList[i];
 	}
 	
 	/**
@@ -68,7 +65,16 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	this.bind = function() {
 		ic.bind();
 	}
-	
+
+	/**
+	 * Elimina los bindings y destruye los componentes creados. 
+	 */
+	this.destroy = function() {
+		this.unbind();
+		delete ic;
+		for (var i=0; i<cleanList.length; i++)
+			delete cleanList[i];		
+	}
 	
 	/**
 	 * Setea el control de visualizacion de sugerencias
