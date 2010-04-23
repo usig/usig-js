@@ -126,6 +126,8 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 					if (opts.debug) usig.debug('afterServerRequest');
 					opts.afterServerRequest();
 				}
+			} else {
+				if (opts.debug) usig.debug('not searching inventario, limit reached');				
 			}
 		}		
 	}
@@ -143,6 +145,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			}
 		} catch(error) {
 			if (opts.debug) usig.debug(error);
+			resNormalizacion = null;
 			errorNormalizacion = error;
 			mostrarErrorNormalizacion();
 		}
@@ -320,7 +323,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 
 usig.AutoCompleter.defaults = {
 	minTextLength: 3,
-	inputPause: 100,
+	inputPause: 10,
 	inputPauseBeforeServerSearch: 500,
 	serverTimeout: 5000,
 	useInventario: true,

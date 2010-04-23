@@ -55,46 +55,53 @@ usig.AutoCompleterView = function(idField, options) {
 	function createHoldingDiv(content) {		
 		// get rid of old list
 		// and clear the list removal timeout
-		$('#'+id).remove();
 		killTimeout();
+		if ($div) { 
+			//$('#'+id).remove();
+			if (opts.debug) usig.debug('AutoCompleterView: updating current div...');
+			$('#'+id+' div.content').html(content);
+			$div.show();
+			highlighted = -1;			
+		} else {
+			if (opts.debug) usig.debug('AutoCompleterView: creating new div...');
+			// create holding div
+			$div = $('<div id="'+id+'" class="usig_acv">\
+						<div class="header">\
+							<div class="corner"/>\
+							<div class="bar"/>\
+						</div>\
+						<div class="content">'+content+'</div>\
+						<div class="footer">\
+							<div class="corner"/>\
+							<div class="bar"/>\
+						</div>\
+					</div>');
+			
+			// get position of target textfield
+			// position holding div below it
+			// set width of holding div to width of field
+			var pos = $(field).offset();
+			
+			$div.css({
+				position: 'absolute',
+				left: pos.left+'px', 
+				top: (pos.top+field.offsetHeight+parseInt(opts.offsetY))+'px', 
+				width: field.offsetWidth, 
+				zIndex: opts.zIndex 
+			});
 		
-		// create holding div
-		$div = $('<div id="'+id+'" class="usig_acv">\
-					<div class="header">\
-						<div class="corner"/>\
-						<div class="bar"/>\
-					</div>\
-					<div class="content">'+content+'</div>\
-					<div class="footer">\
-						<div class="corner"/>\
-						<div class="bar"/>\
-					</div>\
-				</div>');
-		
-		// get position of target textfield
-		// position holding div below it
-		// set width of holding div to width of field
-		var pos = $(field).offset();
-		
-		$div.css({
-			position: 'absolute',
-			left: pos.left+'px', 
-			top: (pos.top+field.offsetHeight+parseInt(opts.offsetY))+'px', 
-			width: field.offsetWidth, 
-			zIndex: opts.zIndex 
-		});
-	
-		// add DIV to document
-		$('body').append($div);	
-		
-		// set mouseover functions for div
-		// when mouse pointer leaves div, set a timeout to remove the list after an interval
-		// when mouse enters div, kill the timeout so the list won't be removed
-		$div.mouseover(killTimeout.createDelegate(this));
-		$div.mouseout(resetTimeout.createDelegate(this));
-		
-		// currently no item is highlighted
-		highlighted = -1;
+			// add DIV to document
+			$('body').append($div);	
+			
+			// set mouseover functions for div
+			// when mouse pointer leaves div, set a timeout to remove the list after an interval
+			// when mouse enters div, kill the timeout so the list won't be removed
+			$div.mouseover(killTimeout.createDelegate(this));
+			$div.mouseout(resetTimeout.createDelegate(this));
+			
+			// currently no item is highlighted
+			highlighted = -1;			
+		}
 		
 		// hide dialog after an interval
 		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);		
@@ -156,13 +163,15 @@ usig.AutoCompleterView = function(idField, options) {
 	
 	function reset() {
 		killTimeout();
+		/*
 		if ($div) {
 			if (opts.debug) usig.debug('AutoCompleterView: destroying current list...');
 			$div.remove();
 		}
+		*/
 		highlighted = -1;
 		numOptions = 0;
-		$div = null;
+		// $div = null;
 		itemsRef = {};
 	}
 
@@ -180,6 +189,9 @@ usig.AutoCompleterView = function(idField, options) {
      * @param {String} newValue El nuevo valor del input text 
     */	
 	this.update = function(newValue) {
+		if (newValue == '') {
+			$div.hide();
+		}
 		fieldValue = newValue;
 		reset();
 	}
@@ -228,11 +240,8 @@ usig.AutoCompleterView = function(idField, options) {
 			}
 		});
 		if (opts.debug) usig.debug('AutoCompleterView: showing '+numOptions+' options');
-		if (append === true && $div) {
+		if ((append === true || !isNaN(parseInt(append))) && $div && $('ul.options li a', $div).length > 0) {
 			if (opts.debug) usig.debug('AutoCompleterView: appending to the end of existing list...');
-			$('ul.options', $div).append(htmlList);
-		} else if (!isNaN(parseInt(append)) && $div) {
-			if (opts.debug) usig.debug('AutoCompleterView: appending at position '+parseInt(append)+' of existing list...');
 			$('ul.options', $div).append(htmlList);
 		} else {
 			if (opts.debug) usig.debug('AutoCompleterView: creating suggestions list...');
