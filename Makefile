@@ -49,12 +49,14 @@ debug:$(FILES)
 	cat $(AUTOCOMPLETER_FILES) > $(SRC)/usig.AutoCompleter-debug.js
 	cat $(GEOCODER_FILES) > $(SRC)/usig.GeoCoder-debug.js
 	cat $(INPUTCONTROLLER_FILES) > $(SRC)/usig.InputController-debug.js
-
+	wget -O $(SRC)/normalizadorDirecciones.min.js http://usig.buenosaires.gov.ar/servicios/nd-js/1.0/normalizadorDirecciones.min.js
+	
 clean:
 	rm -f $(SRC)/usig.Inventario-debug.js
 	rm -f $(SRC)/usig.AutoCompleter-debug.js
 	rm -f $(SRC)/usig.GeoCoder-debug.js
 	rm -f $(SRC)/usig.InputController-debug.js
+	rm -f $(SRC)/normalizadorDirecciones.min.js
 
 prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.core.js -o $(REL)/usig.core.min.js
@@ -73,6 +75,8 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.GeoCoder-debug.js -o $(REL)/usig.GeoCoder.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Inventario-debug.js -o $(REL)/usig.Inventario.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleter-debug.js -o $(REL)/usig.AutoCompleter.min.js
+	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleter-debug.js -o $(REL)/usig.AutoCompleterFull.min.js
+	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterFull.min.js
 	rsync -avz --exclude '.svn' $(SRC)/demos/css $(REL)/demos/
 	rsync -avz --exclude '.svn' $(SRC)/css $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/

@@ -688,6 +688,28 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	});
         	this.simulateType('inputText', 'malba');
         	this.wait();        	
+        },
+        
+        "If acceptSN is set it should accept addresses with S/N" : function () {
+        	var test = this;
+        	this.ac.setOptions({
+        		afterSuggest: function() {
+		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+        		},
+        		afterSelection: function(obj) {
+	        		test.resume(function() {
+	        			Y.Assert.isInstanceOf(usig.Direccion, obj);
+	        			Y.Assert.areEqual('DE LOS ITALIANOS AV. S/N', $('#inputText').val());
+	        		});        			
+        		},
+        		inputPause: 200,
+        		minTextLength: 3,
+        		useInventario: false,
+        		acceptSN: true
+        	});
+        	this.simulateType('inputText', 'italianos s/n');
+        	this.wait();        	
         }
         
     });

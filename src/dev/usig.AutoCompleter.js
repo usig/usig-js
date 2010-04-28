@@ -5,7 +5,23 @@ if (typeof (usig) == "undefined")
 /**
  * @class AutoCompleter
  * Esta clase implementa un autocompleter de lugares y direcciones para inputs de texto.<br/>
- * Requiere: jQuery-1.3.2+, usig.core 1.0+
+ * Requiere: jQuery-1.3.2+, usig.core 1.0+, Normalizador de Direcciones 1.0+, usig.Inventario 2.0+, usig.GeoCoder 2.0+
+ * Ejemplo de uso:
+ * <pre><code>
+ * ...
+ * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * // El usig.AutoCompleterFull.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
+ * &lt;script src="http:&#47;&#47;usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * ...
+ * var ac = new usig.AutoCompleter('inputField', {
+ *              afterSelection: function(option) {
+ * 					...
+ *              }
+ *          });
+ * 
+ * </code></pre> 
+ * Demo: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/demos/autoCompleter.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/demo/autoCompleter.html</a><br/>
+ * Documentaci&oacute;n: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/doc/">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/doc/</a>
  * @namespace usig
  * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
@@ -17,11 +33,14 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} afterRetry Callback que es llamada cada vez que se reintenta un pedido al servidor.
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
- * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de sugerencias.
- * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar seleccionado.
+ * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
+ * sugerencias. El objeto que recibe como parametro puede ser una instancia de usig.Calle, usig.Direccion o bien usig.inventario.Objeto
+ * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar 
+ * seleccionado. El objeto que recibe como parametro es una instancia de usig.Punto
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica.
  * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {Boolean} useInventario Usar el inventario para buscar lugares de interes.
+ * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>False</code>. Ej: de los italianos s/n.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
@@ -94,6 +113,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		view.setOptions(options);
 		opts.inventario.setOptions({ debug: opts.debug });
 		opts.geoCoder.setOptions({ debug: opts.debug });
+		opts.normalizadorDirecciones.setOptions({ aceptarCallesSinAlturas: opts.acceptSN });
 	}
 	
 	/**
@@ -299,7 +319,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	if (!opts.normalizadorDirecciones) {
-		opts.normalizadorDirecciones = new usig.NormalizadorDirecciones();
+		opts.normalizadorDirecciones = new usig.NormalizadorDirecciones({ aceptarCallesSinAlturas: opts.acceptSN });
 		cleanList.push(opts.normalizadorDirecciones);
 	}
 	
@@ -329,6 +349,7 @@ usig.AutoCompleter.defaults = {
 	useInventario: true,
 	autoSelect: true,
 	autoHideTimeout: 5000,
+	acceptSN: false,
 	maxRetries: 5,
 	maxOptions: 10,
 	rootUrl: 'http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/',
