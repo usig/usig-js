@@ -77,7 +77,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
     */		
 	this.toString = function() {
 		if (tipo == usig.Direccion.CALLE_ALTURA) {
-			return calle.toString()+' '+altura;
+			return calle.toString()+' '+(altura>0?altura:'S/N');
 		} else {
 			var nombreCruce = calleCruce.toString();
 			var separador = nombreCruce.match(/^(I|Hi|HI).*/)?' e ':' y ';
