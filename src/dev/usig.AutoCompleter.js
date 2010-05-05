@@ -35,6 +35,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
  * sugerencias. El objeto que recibe como parametro puede ser una instancia de usig.Calle, usig.Direccion o bien usig.inventario.Objeto
+ * @cfg {Function} beforeGeoCoding Callback que es llamada antes de realizar la geocodificacion de la direccion o el lugar 
  * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar 
  * seleccionado. El objeto que recibe como parametro es una instancia de usig.Punto
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica.
@@ -58,6 +59,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		numRetries = 0,
 		errorNormalizacion = null,
 		resNormalizacion = [],
+		lugaresEncontrados = [],
 		cleanList = [];
 		
 	field.setAttribute("autocomplete","off");
@@ -118,6 +120,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	
 	/**
 	 * Cambia el skin actual del control
+	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'mapabsas' o 'dark')
 	 */
 	this.changeSkin = function(newSkin) {
 		view.changeSkin(newSkin);
@@ -131,6 +134,15 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		return opts;
 	}
 	
+	/**
+	 * Fuerza la selección de la opcion indicada
+	 * @param {Integer} num Numero de opcion a seleccionar (entre 0 y el numero de opciones visibles)
+	 * @return {Boolean} Devuelve <code>true</code> en caso de exito y <code>false</code> en caso de que no haya opciones disponibles 
+	 */
+	this.selectOption = function(num) {
+		return view.selectOption(num);
+	}
+	
 	function buscarEnInventario(str) {
 		if (opts.useInventario) {
 			// Solo busca en el inventario si hay lugar para mostrar mas opciones
@@ -140,6 +152,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			} 
 			if (limit > 0) {
 				if (opts.debug) usig.debug('inventario.buscar');
+				lugaresEncontrados = [];
 				opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { limit: limit });
 				serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
 				if (typeof(opts.afterServerRequest) == "function") {
@@ -193,6 +206,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	function mostrarLugares(lugares, inputStr) {
 		clearTimeout(serverTimeout);
 		if (lugares instanceof Array && lugares.length > 0) {
+			lugaresEncontrados = lugares;
 			if (opts.debug) usig.debug('view.show');
 			if (errorNormalizacion) 
 				view.update(inputStr);
@@ -251,6 +265,10 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			opts.afterSelection(option);
 		}
 		if (typeof(opts.afterGeoCoding) == "function") {
+			if (typeof(opts.beforeGeoCoding) == "function") {
+				if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
+				opts.beforeGeoCoding();
+			}
 			if (option instanceof usig.Direccion) {
 				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.Direccion');	
 				try {

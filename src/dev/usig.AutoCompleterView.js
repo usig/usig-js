@@ -109,11 +109,12 @@ usig.AutoCompleterView = function(idField, options) {
 	
 	function highlight(n) {
 		if ($div) {
+			highlighted = n;
 			$('ul.options li.highlight').removeClass('highlight');
 			if (typeof(n) == "string") {
-				$('ul.options li:has(a[name="'+n+'"])').addClass('highlight');				
+				$('ul.options li:has(a[name="'+n+'"])', $div).addClass('highlight');				
 			} else {
-				$('ul.options li:has(a)').slice(n, n+1).addClass('highlight');
+				$('ul.options li:has(a)', $div).slice(n, n+1).addClass('highlight');
 			}
 		}
 	}
@@ -189,7 +190,7 @@ usig.AutoCompleterView = function(idField, options) {
      * @param {String} newValue El nuevo valor del input text 
     */	
 	this.update = function(newValue) {
-		if (newValue == '') {
+		if (newValue == '' && $div) {
 			$div.hide();
 		}
 		fieldValue = newValue;
@@ -311,7 +312,26 @@ usig.AutoCompleterView = function(idField, options) {
 	}
 	
 	/**
+	 * Selecciona la opcion indicada
+	 * @param {Integer} num Numero de opcion a seleccionar (entre 0 y el numero de opciones visibles)
+	 * @return {Boolean} Devuelve <code>true</code> en caso de exito y <code>false</code> en caso de que 
+	 * no haya opciones disponibles o el numero de opcion indicada sea invalido
+	 */
+	this.selectOption = function(num) {
+		if (numOptions > num) {
+			if ($div.css('display') != 'block') {
+				$div.show();
+			}
+			highlight(num);
+			selectionHandler(itemsRef[id+highlighted]);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Cambia el skin actual del control
+	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'mapabsas' o 'dark')
 	 */
 	this.changeSkin = function(newSkin) {
 		usig.removeCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');

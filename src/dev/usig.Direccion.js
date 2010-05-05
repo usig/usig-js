@@ -119,6 +119,15 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	this.getSmp = function() {
 		return smp;
 	}
+	
+	/**
+	 * Devuelve un clon de si mismo
+	 * @returns {usig.Direccion} Clon del objeto
+	 */
+	this.clone = function() {
+		var dir = new usig.Direccion(calle, calle2OAltura);
+		return $.extend(true, dir, this);
+	}
 }
 
 usig.Direccion.CALLE_ALTURA 	= 0;

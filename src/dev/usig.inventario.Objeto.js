@@ -15,7 +15,6 @@ if (typeof (usig.inventario) == "undefined")
  * @param {usig.inventario.Clase} clase La clase a la que pertenece el objeto 
 */	
 usig.inventario.Objeto = function(data, clase) {
-	
 	this.id = 0;
 	this.nombre = usig.inventario.Objeto.defaults.texts.noName;
 	this.ubicacion = null;
@@ -68,6 +67,15 @@ usig.inventario.Objeto = function(data, clase) {
 	 */
 	this.toString = function() {
 		return this.nombre;
+	}
+	
+	/**
+	 * Devuelve un clon de si mismo
+	 * @returns {usig.inventario.Objeto} Clon del objeto
+	 */
+	this.clone = function() {
+		var obj = new usig.inventario.Objeto(data, clase);
+		return $.extend(true, obj, this);
 	}
 	
 	this.fill(data);

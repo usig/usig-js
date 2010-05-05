@@ -7,17 +7,18 @@ if (typeof (usig) == "undefined")
  * Esta clase representa un punto como un par de coordenadas (X, Y)<br/>
  * @namespace usig
  * @constructor 
- * @param {Float} x Coordenada X del punto 
- * @param {Float} y Coordenada Y del punto 
+ * @param {Float} coordX Coordenada X del punto 
+ * @param {Float} coordY Coordenada Y del punto 
 */	
-usig.Punto = function(x, y) {
-	
+usig.Punto = function(coordX, coordY) {
+	this.x = coordX;
+	this.y = coordY;
 	/**
 	 * Devuelve la coordenada x del punto
 	 * @returns {Float} La coordenada x del punto
 	 */
 	this.getX = function() {
-		return x;
+		return this.x;
 	}
 	
 	/**
@@ -25,7 +26,7 @@ usig.Punto = function(x, y) {
 	 * @returns {Float} La coordenada y del punto
 	 */
 	this.getY = function() {
-		return y;
+		return this.y;
 	}
 	
 	/**
@@ -33,7 +34,7 @@ usig.Punto = function(x, y) {
 	 * @return {String} Representacion del punto como cadena JSON con la forma '{'x': XXXXX, 'y': YYYYY }'
     */	
 	this.toJson = function() {
-		return '{ "x":'+x+', "y": '+y+' }';
+		return '{ "x":'+this.x+', "y": '+this.y+' }';
 	}
 	
 	/**
@@ -41,7 +42,7 @@ usig.Punto = function(x, y) {
 	 * @return {String} Representacion del punto como cadena con la forma '(x, y)'
     */	
 	this.toString = function() {
-		return '('+x+', '+y+')';
+		return '('+this.x+', '+this.y+')';
 	}
 	
 };
