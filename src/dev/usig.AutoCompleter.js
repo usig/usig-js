@@ -288,6 +288,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	function afterObjGeoCoding(obj) {
+		if (opts.debug) usig.debug('usig.AutoCompleter: afterGeoCoding usig.inventario.Objeto');
 		if (obj.direccionAsociada) {
 			opts.afterGeoCoding(obj.direccionAsociada.getCoordenadas());
 		} else if (obj.ubicacion) {

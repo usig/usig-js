@@ -151,6 +151,9 @@ usig.AutoCompleterView = function(idField, options) {
 				}
 			}
 		}
+		if (openEm) {
+			output = output + '</em>';
+		}
 		return output;
 	}
 	

@@ -53,8 +53,9 @@ usig.Punto = function(coordX, coordY) {
  * @return {usig.Punto} Punto creado
  */
 usig.Punto.fromWkt = function(wkt) {
-	var splited = wkt.split(/POINT\s*\((\d*.\d*)\s(\d*.\d*)\)/);
-	return new usig.Punto(splited[1], splited[2]);
+	wkt = wkt.replace('POINT (', '').replace(')', '');
+	var splited = wkt.split(' ');
+	return new usig.Punto(splited[0], splited[1]);
 };
 
 /**
