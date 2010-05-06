@@ -57,6 +57,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		inputTimerServerSearch = null,
 		serverTimeout = null,
 		numRetries = 0,
+		focused = true,
 		errorNormalizacion = null,
 		resNormalizacion = [],
 		lugaresEncontrados = [],
@@ -172,6 +173,8 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			resNormalizacion = opts.normalizadorDirecciones.normalizar(str);
 			if (opts.debug) usig.debug('view.show');
 			view.show(resNormalizacion);
+			if (!focused)
+				view.hide();
 			if (typeof(opts.afterSuggest) == "function") {
 				if (opts.debug) usig.debug('afterSuggest');
 				opts.afterSuggest();
@@ -211,6 +214,8 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			if (errorNormalizacion) 
 				view.update(inputStr);
 			view.show(lugares, true);			
+			if (!focused)
+				view.hide();
 			if (typeof(opts.afterSuggest) == "function") {
 				if (opts.debug) usig.debug('afterSuggest');
 				opts.afterSuggest();
@@ -265,11 +270,11 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			opts.afterSelection(option);
 		}
 		if (typeof(opts.afterGeoCoding) == "function") {
-			if (typeof(opts.beforeGeoCoding) == "function") {
-				if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
-				opts.beforeGeoCoding();
-			}
 			if (option instanceof usig.Direccion) {
+				if (typeof(opts.beforeGeoCoding) == "function") {
+					if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
+					opts.beforeGeoCoding();
+				}
 				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.Direccion');	
 				try {
 					opts.geoCoder.geoCodificarDireccion(option, opts.afterGeoCoding, (function(error) {
@@ -279,7 +284,11 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 					if (opts.debug) usig.debug(error);
 				}
 			} else if (option instanceof usig.inventario.Objeto) {
-				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.inventario.Objeto');	
+				if (typeof(opts.beforeGeoCoding) == "function") {
+					if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
+					opts.beforeGeoCoding();
+				}
+				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.inventario.Objeto');
 				opts.inventario.getObjeto(option, afterObjGeoCoding.createDelegate(this), (function(error) {
 						if (opts.debug) usig.debug(error);
 					}).createDelegate(this));
@@ -331,6 +340,13 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 					inputTimer = normalizar.defer(opts.inputPause, this, [newValue]);
 					inputTimerServerSearch = buscarEnInventario.defer(opts.inputPauseBeforeServerSearch, this, [newValue]);
 				}
+			},
+			onBlur: function() {
+				focused = false;
+				view.hide();
+			},
+			onFocus: function() {
+				focused = true;
 			}
 		});
 	} catch(error) {

@@ -342,6 +342,15 @@ usig.AutoCompleterView = function(idField, options) {
 		usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
 	}
 	
+	/**
+	 * Oculta el control
+	 */
+	this.hide = function() {
+		killTimeout();
+		if ($div)
+			$div.hide();
+	}
+	
 	// Inicializacion
 	usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
 }

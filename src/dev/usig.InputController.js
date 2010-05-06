@@ -8,6 +8,8 @@ if (typeof (usig) == "undefined")
  * @namespace usig
  * @cfg {Function} onKeyUp Funcion callback que se dispara al presionar cualquier tecla sobre el control. Recibe dos parametros: keyCode y newValue.
  * @cfg {Function} onChange Funcion callback que se dispara cuando el valor de texto del control se modifica. Recibe como parametro el nuevo valor.
+ * @cfg {Function} onBlur Funcion callback que se dispara cuando el control pierde foco.
+ * @cfg {Function} onFocus Funcion callback que se dispara cuando el control gana foco.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -20,12 +22,18 @@ usig.InputController = function(idField, options) {
 	
 	var onEvent = function(ev) {
 		var key = (window.event) ? window.event.keyCode : ev.keyCode;
-		if (typeof(opts.onKeyUp) == "function") {
+		if (ev.type != "blur" && ev.type != "focus" && typeof(opts.onKeyUp) == "function") {
 			opts.onKeyUp(key, field.value);
 		}
-		if (field.value != previousValue && typeof(opts.onChange) == "function") {
+		if (ev.type != "blur" && ev.type != "focus" && field.value != previousValue && typeof(opts.onChange) == "function") {
 			previousValue = field.value;
 			opts.onChange(field.value);			
+		}
+		if (ev.type == "blur" && typeof(opts.onBlur) == "function") {
+			opts.onBlur();
+		}
+		if (ev.type == "focus" && typeof(opts.onFocus) == "function") {
+			opts.onFocus();
 		}
 	}
 	
@@ -72,5 +80,5 @@ usig.InputController = function(idField, options) {
 }
 
 usig.InputController.defaults = {
-	events: 'blur keyup input'
+	events: 'blur keyup input focus'
 }
