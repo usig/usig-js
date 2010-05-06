@@ -10,7 +10,6 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} onChange Funcion callback que se dispara cuando el valor de texto del control se modifica. Recibe como parametro el nuevo valor.
  * @cfg {Function} onBlur Funcion callback que se dispara cuando el control pierde foco.
  * @cfg {Function} onFocus Funcion callback que se dispara cuando el control gana foco.
- * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log. Por defecto: false.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
