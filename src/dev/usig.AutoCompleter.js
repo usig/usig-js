@@ -343,11 +343,12 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			},
 			onBlur: function() {
 				focused = false;
-				view.hide();
+				view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click
 			},
 			onFocus: function() {
 				focused = true;
-			}
+			},
+			debug: opts.debug
 		});
 	} catch(error) {
 		throw(error);

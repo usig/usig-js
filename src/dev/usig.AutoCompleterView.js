@@ -166,6 +166,7 @@ usig.AutoCompleterView = function(idField, options) {
 	}
 	
 	function reset() {
+		if (opts.debug) usig.debug('usig.AutoCompleterView: reset');
 		killTimeout();
 		/*
 		if ($div) {
@@ -253,9 +254,11 @@ usig.AutoCompleterView = function(idField, options) {
 		}
 		$('ul.options li a', $div).mouseover((function(ev, highlight) { highlight(ev.target.name); }).createDelegate(this, [highlight], 1));
 		$('ul.options li a', $div).click((function(ev) { 
+			if (opts.debug) usig.debug('AutoCompleterView: click');
 			var target = ev.target?ev.target:ev.srcElement;
 			var name = $(target).parents('a.acv_op').attr('name');
 			selectionHandler(itemsRef[name]); 
+			ev.preventDefault();
 		}).createDelegate(this));
 		if (opts.autoSelect && numOptions == 1) {
 			highlighted = 0;
@@ -346,6 +349,7 @@ usig.AutoCompleterView = function(idField, options) {
 	 * Oculta el control
 	 */
 	this.hide = function() {
+		if (opts.debug) usig.debug('AutoCompleterView: hide');
 		killTimeout();
 		if ($div)
 			$div.hide();

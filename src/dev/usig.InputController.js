@@ -10,6 +10,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} onChange Funcion callback que se dispara cuando el valor de texto del control se modifica. Recibe como parametro el nuevo valor.
  * @cfg {Function} onBlur Funcion callback que se dispara cuando el control pierde foco.
  * @cfg {Function} onFocus Funcion callback que se dispara cuando el control gana foco.
+ * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log. Por defecto: false.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -30,9 +31,11 @@ usig.InputController = function(idField, options) {
 			opts.onChange(field.value);			
 		}
 		if (ev.type == "blur" && typeof(opts.onBlur) == "function") {
+			if (opts.debug) usig.debug('usig.InputController: blur');
 			opts.onBlur();
 		}
 		if (ev.type == "focus" && typeof(opts.onFocus) == "function") {
+			if (opts.debug) usig.debug('usig.InputController: focus');
 			opts.onFocus();
 		}
 	}
@@ -43,6 +46,7 @@ usig.InputController = function(idField, options) {
 	 * Elimina los manejadores de eventos del control 
     */		
 	this.unbind = function() {
+		if (opts.debug) usig.debug('usig.InputController: unbind');
 		$(field).unbind(opts.events, eventHandler);
 	}
 	
@@ -50,6 +54,7 @@ usig.InputController = function(idField, options) {
 	 * Setea los manejadores de eventos sobre el control 
     */		
 	this.bind = function() {
+		if (opts.debug) usig.debug('usig.InputController: bind');
 		$(field).bind(opts.events, eventHandler);
 		previousValue = $(field).val();		
 	}
