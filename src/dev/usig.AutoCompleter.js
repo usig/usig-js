@@ -41,7 +41,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica.
  * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {Boolean} useInventario Usar el inventario para buscar lugares de interes.
- * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>False</code>. Ej: de los italianos s/n.
+ * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>True</code>. Ej: de los italianos s/n.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -384,7 +384,7 @@ usig.AutoCompleter.defaults = {
 	useInventario: true,
 	autoSelect: true,
 	autoHideTimeout: 5000,
-	acceptSN: false,
+	acceptSN: true,
 	maxRetries: 5,
 	maxOptions: 10,
 	rootUrl: 'http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/',
