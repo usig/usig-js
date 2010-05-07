@@ -77,7 +77,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			clearTimeout(serverTimeout);
 			opts.inventario.abort();
 		}
-		view.remove();
+		view.hide();
 	}
 	
 	/**
