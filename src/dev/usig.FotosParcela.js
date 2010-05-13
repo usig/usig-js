@@ -83,8 +83,9 @@ usig.FotosParcela = function(smp, opts) {
 				var params = new Array();
 				if (typeof(id) == "undefined" && fotosParcela)
 					id = currentFoto;
-				else
+				else if (!fotosParcela || (fotosParcela && !fotosParcela[id]))
 					id = 0;
+					
 				var idFoto = smp+id;
 				params.push('smp='+smp, 'i='+id);
 				if (typeof(opts) != "undefined" && typeof(opts.w) != "undefined" && !isNaN(parseInt(opts.w))) {
@@ -127,7 +128,7 @@ usig.FotosParcela = function(smp, opts) {
 						$container.html('<p>'+usig.FotosParcela.defaults.texts.loadingFoto+'</p>');
 						$(fotos[idFoto]).load((function(foto) {
 							$container.html('');
-							$container.append(foto);					
+							$container.append(foto);			
 						}).createDelegate(this, [fotos[idFoto]]));
 					} else {
 						$container.append(fotos[idFoto]);
@@ -188,7 +189,22 @@ usig.FotosParcela = function(smp, opts) {
 		} else {
 			setTimeout(this.setFechaFoto.createDelegate(this, [$container, id]), 1000);
 		}		
-	}
+	};
+	
+	this.getSMP = function() {
+		return smp;
+	};
+	
+	this.getDatosFoto = function(id) {
+		if (fotosParcela[id]) {
+			return fotosParcela[id];
+		}
+		return null;
+	};
+	
+	this.getCurrentFoto = function() {
+		return currentFoto;
+	};
 	
 	function sumaCircular(valor, valorASumar, maximo) {
 		var val = valor + valorASumar;
