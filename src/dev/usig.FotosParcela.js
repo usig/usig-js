@@ -103,7 +103,7 @@ usig.FotosParcela = function(smp, opts) {
 	
 	/**
 	 * Carga una foto (asicronicamente) en un contenedor jQuery
-     * @param {jQuery Object} $container Contenedor donde se cargará la foto.  
+     * @param {jQueryObject} $container Contenedor donde se cargará la foto.  
      * @param {Integer} id (optional) Id de la foto a cargar. De lo contrario carga la actual
      * que al inicializar el componente es siempre la mas nueva y luego puede cambiarse llamando a los metodos
      * <code>fotoAnterior()</code> y <code>fotoSiguiente()</code>   
@@ -241,7 +241,7 @@ usig.FotosParcela = function(smp, opts) {
 	
 	/**
 	 * Escribe (asincronicamente) la fecha de una foto en un contenedor jQuery
-	 * @param {jQuery Object} $container Contenedor jQuery donde escribir la fecha de la foto
+	 * @param {jQueryObject} $container Contenedor jQuery donde escribir la fecha de la foto
 	 * @param {Integer} id Id de la foto cuya fecha debe setearse
 	 */
 	this.setFechaFoto = function($container, id) {
