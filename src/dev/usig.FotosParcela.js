@@ -25,12 +25,12 @@ if (typeof (usig.debug) == "undefined") {
  * ...
  * </code></pre>
  * @namespace usig
- * @cfg {String} smp Codigo de seccion-manzana-parcela de la parcela cuyas fotos se desean consultar
  * @cfg {Integer} maxWidth (optional) Maximo ancho por defecto de las fotos a obtener (en pixeles).
  * @cfg {Integer} maxHeight (optional) Maximo alto por defecto de las fotos a obtener (en pixeles).
- * @cfg {Function} onLoad (optional) Funcion callback que es llamada una vez que el componente logró 
+ * @cfg {Function} onLoad (optional) Funcion callback que es llamada una vez que el componente logro 
  * inicializarse con los datos de las fotos correspondientes a la parcela.
  * @constructor 
+ * @param {String} smp Codigo de seccion-manzana-parcela de la parcela cuyas fotos se desean consultar
  * @param {Object} opts (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
 usig.FotosParcela = function(smp, opts) {
@@ -103,11 +103,11 @@ usig.FotosParcela = function(smp, opts) {
 	
 	/**
 	 * Carga una foto (asicronicamente) en un contenedor jQuery
-     * @param {jQueryObject} $container Contenedor donde se cargará la foto.  
+     * @param {jQueryObject} $container Contenedor donde se cargara la foto.  
      * @param {Integer} id (optional) Id de la foto a cargar. De lo contrario carga la actual
      * que al inicializar el componente es siempre la mas nueva y luego puede cambiarse llamando a los metodos
      * <code>fotoAnterior()</code> y <code>fotoSiguiente()</code>   
-     * @param {Object} opts Objeto conteniendo overrides para las opciones disponibles (maxWidth y maxHeight).
+     * @param {Object} opts (optional) Objeto conteniendo overrides para las opciones disponibles (maxWidth y maxHeight).
     */		
 	this.cargarFoto = function ($container, id, opts) {
 		if (fotosParcela || typeof(id) == "undefined") {
