@@ -9,6 +9,23 @@ if (typeof (usig.debug) == "undefined") {
 	};	
 }
 
+/**
+ * @class FotosParcela
+ * Este clase implementa una interfaz Javascript con sistema de administracion de fotos de fachada.<br/>
+ * Ejemplo de uso:
+ * <pre><code>
+ * var img = usig.MapaEstatico({ x: 106983.5920869, y: 103687.499668, marcarPunto: true, width: 600 });
+ * $('#div').append(img);
+ * </code></pre>
+ * @namespace usig
+ * @cfg {String} smp Codigo de seccion-manzana-parcela de la parcela cuyas fotos se desean consultar
+ * @cfg {Integer} width (optional) Ancho por defecto de las fotos a obtener (en pixeles).
+ * @cfg {Integer} height (optional) Alto por defecto de las fotos a obtener (en pixeles).
+ * @cfg {Function} onLoad (optional) Funcion callback que es llamada una vez que el componente logró 
+ * inicializarse con los datos de las fotos correspondientes a la parcela.
+ * @constructor 
+ * @param {Object} opts (optional) Un objeto conteniendo overrides para las opciones disponibles 
+*/	
 usig.FotosParcela = function(smp, opts) {
 	var regExpSMP = /[0-9][0-9]-[0-9]{3,3}[A-Z]?-[A-Z0-9]{3,4}/;
 	if (typeof(smp) == "undefined" || !regExpSMP.test(smp)) {
