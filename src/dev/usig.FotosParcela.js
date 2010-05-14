@@ -12,15 +12,22 @@ if (typeof (usig.debug) == "undefined") {
 /**
  * @class FotosParcela
  * Este clase implementa una interfaz Javascript con sistema de administracion de fotos de fachada.<br/>
+ * Requiere: jQuery-1.3.2+, usig.core y opcionalmente usig.DataManager.js (para el cache)
  * Ejemplo de uso:
  * <pre><code>
- * var img = usig.MapaEstatico({ x: 106983.5920869, y: 103687.499668, marcarPunto: true, width: 600 });
- * $('#div').append(img);
+ * ...
+ * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/usig.core.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/usig.FotosParcela.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * ...
+ * var fotosParcela = new usig.FotosParcela(parcela.smp, {maxHeight : 195, maxWidth : 243, onLoad: function() { ... } });
+ * fotosParcela.cargarFoto($('div.foto'));
+ * ...
  * </code></pre>
  * @namespace usig
  * @cfg {String} smp Codigo de seccion-manzana-parcela de la parcela cuyas fotos se desean consultar
- * @cfg {Integer} width (optional) Ancho por defecto de las fotos a obtener (en pixeles).
- * @cfg {Integer} height (optional) Alto por defecto de las fotos a obtener (en pixeles).
+ * @cfg {Integer} maxWidth (optional) Maximo ancho por defecto de las fotos a obtener (en pixeles).
+ * @cfg {Integer} maxHeight (optional) Maximo alto por defecto de las fotos a obtener (en pixeles).
  * @cfg {Function} onLoad (optional) Funcion callback que es llamada una vez que el componente logró 
  * inicializarse con los datos de las fotos correspondientes a la parcela.
  * @constructor 
@@ -94,6 +101,14 @@ usig.FotosParcela = function(smp, opts) {
 		}
 	};
 	
+	/**
+	 * Carga una foto (asicronicamente) en un contenedor jQuery
+     * @param {jQuery Object} $container Contenedor donde se cargará la foto.  
+     * @param {Integer} id (optional) Id de la foto a cargar. De lo contrario carga la actual
+     * que al inicializar el componente es siempre la mas nueva y luego puede cambiarse llamando a los metodos
+     * <code>fotoAnterior()</code> y <code>fotoSiguiente()</code>   
+     * @param {Object} opts Objeto conteniendo overrides para las opciones disponibles (maxWidth y maxHeight).
+    */		
 	this.cargarFoto = function ($container, id, opts) {
 		if (fotosParcela || typeof(id) == "undefined") {
 			if (currentFoto >= 0 || typeof(id) == "undefined") {
@@ -105,19 +120,19 @@ usig.FotosParcela = function(smp, opts) {
 					
 				var idFoto = smp+id;
 				params.push('smp='+smp, 'i='+id);
-				if (typeof(opts) != "undefined" && typeof(opts.w) != "undefined" && !isNaN(parseInt(opts.w))) {
-					params.push('w='+parseInt(opts.w));
-					idFoto+=opts.w;
+				if (typeof(opts) != "undefined" && typeof(opts.maxWidth) != "undefined" && !isNaN(parseInt(opts.maxWidth))) {
+					params.push('w='+parseInt(opts.maxWidth));
+					idFoto+=opts.maxWidth;
 				} else {
-					params.push('w='+parseInt(options.fotoSize.w));
-					idFoto+=options.fotoSize.w;				
+					params.push('w='+parseInt(options.maxWidth));
+					idFoto+=options.maxWidth;				
 				}
-				if (typeof(opts) != "undefined" && typeof(opts.h) != "undefined" && !isNaN(parseInt(opts.h))) {
-					params.push('h='+parseInt(opts.h));
-					idFoto+=opts.h;
+				if (typeof(opts) != "undefined" && typeof(opts.maxHeight) != "undefined" && !isNaN(parseInt(opts.maxHeight))) {
+					params.push('h='+parseInt(opts.maxHeight));
+					idFoto+=opts.maxHeight;
 				} else {
-					params.push('h='+parseInt(options.fotoSize.h));
-					idFoto+=options.fotoSize.h;								
+					params.push('h='+parseInt(options.maxHeight));
+					idFoto+=options.maxHeight;								
 				}
 				if (pendings.indexOf($container) >= 0) {
 					pendings.removeObject($container);
@@ -152,17 +167,22 @@ usig.FotosParcela = function(smp, opts) {
 					}
 				}
 			} else {
-				$container.html('<p>'+usig.FotosParcela.defaults.texts.noFotos+'</p>');
+				$container.html('<p>'+options.texts.noFotos+'</p>');
 			}
 		} else {
 			if (pendings.indexOf($container) < 0) {
 				pendings.push($container);
-				$container.html('<p>'+usig.FotosParcela.defaults.texts.loading+'</p>');
+				$container.html('<p>'+options.texts.loading+'</p>');
 			}
 			setTimeout(this.cargarFoto.createDelegate(this, [$container, id, opts]), 500);
 		}
 	};
 	
+	/**
+	 * Setea una funcion callback que es llamada una vez que el componente obtuvo los 
+	 * datos correspondientes a las fotos de la parcela elegida
+	 * @param {Function} listener Funcion callback a ser llamada
+	 */
 	this.onLoad = function(listener) {
 		if (typeof(listener) == "function") {
 			loadListeners.push(listener);
@@ -171,6 +191,11 @@ usig.FotosParcela = function(smp, opts) {
 		}
 	};
 	
+	/**
+	 * Devuelve el numero de fotos disponibles para la parcela
+	 * @return {Integer} Numero de fotos disponibles para la parcela o -1 si no aun no 
+	 * esta inicializado
+	 */
 	this.numFotos = function() {
 		if (fotosParcela) 
 			return fotosParcela.length;
@@ -178,16 +203,30 @@ usig.FotosParcela = function(smp, opts) {
 			return -1;
 	};
 	
+	/**
+	 * Avanza el puntero interno a la foto siguiente en la lista (en forma circular)
+	 * @return {Integer} El Id de la foto apuntada
+	 */
 	this.fotoSiguiente = function() {
 		currentFoto = sumaCircular(currentFoto, -1, fotosParcela.length-1);
 		return currentFoto;
 	};
 	
+	/**
+	 * Retrocede el puntero interno a la foto anterior en la lista (en forma circular)
+	 * @return {Integer} El Id de la foto apuntada
+	 */
 	this.fotoAnterior = function() {
 		currentFoto = sumaCircular(currentFoto, 1, fotosParcela.length-1);
 		return currentFoto;		
 	};
 	
+	/**
+	 * Devuelve la fecha de una foto 
+	 * @param {Integer} id El Id de la foto cuya fecha desea conocerse
+	 * @return {String} Cadena representando la fecha de la foto o cadena vacia si el id es invalido
+	 * o el componente no se encuentra inicializado
+	 */
 	this.fechaFoto = function(id) {
 		if (fotosParcela) {
 			if (currentFoto >= 0) {
@@ -200,6 +239,11 @@ usig.FotosParcela = function(smp, opts) {
 		}
 	};
 	
+	/**
+	 * Escribe (asincronicamente) la fecha de una foto en un contenedor jQuery
+	 * @param {jQuery Object} $container Contenedor jQuery donde escribir la fecha de la foto
+	 * @param {Integer} id Id de la foto cuya fecha debe setearse
+	 */
 	this.setFechaFoto = function($container, id) {
 		if (fotosParcela) {
 			$container.html(this.fechaFoto(id));
@@ -208,10 +252,19 @@ usig.FotosParcela = function(smp, opts) {
 		}		
 	};
 	
+	/**
+	 * Obtiene el codigo de seccion-manzana-parcela con que fue inicializado el componente
+	 * @return {String} Codigo de seccion-manzana-parcela
+	 */
 	this.getSMP = function() {
 		return smp;
 	};
 	
+	/**
+	 * Devuelve los datos disponibles de una foto
+	 * @param {Integer} id Identificador de la foto cuyos datos se desean obtener
+	 * @return {Object} Datos de la foto o null en caso de Id incorrecto
+	 */
 	this.getDatosFoto = function(id) {
 		if (fotosParcela[id]) {
 			return fotosParcela[id];
@@ -219,6 +272,10 @@ usig.FotosParcela = function(smp, opts) {
 		return null;
 	};
 	
+	/**
+	 * Devuelve la foto apuntada por el puntero interno del componente
+	 * @return {Integer} Identificador de la foto apuntada internamente por el componente
+	 */
 	this.getCurrentFoto = function() {
 		return currentFoto;
 	};
@@ -235,10 +292,8 @@ usig.FotosParcela = function(smp, opts) {
 
 usig.FotosParcela.defaults = {
 	server: 'http://fotos.usig.buenosaires.gob.ar/',
-	fotoSize: {
-		w: 200,
-		h: 200
-	},
+	maxWidth: 200,
+	maxHeight: 200,
 	texts: {
 		loading: 'Cargando...',
 		loadingFoto: 'Cargando foto...',
