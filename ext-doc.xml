@@ -60,11 +60,12 @@
 	<source src="src/dev/usig.inventario.Objeto.js"/>
 	<source src="src/dev/usig.inventario.Clase.js"/>
 	<source src="src/dev/usig.inventario.Ubicacion.js"/>
-	<source src="src/dev/usig.Punto.js"/>
 	<source src="src/dev/usig.Calle.js"/>
 	<source src="src/dev/usig.Direccion.js"/>
 	<source src="src/dev/usig.GeoCoder.js"/>
 	<source src="src/dev/usig.MapaEstatico.js"/>
+	<source src="src/dev/usig.FotosParcela.js"/>
+	<source src="src/dev/usig.Punto.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>
