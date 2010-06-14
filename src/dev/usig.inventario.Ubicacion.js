@@ -17,7 +17,9 @@ usig.inventario.Ubicacion = function(data) {
 
 	var centroide = null; 
 	
-	if (data.centroide != undefined) {
+	if (data instanceof usig.Punto) {
+		centroide = data;
+	} else if (data.centroide != undefined) {
 		centroide = usig.Punto.fromWkt(data.centroide);
 	}
 	
