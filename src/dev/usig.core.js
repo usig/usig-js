@@ -21,6 +21,8 @@ $.extendIf = function(o, c){
     }
     return o;
 };
+
+if (typeof(Ext) == "undefined") {
 /**
  * @class Function 
 */
@@ -275,6 +277,7 @@ var s = String.format('&lt;div class="{0}">{1}&lt;/div>', cls, text);
         });
     }
 });
+}
 
 /**
  * Checks whether or not the current string can be converted to an Integer.
