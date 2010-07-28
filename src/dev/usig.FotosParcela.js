@@ -107,33 +107,13 @@ usig.FotosParcela = function(smp, opts) {
      * @param {Integer} id (optional) Id de la foto a cargar. De lo contrario carga la actual
      * que al inicializar el componente es siempre la mas nueva y luego puede cambiarse llamando a los metodos
      * <code>fotoAnterior()</code> y <code>fotoSiguiente()</code>   
-     * @param {Object} opts (optional) Objeto conteniendo overrides para las opciones disponibles (maxWidth y maxHeight).
+     * @param {Object} opts (optional) Objeto conteniendo overrides para las opciones disponibles (maxWidth, maxHeight, onLoad).
     */		
 	this.cargarFoto = function ($container, id, opts) {
 		if (fotosParcela || typeof(id) == "undefined") {
 			if (currentFoto >= 0 || typeof(id) == "undefined") {
-				var params = new Array();
-				if (typeof(id) == "undefined" && fotosParcela)
-					id = currentFoto;
-				else if (!fotosParcela || (fotosParcela && !fotosParcela[id]))
-					id = 0;
-					
-				var idFoto = smp+id;
-				params.push('smp='+smp, 'i='+id);
-				if (typeof(opts) != "undefined" && typeof(opts.maxWidth) != "undefined" && !isNaN(parseInt(opts.maxWidth))) {
-					params.push('w='+parseInt(opts.maxWidth));
-					idFoto+=opts.maxWidth;
-				} else {
-					params.push('w='+parseInt(options.maxWidth));
-					idFoto+=options.maxWidth;				
-				}
-				if (typeof(opts) != "undefined" && typeof(opts.maxHeight) != "undefined" && !isNaN(parseInt(opts.maxHeight))) {
-					params.push('h='+parseInt(opts.maxHeight));
-					idFoto+=opts.maxHeight;
-				} else {
-					params.push('h='+parseInt(options.maxHeight));
-					idFoto+=options.maxHeight;								
-				}
+				var params = new Array();				
+				var idFoto = optionsToParams(params, id, opts);
 				if (pendings.indexOf($container) >= 0) {
 					pendings.removeObject($container);
 					$container.html('');
@@ -143,12 +123,16 @@ usig.FotosParcela = function(smp, opts) {
 					if (usig.DataManager.isCached('FotoParcela', idFoto)) {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
 						$container.append(img);
+						if (opts.onLoad && typeof(opts.onLoad) == "function")
+							opts.onLoad(img);
 					} else {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
 						$container.html('<p>'+usig.FotosParcela.defaults.texts.loadingFoto+'</p>');
 						$(img).load((function() {
 							$container.html('');
 							$container.append(usig.DataManager.getData('FotoParcela', idFoto, params));					
+							if (opts.onLoad && typeof(opts.onLoad) == "function")
+								opts.onLoad(img);
 						}).createDelegate(this));
 					}
 				} else {
@@ -161,6 +145,8 @@ usig.FotosParcela = function(smp, opts) {
 						$(fotos[idFoto]).load((function(foto) {
 							$container.html('');
 							$container.append(foto);			
+							if (opts.onLoad && typeof(opts.onLoad) == "function")
+								opts.onLoad(foto);
 						}).createDelegate(this, [fotos[idFoto]]));
 					} else {
 						$container.append(fotos[idFoto]);
@@ -177,6 +163,18 @@ usig.FotosParcela = function(smp, opts) {
 			setTimeout(this.cargarFoto.createDelegate(this, [$container, id, opts]), 500);
 		}
 	};
+	
+	/**
+	 * Devuelve un link a una foto particular
+	 * @param {Integer} id Id de la foto a obtener
+	 * @param {Object} opts Opciones maxWidth y maxHeight
+	 * @return {String} Link a una foto
+	 */
+	this.getLinkToFoto = function(id, opts) {
+		var params = new Array();
+		optionsToParams(params, id, opts);
+		return usig.FotosParcela.defaults.server+'/getFoto?'+params.join('&');
+	}
 	
 	/**
 	 * Setea una funcion callback que es llamada una vez que el componente obtuvo los 
@@ -273,12 +271,31 @@ usig.FotosParcela = function(smp, opts) {
 	};
 	
 	/**
+	 * Devuelve la url del servidor de fotos
+	 * @return {String} Url del servidor de fotos
+	 */
+	this.getServerUrl = function() {
+		return options.server;
+	};
+	
+	/**
 	 * Devuelve la foto apuntada por el puntero interno del componente
 	 * @return {Integer} Identificador de la foto apuntada internamente por el componente
 	 */
 	this.getCurrentFoto = function() {
 		return currentFoto;
 	};
+	
+	/**
+	 * Devuelve los datos obtenidos del servidor para todas las fotos de la parcela
+	 * @return {Object} Datos de las fotos
+	 */
+	this.getDatosFotos = function() {
+		if (fotosParcela) 
+			return fotosParcela;
+		else
+			return {};
+	}
 	
 	function sumaCircular(valor, valorASumar, maximo) {
 		var val = valor + valorASumar;
@@ -287,6 +304,31 @@ usig.FotosParcela = function(smp, opts) {
 		if (val < 0)
 			val = maximo;
 		return val;
+	}
+	
+	function optionsToParams(params, id, opts) {
+		if (typeof(id) == "undefined" && fotosParcela)
+			id = currentFoto;
+		else if (!fotosParcela || (fotosParcela && !fotosParcela[id]))
+			id = 0;
+			
+		var idFoto = smp+id;
+		params.push('smp='+smp, 'i='+id);
+		if (typeof(opts) != "undefined" && typeof(opts.maxWidth) != "undefined" && !isNaN(parseInt(opts.maxWidth))) {
+			params.push('w='+parseInt(opts.maxWidth));
+			idFoto+=opts.maxWidth;
+		} else {
+			params.push('w='+parseInt(options.maxWidth));
+			idFoto+=options.maxWidth;				
+		}
+		if (typeof(opts) != "undefined" && typeof(opts.maxHeight) != "undefined" && !isNaN(parseInt(opts.maxHeight))) {
+			params.push('h='+parseInt(opts.maxHeight));
+			idFoto+=opts.maxHeight;
+		} else {
+			params.push('h='+parseInt(options.maxHeight));
+			idFoto+=options.maxHeight;								
+		}
+		return idFoto;
 	}
 }
 

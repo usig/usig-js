@@ -89,4 +89,4 @@ usig.MapaEstatico = function(opts) {
 			usig.debug('Loading: '+img.src);
 		return img;
 	}
-}
+};
