@@ -21,7 +21,8 @@ if (typeof (usig) == "undefined")
  * 
  * </code></pre> 
  * Demo: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/demos/autoCompleter.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/demo/autoCompleter.html</a><br/>
- * Documentaci&oacute;n: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/doc/">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/doc/</a>
+ * Documentaci&oacute;n: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/doc/">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/doc/</a><br/>
+ * Tests de Unidad: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/autoCompleter.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/autoCompleter.html</a>
  * @namespace usig
  * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
@@ -92,6 +93,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	 */
 	this.destroy = function() {
 		this.unbind();
+		view.remove();
 		delete ic;
 		for (var i=0; i<cleanList.length; i++)
 			delete cleanList[i];		

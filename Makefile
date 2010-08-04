@@ -71,6 +71,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.InputController.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Mock.js -o $(REL)/usig.Mock.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Calle.js -o $(REL)/usig.Calle.min.js
+	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Punto.js -o $(REL)/usig.Punto.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Direccion.js -o $(REL)/usig.Direccion.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.AutoCompleterView.js -o $(REL)/usig.AutoCompleterView.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.InputController-debug.js -o $(REL)/usig.InputController.min.js

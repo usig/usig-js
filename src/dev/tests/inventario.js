@@ -33,7 +33,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.inv.buscar('asdfp', function(result) {
         		test.resume(function() {
-        			Y.Assert.areEqual(0, result.total);
+        			Y.Assert.areEqual(0, result.length);
         		});        		
         	}, function() {
         		test.resume(function(msg) {

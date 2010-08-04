@@ -54,6 +54,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'show' });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	var mockInv = usig.Mock(Y);
@@ -64,7 +65,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		normalizadorDirecciones: {
         			normalizar: function(str) {
         				return [];
-        			}
+        			},
+        			setOptions: function(opts) {}
         		},
         		inventario: mockInv,
         		afterSuggest: function() {
@@ -86,10 +88,12 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'show', callCount: 0 });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', callCount: 0});
+        	mockND.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
         		normalizadorDirecciones: mockND,
@@ -109,11 +113,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show', callCount: 1 });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	var mockInv = usig.Mock(Y);
@@ -139,11 +145,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show' });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	var mockInv = usig.Mock(Y);
@@ -171,10 +179,12 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show' });
         	mockView.expect({ method: 'onSelection' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'keyUp' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
@@ -204,11 +214,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show' });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	var mockInv = usig.Mock(Y);
@@ -237,6 +249,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar'});
+        	mockND.expect({ method: 'setOptions'});
         	var mockInv = usig.Mock(Y);
         	mockInv.expect({ method: 'buscar', callCount: 1 });
         	mockInv.expect({ method: 'abort', callCount: 1 });
@@ -244,6 +257,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.ac.setViewControl({
         		update: function() {},
         		show: function() {},
+        		hide: function() {},
         		keyUp: function() {},
         		onSelection: function(callback) {
         			callback.defer(400, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
@@ -272,11 +286,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions'});
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show', callCount: 2 });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
@@ -309,11 +325,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', args: [['ciudad']]});
+        	mockND.expect({ method: 'setOptions'});
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show', callCount: 1 });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
@@ -348,11 +366,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'update', callCount: 6 });
         	mockView.expect({ method: 'show' });
         	mockView.expect({ method: 'keyUp', callCount: 8 });
+        	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar'});
+        	mockND.expect({ method: 'setOptions'});
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
         		normalizadorDirecciones: mockND
@@ -368,6 +388,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	var mockND = usig.Mock(Y);
         	mockND.expect({ method: 'normalizar', callCount: 1 });
+        	mockND.expect({ method: 'setOptions'});
         	var mockInv = usig.Mock(Y);
         	mockInv.expect({ method: 'buscar', callCount: 1 });
         	mockInv.expect({ method: 'abort'});
@@ -375,6 +396,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.ac.setViewControl({
         		update: function() {},
         		show: function() {},
+        		hide: function() {},
         		keyUp: function() {},
         		onSelection: function(callback) {
         			callback.defer(600, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
@@ -396,7 +418,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	});
         	this.simulateType('inputText', 'ciudad');
         	this.wait();        	
-        },        
+        }/*,        
             
         "User selection should trigger callback with the real NormalizadorDirecciones" : function () {
         	var test = this;
@@ -408,6 +430,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		update: function() {},
         		show: function() {},
         		keyUp: function() {},
+        		hide: function() {},
         		onSelection: function(callback) {
         			callback.defer(600, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
         		},
@@ -464,7 +487,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	});
         	this.simulateType('inputText', 'ciudad 2849');
         	this.wait();        	
-        }        
+        }*/        
 		
     });
     
@@ -715,8 +738,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
     });
     
     Y.AutoCompleter.test.AutoCompleterSuite = new Y.Test.Suite("AutoCompleter");
-    // Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.EventsTestCase);
     Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCase);
+    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.EventsTestCase);
     
     //create the console
     var r = new Y.Console({
