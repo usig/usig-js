@@ -123,15 +123,15 @@ usig.FotosParcela = function(smp, opts) {
 					if (usig.DataManager.isCached('FotoParcela', idFoto)) {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
 						$container.append(img);
-						if (opts.onLoad && typeof(opts.onLoad) == "function")
+						if (opts && opts.onLoad && typeof(opts.onLoad) == "function")
 							opts.onLoad(img);
 					} else {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
 						$container.html('<p>'+usig.FotosParcela.defaults.texts.loadingFoto+'</p>');
-						$(img).load((function() {
+						$(img).load((function(opts) {
 							$container.html('');
 							$container.append(usig.DataManager.getData('FotoParcela', idFoto, params));					
-							if (opts.onLoad && typeof(opts.onLoad) == "function")
+							if (opts && opts.onLoad && typeof(opts.onLoad) == "function")
 								opts.onLoad(img);
 						}).createDelegate(this));
 					}
