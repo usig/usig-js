@@ -7,7 +7,7 @@ if (typeof (usig) == "undefined")
  * Esta clase implementa un cuadro de dialogo flotante que permite seleccionar las opciones
  * provistas por el autocompleter de lugares y direcciones para inputs de texto.<br/>
  * Requiere: jQuery-1.3.2+, usig.core 1.0+<br/>
- * Tests de Unidad: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/autoCompleterView.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/autoCompleterView.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleterView.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleterView.html</a>
  * @namespace usig
  * @cfg {Integer} maxOptions Maximo numero de sugerencias a mostrar por vez. Por defecto: 10.
  * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
@@ -366,6 +366,6 @@ usig.AutoCompleterView.defaults = {
 	zIndex: 10000,
 	autoHideTimeout: 5000,
 	autoSelect: true,
-	rootUrl: 'http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/',
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/',
 	skin: 'usig'
 }

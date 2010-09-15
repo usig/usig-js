@@ -1,6 +1,10 @@
 # Automatizacion de actualizacion de USIG-JS
 HOST=10.20.1.164
 HOST_DIR=/d/usig/www/servicios/Usig-JS
+
+HOSTS=10.20.1.43 10.20.1.46 10.20.1.91 10.20.1.96
+APPDIR=/usr/local/usig/servicios/Usig-JS
+
 VERSION=2.0
 USER=usig
 SRC=src/dev
@@ -50,7 +54,7 @@ debug:$(FILES)
 	sed -e '/usig\.debug(/ d' < $(SRC)/usig.AutoCompleter-debug.js > $(SRC)/usig.AutoCompleter-nodebug.js
 	cat $(GEOCODER_FILES) > $(SRC)/usig.GeoCoder-debug.js
 	cat $(INPUTCONTROLLER_FILES) > $(SRC)/usig.InputController-debug.js
-	wget -O $(SRC)/normalizadorDirecciones.min.js http://usig.buenosaires.gov.ar/servicios/nd-js/1.0/normalizadorDirecciones.min.js
+	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gov.ar/nd-js/1.0/normalizadorDirecciones.min.js
 	
 clean:
 	rm -f $(SRC)/usig.Inventario-debug.js
@@ -92,3 +96,8 @@ docs:
 install:
 	rsync -e ssh -avzc --delete src/release/* $(USER)@$(HOST):$(HOST_DIR)/$(VERSION)
 	rsync -e ssh -avzc --delete doc/www/* $(USER)@$(HOST):$(HOST_DIR)/$(VERSION)/doc
+	for host in $(HOSTS); do \
+		rsync -e ssh -avzc --delete src/release/* $(USER)@$$host:$(APPDIR)/$(VERSION); \
+		rsync -e ssh -avzc --delete doc/www/* $(USER)@$$host:$(APPDIR)/$(VERSION)/doc; \
+	done
+

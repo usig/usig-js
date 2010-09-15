@@ -6,7 +6,7 @@ if (typeof (usig) == "undefined")
  * @class Inventario
  * Esta clase implementa una interfaz Javascript con los servicios del Inventario de Informacion Geografica de la USIG<br/>
  * Requiere: jQuery-1.3.2+, jQuery-jsonp-1.1.0.1+, usig.core, usig.inventario.Objeto, usig.inventario.Ubicacion, usig.inventario.Clase<br/>
- * Tests de Unidad: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/inventario.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/inventario.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/inventario.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/inventario.html</a>
  * @namespace usig
  * @cfg {String} server Url del servidor de informacion publica del Inventario de Informacion Geografica de USIG. Por defecto: 'http://inventario.usig.buenosaires.gob.ar/mapabsas/'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.

@@ -17,8 +17,8 @@ if (typeof (usig.debug) == "undefined") {
  * <pre><code>
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
- * &lt;script src="http:&#47;&#47;usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/usig.core.min.js" type="text/javascript"&gt;&lt;/script&gt;
- * &lt;script src="http:&#47;&#47;usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/usig.FotosParcela.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.0/usig.core.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.0/usig.FotosParcela.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var fotosParcela = new usig.FotosParcela(parcela.smp, {maxHeight : 195, maxWidth : 243, onLoad: function() { ... } });
  * fotosParcela.cargarFoto($('div.foto'));
