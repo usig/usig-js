@@ -110,6 +110,7 @@ usig.FotosParcela = function(smp, opts) {
      * @param {Object} opts (optional) Objeto conteniendo overrides para las opciones disponibles (maxWidth, maxHeight, onLoad).
     */		
 	this.cargarFoto = function ($container, id, opts) {
+		
 		if (fotosParcela || typeof(id) == "undefined") {
 			if (currentFoto >= 0 || typeof(id) == "undefined") {
 				var params = new Array();				
@@ -122,9 +123,10 @@ usig.FotosParcela = function(smp, opts) {
 					var img = null;
 					if (usig.DataManager.isCached('FotoParcela', idFoto)) {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
-						$container.append(img);
+						var imgClone = $(img).clone();
+						$(imgClone).appendTo($container);
 						if (opts && opts.onLoad && typeof(opts.onLoad) == "function")
-							opts.onLoad(img);
+							opts.onLoad(imgClone);							
 					} else {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
 						$container.html('<p>'+usig.FotosParcela.defaults.texts.loadingFoto+'</p>');
