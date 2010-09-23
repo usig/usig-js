@@ -23,6 +23,7 @@ usig.inventario.Objeto = function(data, clase) {
 	this.fechaAlta = null;
 	this.fechaUltimaModificacion = null;	
 	this.datos = {};
+	this.rawData = {};
 	
 	this.fill = function(data) {
 		if (data.id) {
@@ -70,6 +71,14 @@ usig.inventario.Objeto = function(data, clase) {
 	}
 	
 	/**
+	 * Devuelve los datos crudos tal como vienen del Inventario
+	 * @returns {Object} Datos del inventario
+	 */
+	this.getRawData = function() {
+		return this.rawData;
+	}
+	
+	/**
 	 * Devuelve un clon de si mismo
 	 * @returns {usig.inventario.Objeto} Clon del objeto
 	 */
@@ -79,6 +88,7 @@ usig.inventario.Objeto = function(data, clase) {
 	}
 	
 	this.fill(data);
+	this.rawData = $.extend(this.rawData, data);
 }
 
 usig.inventario.Objeto.defaults = {
