@@ -130,7 +130,7 @@ usig.FotosParcela = function(smp, opts) {
 					} else {
 						img = usig.DataManager.getData('FotoParcela', idFoto, params);
 						$container.html('<p>'+usig.FotosParcela.defaults.texts.loadingFoto+'</p>');
-						$(img).load((function(opts) {
+						$(img).load((function() {
 							$container.html('');
 							$container.append(usig.DataManager.getData('FotoParcela', idFoto, params));					
 							if (opts && opts.onLoad && typeof(opts.onLoad) == "function")
