@@ -152,6 +152,8 @@ usig.FotosParcela = function(smp, opts) {
 						}).createDelegate(this, [fotos[idFoto]]));
 					} else {
 						$container.append(fotos[idFoto]);
+						if (opts.onLoad && typeof(opts.onLoad) == "function")
+							opts.onLoad(fotos[idFoto]);
 					}
 				}
 			} else {
