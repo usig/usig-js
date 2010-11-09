@@ -465,7 +465,16 @@ $.extendIf(Array.prototype, {
             for (var i=0; i< this.length; i++)
                 acc = it(acc, this[i], i);
             return acc;
-        }    
+        },
+        
+    map: function(mapper, that /*opt*/) {
+        var other= new Array(this.length);
+        for (var i= 0, n= this.length; i<n; i++)
+            if (i in this)
+                other[i]= mapper.call(that, this[i], i, this);
+        return other;
+    }
+
 });
 /**
  * @class Date
