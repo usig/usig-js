@@ -139,7 +139,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	/**
-	 * Fuerza la selecci�n de la opcion indicada
+	 * Fuerza la seleccion de la opcion indicada
 	 * @param {Integer} num Numero de opcion a seleccionar (entre 0 y el numero de opciones visibles)
 	 * @return {Boolean} Devuelve <code>true</code> en caso de exito y <code>false</code> en caso de que no haya opciones disponibles 
 	 */
