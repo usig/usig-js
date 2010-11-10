@@ -20,12 +20,15 @@
 			$('#mapa').html('Cargando mapa centrado en '+pt+'...');		
 		}
 		
-		$('#b').val('').focus();
+		$('#b').val('Cargando...').attr('disabled', 'disabled');
 		
 		var ac = new usig.AutoCompleter('b', {
 	        		debug: true,
 	        		skin: 'usig',
 	        		useInventario: true,
+	        		onReady: function() {
+	        			$('#b').val('').removeAttr('disabled').focus();	        			
+	        		},
 	        		afterSelection: function(option) {
 	        			$('#mapa').html('Se seleccionó la opción: '+option);
 	        			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {

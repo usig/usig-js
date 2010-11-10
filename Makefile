@@ -94,8 +94,8 @@ docs:
 	cp doc/index.html doc/www/
 	
 install:
-	rsync -e ssh -avzc --delete src/release/* $(USER)@$(HOST):$(HOST_DIR)/$(VERSION)
-	rsync -e ssh -avzc --delete doc/www/* $(USER)@$(HOST):$(HOST_DIR)/$(VERSION)/doc
+	# rsync -e ssh -avzc --delete src/release/* $(USER)@$(HOST):$(HOST_DIR)/$(VERSION)
+	# rsync -e ssh -avzc --delete doc/www/* $(USER)@$(HOST):$(HOST_DIR)/$(VERSION)/doc
 	for host in $(HOSTS); do \
 		rsync -e ssh -avzc --delete src/release/* $(USER)@$$host:$(APPDIR)/$(VERSION); \
 		rsync -e ssh -avzc --delete doc/www/* $(USER)@$$host:$(APPDIR)/$(VERSION)/doc; \

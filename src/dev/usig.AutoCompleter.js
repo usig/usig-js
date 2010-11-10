@@ -43,6 +43,8 @@ if (typeof (usig) == "undefined")
  * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {Boolean} useInventario Usar el inventario para buscar lugares de interes.
  * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>True</code>. Ej: de los italianos s/n.
+ * @cfg {Function} onReady Callback que es llamada cuando ya se cargaron los datos del callejero y pueden hacerse 
+ *  normalizaciones. 
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -137,12 +139,20 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	/**
-	 * Fuerza la selección de la opcion indicada
+	 * Fuerza la selecciï¿½n de la opcion indicada
 	 * @param {Integer} num Numero de opcion a seleccionar (entre 0 y el numero de opciones visibles)
 	 * @return {Boolean} Devuelve <code>true</code> en caso de exito y <code>false</code> en caso de que no haya opciones disponibles 
 	 */
 	this.selectOption = function(num) {
 		return view.selectOption(num);
+	}
+	
+	/**
+	 * Indica si ya se cargaron los datos del callejero y pueden empezar a hacerse normalizaciones.
+	 * @return {Boolean} Retorna True en caso de que ya se hayan cargado los datos del callejero.
+	 */	
+	this.ready = function() {
+		return opts.normalizadorDirecciones.listo();
 	}
 	
 	function buscarEnInventario(str) {
@@ -233,10 +243,12 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	function mostrarErrorNormalizacion() {
-		try {
-			view.showMessage(errorNormalizacion.getErrorMessage());
-		} catch(e) {
-			view.showMessage(opts.texts.nothingFound);
+		if (!(errorNormalizacion instanceof usig.ErrorEnCargaDelCallejero)) {
+			try {
+				view.showMessage(errorNormalizacion.getErrorMessage());
+			} catch(e) {
+				view.showMessage(opts.texts.nothingFound);
+			}
 		}
 		if (typeof(opts.afterSuggest) == "function") {
 			if (opts.debug) usig.debug('afterSuggest');
@@ -356,7 +368,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	if (!opts.normalizadorDirecciones) {
-		opts.normalizadorDirecciones = new usig.NormalizadorDirecciones({ aceptarCallesSinAlturas: opts.acceptSN });
+		opts.normalizadorDirecciones = new usig.NormalizadorDirecciones({ aceptarCallesSinAlturas: opts.acceptSN, onReady: opts.onReady });
 		cleanList.push(opts.normalizadorDirecciones);
 	}
 	
@@ -393,6 +405,6 @@ usig.AutoCompleter.defaults = {
 	skin: 'usig',
 	debug: false,
 	texts: {
-		nothingFound: 'No se hallaron resultados coincidentes con su búsqueda.'
+		nothingFound: 'No se hallaron resultados coincidentes con su b&uacute;squeda.'
 	}
 }
