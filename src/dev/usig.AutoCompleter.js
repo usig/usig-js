@@ -307,6 +307,10 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 					}).createDelegate(this));
 			}
 		}
+		if (option instanceof usig.Calle) {
+			if (opts.debug) usig.debug('usig.AutoCompleter: restoring focus');
+			ic.setFocus();
+		}
 	}
 	
 	function afterObjGeoCoding(obj) {

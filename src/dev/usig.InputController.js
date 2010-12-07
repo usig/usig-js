@@ -75,6 +75,13 @@ usig.InputController = function(idField, options) {
 		field.value = newValue;
 		previousValue = newValue;
 	}
+		
+	/**
+	 * Setea el foco sobre el control
+    */	
+	this.setFocus = function() {
+		$(field).focus();
+	}
 	
 	if (!field) {
 		throw "InvalidField";

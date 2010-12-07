@@ -110,7 +110,7 @@ usig.AutoCompleterView = function(idField, options) {
 	function highlight(n) {
 		if ($div) {
 			highlighted = n;
-			$('ul.options li.highlight').removeClass('highlight');
+			$('ul.options li.highlight', $div).removeClass('highlight');
 			if (typeof(n) == "string") {
 				$('ul.options li:has(a[name="'+n+'"])', $div).addClass('highlight');				
 			} else {
@@ -279,6 +279,9 @@ usig.AutoCompleterView = function(idField, options) {
      * @param {Integer} keyCode Codigo de la tecla presionada. 
     */	
 	this.keyUp = function(keyCode) {
+		if (highlighted == undefined) {
+			highlighted = -1;
+		}		
 		if ((keyCode == keyCodes.arrDn || keyCode == keyCodes.arrUp) && numOptions > 0) {
 			if ($div.css('display') != 'block') {
 				$div.show();
@@ -289,8 +292,12 @@ usig.AutoCompleterView = function(idField, options) {
 				highlight(highlighted);
 			}
 		}
-		if (keyCodes.enter == keyCode && highlighted >= 0) {
-			selectionHandler(itemsRef[id+highlighted]);
+		if (keyCodes.enter == keyCode && (highlighted >= 0 || numOptions == 1)) {
+			if (highlighted >= 0) {
+				selectionHandler(itemsRef[id+highlighted]);
+			} else {
+				selectionHandler(itemsRef[id+'0']);
+			}
 		}
 		if (keyCodes.esc == keyCode) {
 			killTimeout();
