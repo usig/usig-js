@@ -157,22 +157,27 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	
 	function buscarEnInventario(str) {
 		if (opts.useInventario) {
-			// Solo busca en el inventario si hay lugar para mostrar mas opciones
-			var limit = opts.maxOptions;
-			if (resNormalizacion && resNormalizacion.length) {
-				limit = opts.maxOptions - resNormalizacion.length;
-			} 
-			if (limit > 0) {
-				if (opts.debug) usig.debug('inventario.buscar');
-				lugaresEncontrados = [];
-				opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { limit: limit });
-				serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
-				if (typeof(opts.afterServerRequest) == "function") {
-					if (opts.debug) usig.debug('afterServerRequest');
-					opts.afterServerRequest();
-				}
+			// Solo busca en el inventario si no encontro una direccion
+			if (resNormalizacion && resNormalizacion.length && resNormalizacion[0] instanceof usig.Direccion) {
+				if (opts.debug) usig.debug('not searching inventario, address found');
 			} else {
-				if (opts.debug) usig.debug('not searching inventario, limit reached');				
+				// Solo busca en el inventario si hay lugar para mostrar mas opciones
+				var limit = opts.maxOptions;
+				if (resNormalizacion && resNormalizacion.length) {
+					limit = opts.maxOptions - resNormalizacion.length;
+				} 
+				if (limit > 0) {
+					if (opts.debug) usig.debug('inventario.buscar');
+					lugaresEncontrados = [];
+					opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { limit: limit });
+					serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
+					if (typeof(opts.afterServerRequest) == "function") {
+						if (opts.debug) usig.debug('afterServerRequest');
+						opts.afterServerRequest();
+					}
+				} else {
+					if (opts.debug) usig.debug('not searching inventario, limit reached');				
+				}
 			}
 		}		
 	}
@@ -332,39 +337,47 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		}
 	}
 	
+	function onInputChange(newValue) {
+		try {
+			if (opts.debug) usig.debug('view.update: '+newValue);
+			abortIfNecessary();
+			view.update(newValue);
+		} catch(error) {
+			throw(error);
+		}
+		if (inputTimer) {
+			clearTimeout(inputTimer);
+		}
+		if (inputTimerServerSearch) {
+			clearTimeout(inputTimerServerSearch);
+		}
+		if (newValue.length >= opts.minTextLength) {
+			inputTimer = normalizar.defer(opts.inputPause, this, [newValue]);
+			inputTimerServerSearch = buscarEnInventario.defer(opts.inputPauseBeforeServerSearch, this, [newValue]);
+		}
+	}
+	
+	function onInputKeyUp(keyCode, newValue) {
+		if (opts.debug) usig.debug('view.keyUp');
+		view.keyUp(keyCode);		
+	}
+	
+	function onInputBlur() {
+		focused = false;
+		view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click		
+	}
+	
+	function onInputFocus() {
+		focused = true;		
+	}
+	
 	// Inicializacion
 	try {
 		ic = new usig.InputController(idField, {
-			onKeyUp: function(keyCode, newValue) {
-				if (opts.debug) usig.debug('view.keyUp');
-				view.keyUp(keyCode);
-			},
-			onChange: function(newValue) {
-				try {
-					if (opts.debug) usig.debug('view.update: '+newValue);
-					abortIfNecessary();
-					view.update(newValue);
-				} catch(error) {
-					throw(error);
-				}
-				if (inputTimer) {
-					clearTimeout(inputTimer);
-				}
-				if (inputTimerServerSearch) {
-					clearTimeout(inputTimerServerSearch);
-				}
-				if (newValue.length >= opts.minTextLength) {
-					inputTimer = normalizar.defer(opts.inputPause, this, [newValue]);
-					inputTimerServerSearch = buscarEnInventario.defer(opts.inputPauseBeforeServerSearch, this, [newValue]);
-				}
-			},
-			onBlur: function() {
-				focused = false;
-				view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click
-			},
-			onFocus: function() {
-				focused = true;
-			},
+			onKeyUp: onInputKeyUp.createDelegate(this),
+			onChange: onInputChange.createDelegate(this),
+			onBlur: onInputBlur.createDelegate(this),
+			onFocus: onInputFocus.createDelegate(this),
 			debug: opts.debug
 		});
 	} catch(error) {
