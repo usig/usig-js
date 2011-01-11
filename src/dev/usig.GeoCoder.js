@@ -5,7 +5,8 @@ if (typeof (usig) == "undefined")
 /**
  * @class GeoCoder
  * Esta clase implementa una interfaz Javascript con el servicio de GeoCoding de USIG<br/>
- * Requiere: jQuery-1.3.2+, usig.core, usig.Punto, usig.Calle, usig.Direccion<br/>
+ * Requiere: jQuery-1.3.2+, jquery.class, json, jquery.jsonp-1.1.0.1+, usig.core, usig.Punto, 
+ * usig.Calle, usig.Direccion, usig.AjaxComponent<br/>
  * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/geoCoder.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/geoCoder.html</a>
  * @namespace usig
  * @cfg {String} server Url del servicio de GeoCoding de USIG. Por defecto: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder'.
@@ -61,10 +62,10 @@ usig.GeoCoder = function(options) {
 	/**
 	 * Realiza una geocodificacion a partir de una instancia de usig.Direccion (NormalizadorDireccionesJS)
      * @param {usig.Direccion} dir Direccion a geocodificar.  
-     * @param {String} metodo (optional) Metodo de geocodificacion a utilizar (solo aplicable a direcciones calle-altura).   
      * @param {Function} success Funcion callback que es llamada al concretarse con exito la geocodificacion.
      * Recibe como parametro una instancia de usig.Punto. 
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
+     * @param {String} metodo (optional) Metodo de geocodificacion a utilizar (solo aplicable a direcciones calle-altura).   
     */	
 	this.geoCodificarDireccion = function(dir, success, error, metodo) {
 		if (!(dir instanceof usig.Direccion)) {

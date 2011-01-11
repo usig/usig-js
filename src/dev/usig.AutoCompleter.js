@@ -184,7 +184,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	
 	function normalizar(str) {
 		try {
-			if (opts.debug) if (opts.debug) usig.debug('normalizar("'+str+'")');
+			if (opts.debug) usig.debug('normalizar("'+str+'")');
 			errorNormalizacion = null;
 			resNormalizacion = opts.normalizadorDirecciones.normalizar(str);
 			if (opts.debug) usig.debug('view.show');

@@ -585,3 +585,37 @@ usig.Animator = function(inputArray, procedure, stepDelay, callback) {
 	animate();
 };
 
+/**
+parseUri JS v0.1.1, by Steven Levithan <br/> 
+Splits any well-formed URI into the following parts (all are optional): <br/>
+<ul>
+<li>source (since the exec method returns the entire match as key 0, we might as well use it)</li>
+<li>protocol (i.e., scheme)</li>
+<li>authority (includes both the domain and port)<br/>
+  - domain (i.e., host; can be an IP address)<br/>
+  - port</li>
+<li>path (includes both the directory path and filename)<br/>
+  - directoryPath (supports directories with periods, and without a trailing backslash)<br/>
+  - fileName</li>
+<li>query (does not include the leading question mark)</li>
+<li>anchor (i.e., fragment)</li>
+</ul>
+@param {String} sourceUri URI to parse 
+*/
+usig.parseUri = function(sourceUri){
+	var uriPartNames = ["source","protocol","authority","domain","port","path","directoryPath","fileName","query","anchor"],
+		uriParts = new RegExp("^(?:([^:/?#.]+):)?(?://)?(([^:/?#]*)(?::(\\d*))?)((/(?:[^?#](?![^?#/]*\\.[^?#/.]+(?:[\\?#]|$)))*/?)?([^?#/]*))?(?:\\?([^#]*))?(?:#(.*))?").exec(sourceUri),
+		uri = {};
+	
+	for(var i = 0; i < 10; i++){
+		uri[uriPartNames[i]] = (uriParts[i] ? uriParts[i] : "");
+	}
+	
+	/* Always end directoryPath with a trailing backslash if a path was present in the source URI
+	Note that a trailing backslash is NOT automatically inserted within or appended to the "path" key */
+	if(uri.directoryPath.length > 0){
+		uri.directoryPath = uri.directoryPath.replace(/\/?$/, "/");
+	}
+	
+	return uri;
+}

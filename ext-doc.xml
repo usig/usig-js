@@ -66,6 +66,9 @@
 	<source src="src/dev/usig.MapaEstatico.js"/>
 	<source src="src/dev/usig.FotosParcela.js"/>
 	<source src="src/dev/usig.Punto.js"/>
+	<source src="src/dev/usig.Suggester.js"/>
+	<source src="src/dev/usig.SuggesterDirecciones.js"/>
+	<source src="src/dev/usig.AjaxComponent.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>
