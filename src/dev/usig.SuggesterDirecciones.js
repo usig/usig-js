@@ -5,7 +5,7 @@ if (typeof (usig) == "undefined")
 /**
  * @class SuggesterDirecciones
  * Implementa un suggester de direcciones usando el Normalizador de Direcciones.<br/>
- * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, Normalizador de Direcciones 1.0+<br/>
+ * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, Normalizador de Direcciones 1.0+, GeoCoder<br/>
  * @namespace usig
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a devolver
  * @cfg {Integer} serverTimeout Tiempo maximo de espera (en ms) antes de abortar una busqueda en el servidor
