@@ -11,6 +11,12 @@ if (typeof (usig) == "undefined")
  * @namespace usig
  * @cfg {String} server Url del servicio de GeoCoding de USIG. Por defecto: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
+ * @cfg {Integer} serverTimeout Tiempo maximo de espera (en ms) antes de abortar una busqueda en el servidor
+ * @cfg {Integer} maxRetries Maximo numero de reintentos a realizar en caso de timeout 
+ * @cfg {Function} afterAbort Callback que es llamada cada vez que se aborta un pedido al servidor.
+ * @cfg {Function} afterRetry Callback que es llamada cada vez que se reintenta un pedido al servidor.
+ * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
+ * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {String} metodo Nombre del metodo de geocodificacion a utilizar si se omite el parametro en los metodos 
  * correspondientes. Si no se setea utiliza el metodo por defecto seteado en el servidor. 
  * <br/>Metodos de geocodificacion disponibles: 'interpolacion', 'puertas' y 'centroide'
@@ -18,46 +24,32 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.GeoCoder = function(options) {
+usig.GeoCoder = usig.AjaxComponent.extend({
 	
-	var opts = $.extend({}, usig.GeoCoder.defaults, options),
-		metodos = ['interpolacion', 'puertas', 'centroide'];
+	metodos: ['interpolacion', 'puertas', 'centroide'],
 	
-	function mkRequest(data, success, error) {
-		$.ajax({
-			type: 'GET',
-			url: opts.server,
-			data: data,
-			dataType: 'jsonp',
-			success: function(res) {
-				if (typeof(res) != "string") {
-					success(new usig.Punto(res.x, res.y));
-				} else {
-					success(res);
-				}
-			},
-			error: error
-		});		
-	}
+	init: function(options) {
+		this._super('GeoCoder', usig.GeoCoder.defaults.server, options);
+	},
 	
-	function validarMetodo(metodo) {
+	validarMetodo: function(metodo) {
 		if (metodo != undefined) {
-			if (metodos.indexOf(metodo) >= 0) {
+			if (this.metodos.indexOf(metodo) >= 0) {
 				return metodo;
 			}
-		} else if (opts.metodo != undefined) {
-			return opts.metodo;
+		} else if (this.opts.metodo != undefined) {
+			return this.opts.metodo;
 		}		
-		return undefined;
-	}
-
-	/**
-	 * Setea las opciones del componente
-     * @param {Object} options Un objeto conteniendo overrides para las opciones disponibles 
-    */	
-	this.setOptions = function(options) {
-		opts = $.extend({}, opts, options);
-	}
+		return undefined;		
+	},
+	
+	onSuccess: function(res, success) {
+		if (typeof(res) != "string") {
+			success(new usig.Punto(res.x, res.y));
+		} else {
+			success(res);
+		}
+	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de una instancia de usig.Direccion (NormalizadorDireccionesJS)
@@ -67,7 +59,7 @@ usig.GeoCoder = function(options) {
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
      * @param {String} metodo (optional) Metodo de geocodificacion a utilizar (solo aplicable a direcciones calle-altura).   
     */	
-	this.geoCodificarDireccion = function(dir, success, error, metodo) {
+	geoCodificarDireccion: function(dir, success, error, metodo) {
 		if (!(dir instanceof usig.Direccion)) {
 			throw('dir debe ser una instancia de usig.Direccion');
 			return;
@@ -77,7 +69,7 @@ usig.GeoCoder = function(options) {
 		} else {
 			this.geoCodificar2CodigosDeCalle(dir.getCalle().codigo, dir.getCalleCruce().codigo, success, error);			
 		}
-	}
+	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de un nombre oficial de calle y una altura valida para la misma
@@ -88,7 +80,7 @@ usig.GeoCoder = function(options) {
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
      * @param {String} metodo (optional) Metodo de geocodificacion a utilizar.   
     */	
-	this.geoCodificarCalleAltura = function(calle, altura, success, error, metodo) {
+	geoCodificarCalleAltura: function(calle, altura, success, error, metodo) {
 		if (!altura.isInteger()) {
 			throw('altura tiene que ser un entero');
 			return;
@@ -97,12 +89,12 @@ usig.GeoCoder = function(options) {
 			cod_calle: calle,
 			altura: altura
 		}
-		metodo = validarMetodo(metodo);
+		metodo = this.validarMetodo(metodo);
 		if (metodo != undefined) {
 			data.metodo = metodo;
 		}
-		mkRequest(data, success, error);
-	}
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);
+	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de un codigo de calle valido y una altura valida para la misma
@@ -113,7 +105,7 @@ usig.GeoCoder = function(options) {
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
      * @param {String} metodo (optional) Metodo de geocodificacion a utilizar.   
     */	
-	this.geoCodificarCodigoDeCalleAltura = function(codCalle, altura, success, error, metodo) {
+	geoCodificarCodigoDeCalleAltura: function(codCalle, altura, success, error, metodo) {
 		if (!codCalle.isInteger()) {
 			throw('codCalle tiene que ser un entero');
 			return;
@@ -126,12 +118,12 @@ usig.GeoCoder = function(options) {
 			cod_calle: codCalle,
 			altura: altura
 		}
-		metodo = validarMetodo(metodo);
+		metodo = this.validarMetodo(metodo);
 		if (metodo != undefined) {
 			data.metodo = metodo;
 		}
-		mkRequest(data, success, error);		
-	}
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);		
+	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de dos nombres oficiales de calles que se cruzan
@@ -141,13 +133,13 @@ usig.GeoCoder = function(options) {
      * Recibe como parametro una instancia de usig.Punto. 
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
     */	
-	this.geoCodificarCalleYCalle = function(calle1, calle2, success, error) {
+	geoCodificarCalleYCalle: function(calle1, calle2, success, error) {
 		var data = {
 			cod_calle1: calle1,
 			cod_calle2: calle2
 		}
-		mkRequest(data, success, error);		
-	}
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);		
+	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de dos codigos de calles que se cruzan
@@ -157,7 +149,7 @@ usig.GeoCoder = function(options) {
      * Recibe como parametro una instancia de usig.Punto. 
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
     */	
-	this.geoCodificar2CodigosDeCalle = function(codCalle1, codCalle2, success, error) {
+	geoCodificar2CodigosDeCalle: function(codCalle1, codCalle2, success, error) {
 		if (!codCalle1.isInteger()) {
 			throw('codCalle1 tiene que ser un entero');
 			return;
@@ -170,9 +162,10 @@ usig.GeoCoder = function(options) {
 			cod_calle1: codCalle1,
 			cod_calle2: codCalle2
 		}
-		mkRequest(data, success, error);				
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);				
 	}
-}
+	
+});
 
 usig.GeoCoder.defaults = {
 	debug: false,

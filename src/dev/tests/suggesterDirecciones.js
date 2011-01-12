@@ -15,7 +15,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Sets up data that is needed by each test.
          */
         setUp : function () {
-        	this.sd = new usig.SuggesterDirecciones();
+        	this.sd = new usig.SuggesterDirecciones({ debug: true });
         },
         
         /*
@@ -140,57 +140,9 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         }        
         
     });
-    
-        
-    Y.SuggesterDirecciones.test.EventosTestCase = new Y.Test.Case({
-    
-        //name of the test case - if not provided, one is auto-generated
-        name : "Tests de Eventos",
-        
-        //---------------------------------------------------------------------
-        // setUp and tearDown methods - optional
-        //---------------------------------------------------------------------
-        
-        /*
-         * Sets up data that is needed by each test.
-         */
-        setUp : function () {
-        	this.sd = new usig.SuggesterDirecciones();
-        },
-        
-        /*
-         * Cleans up everything that was created by setUp().
-         */
-        tearDown : function () {
-        	delete this.sd;
-        },
-        
-        //---------------------------------------------------------------------
-        // Test methods - names must begin with "test"
-        //---------------------------------------------------------------------
-            
-        "After a timeout on geocoder it should abort" : function () {
-        	var test = this;
-        	var mockGeoCoder = usig.Mock(Y);
-        	mockGeoCoder.expect({ method: 'geoCodificarDireccion', callCount: 1});
-        	mockGeoCoder.expect({ method: 'setOptions' });
-        	this.sd.setOptions({
-        		geoCoder: mockGeoCoder,
-        		afterAbort: function() {
-        			test.resume(function() {
-        				mockGeoCoder.verify();
-        			});
-        		},
-        		serverTimeout: 200
-        	});
-        	this.wait();        	
-        }
-        
-    });
-    
+      
     Y.SuggesterDirecciones.test.SuggesterDireccionesSuite = new Y.Test.Suite("SuggesterDirecciones");
     Y.SuggesterDirecciones.test.SuggesterDireccionesSuite.add(Y.SuggesterDirecciones.test.IntegracionTestCase);
-    Y.SuggesterDirecciones.test.SuggesterDireccionesSuite.add(Y.SuggesterDirecciones.test.EventosTestCase);
     
     //create the console
     var r = new Y.Console({

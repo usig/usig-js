@@ -30,7 +30,7 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 			this.cleanList.push(this.opts.normalizadorDirecciones);
 		}	
 		if (!this.opts.geoCoder) {
-			this.opts.geoCoder = new usig.GeoCoder({ debug: this.opts.debug });
+			this.opts.geoCoder = new usig.GeoCoder(this.opts);
 			this.cleanList.push(this.opts.geoCoder);
 		}
 	},
@@ -61,13 +61,7 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 		if (!(obj instanceof usig.Direccion)) {
 			callback(new usig.Suggester.GeoCodingTypeError());
 		} else {
-			this.opts.geoCoder.geoCodificarDireccion(obj, (function(pt) {
-				if (typeof(this.opts.afterServerResponse) == "function")
-					this.opts.afterServerResponse();
-				callback(pt);
-			}).createDelegate(this));
-			if (typeof(this.opts.afterServerRequest) == "function")
-				this.opts.afterServerRequest();
+			this.opts.geoCoder.geoCodificarDireccion(obj, callback);
 		}
 	},
 	
@@ -77,8 +71,18 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 	 */
 	ready: function() {
 		return this.opts.normalizadorDirecciones.listo();
-	}
+	},
 	
+	/**
+	 * Actualiza la configuracion del componente a partir de un objeto con overrides para las
+	 * opciones disponibles
+	 * @param {Object} options Objeto conteniendo overrides para las opciones disponibles
+	 */
+	setOptions: function(options) {
+		this._super(options);
+		this.opts.geoCoder.setOptions(options);
+	}
+		
 });
 
 usig.SuggesterDirecciones.defaults = {

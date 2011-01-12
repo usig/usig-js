@@ -59,8 +59,10 @@ usig.AjaxComponent = jQuery.Class.create({
 		function onAjaxSuccess(data, callback) {
 			clearTimeout(requestTimeout);
 			if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Success'); }
-	       	if (typeof(this.opts.afterServerResponse) == "function")
+	       	if (typeof(this.opts.afterServerResponse) == "function") {
+		       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterServerResponse');
 	       		this.opts.afterServerResponse();
+	       	}
 			callback(data);
 		}; 
 		
@@ -68,12 +70,16 @@ usig.AjaxComponent = jQuery.Class.create({
 			if (requester != null && requester.readyState != 0 && requester.readyState != 4) {
 				if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Aborting request...');
 				requester.abort();
-		       	if (typeof(this.opts.afterAbort) == "function")
+		       	if (typeof(this.opts.afterAbort) == "function") {
+			       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterAbort');
 		       		this.opts.afterAbort();
+		       	}
 		       	if (this.opts.maxRetries > numRetries) {
 			       	var ajaxReq = $.ajax(params);
-			       	if (typeof(this.opts.afterRetry) == "function")
+			       	if (typeof(this.opts.afterRetry) == "function") {
+				       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterRetry');
 			       		this.opts.afterRetry();
+			       	}
 					if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Retrying request...');
 		       		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams, (numRetries + 1)]), this.opts.serverTimeout);
 		       	} else {
@@ -103,8 +109,10 @@ usig.AjaxComponent = jQuery.Class.create({
        	
        	var ajaxReq = $.ajax(ajaxParams);
        	
-       	if (typeof(this.opts.afterServerRequest) == "function")
+       	if (typeof(this.opts.afterServerRequest) == "function") {
+	       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterServerRequest');
        		this.opts.afterServerRequest();
+       	}
        		
        	if (this.opts.serverTimeout > 0)
        		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams, 0]), this.opts.serverTimeout);
