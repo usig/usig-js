@@ -29,7 +29,8 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 	metodos: ['interpolacion', 'puertas', 'centroide'],
 	
 	init: function(options) {
-		this._super('GeoCoder', usig.GeoCoder.defaults.server, options);
+		var opts = $.extend({}, usig.GeoCoder.defaults, options);		
+		this._super('GeoCoder', usig.GeoCoder.defaults.server, opts);
 	},
 	
 	validarMetodo: function(metodo) {

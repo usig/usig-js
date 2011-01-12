@@ -75,7 +75,7 @@ usig.AjaxComponent = jQuery.Class.create({
 		       		this.opts.afterAbort();
 		       	}
 		       	if (this.opts.maxRetries > numRetries) {
-			       	var ajaxReq = $.ajax(params);
+			       	var ajaxReq = (params.dataType == 'jsonp')?$.jsonp(params):$.ajax(params);
 			       	if (typeof(this.opts.afterRetry) == "function") {
 				       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterRetry');
 			       		this.opts.afterRetry();
@@ -107,7 +107,7 @@ usig.AjaxComponent = jQuery.Class.create({
        	});
        	if (url) ajaxParams.url = url;
        	
-       	var ajaxReq = $.ajax(ajaxParams);
+       	var ajaxReq = (ajaxParams.dataType == 'jsonp')?$.jsonp(ajaxParams):$.ajax(ajaxParams);
        	
        	if (typeof(this.opts.afterServerRequest) == "function") {
 	       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterServerRequest');
@@ -116,6 +116,8 @@ usig.AjaxComponent = jQuery.Class.create({
        		
        	if (this.opts.serverTimeout > 0)
        		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams, 0]), this.opts.serverTimeout);
+       	
+       	return ajaxReq;
 	},
 		
 	/**

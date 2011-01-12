@@ -27,7 +27,6 @@ usig.Suggester = jQuery.Class.create({
     	this.name = name;
     	this.cleanList = [];
 		this.opts = $.extend({}, usig.Suggester.defaults, options);		
-		// this.opts = $.extend({}, usig.Suggester.defaults, options);		
 	},
 	
 	/**
