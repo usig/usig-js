@@ -39,8 +39,8 @@ usig.Inventario = usig.AjaxComponent.extend({
 		this.lastRequest = this.mkRequest({}, success, error, this.opts.server + 'getCategorias/');
 	},
 		
-	/**
-	 * Dado un objeto usig.Direccion permite obtener el smp correspondiente si existe
+	/**  SE USA??????????
+	 * Dado un objeto usig.UbicacionMapabsas permite obtener el smp correspondiente si existe 
 	 * @param {usig.Direccion} dir Direccion de la que se desea averiguar el smp 
 	 * @param {Function} success Funcion callback que es llamada con el resultado 
 	 * obtenido del servidor
@@ -48,6 +48,51 @@ usig.Inventario = usig.AjaxComponent.extend({
 	 */
 	getParcelaPorDir: function(dir, success, error) {
 		this.lastRequest = this.mkRequest({cod_calle: dir.cod,  altura: dir.alt}, success, error, this.opts.server + 'getParcela/');
+	},
+
+	/**
+	 * Dado una ubicacion trae del inventario informacion de esa ubicacion.
+	 * @param {Object} data Objeto que contiene datos de la ubicacion sobre la que se requiere informacion
+	 * data es {x: coordenadaX, y:coordenadaY, cod_calle: int (o 0 si es un lugar sin direccion), altura: int (o '' si es un lugar sin direccion)};
+	 * @param {Function} success Funcion callback que es llamada con el resultado 
+	 * obtenido del servidor
+	 * @param {Function} error (optional) Funcion callback que es llamada en caso de error
+	 */
+	getDir: function(data, success, error) {
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'getDir/');
+	},
+	
+	/**
+	 * Dado una ubicacion busca en el inventario cierta informacion de esa ubicacion segun los parametros que reciba. 
+	 * @param {Object} data contiene la siguiente informacion: <br/>
+	 * 		Si loadDatos es vacio debe tener: <br/> 
+	 * 		{int} cod_calle Codigo de calle  <br/> 
+	 * 		{int} altura Altura de calle <br/> 
+	 * 		Si loadDatos no es vacio debe tener: <br/>
+	 * 		{SMP} smp Seccion-manzana-parcela de la ubicacion 
+	 * @param {string} loadDatos puede ser "FichaTecnica", "DatosZona" o "Actividades", o puede ser vacio. 
+	 * @param {Function} success Funcion callback que es llamada con el resultado 
+	 * obtenido del servidor
+	 * @param {Function} error (optional) Funcion callback que es llamada en caso de error
+	 */
+	getParcela: function(data, loadDatos, success, error) {
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'getParcela' +  loadDatos + '/');
+	},
+
+	
+	/**
+	 * Devuelve la informacion de transporte asociada a la ubicacion
+	 * @param {Object} data Objeto que contiene datos de la ubicacion sobre la que se requiere informacion de transporte
+	 * 		data puede contener alguno de los siguientes datos:
+	 * 		{int} x Coordenada x de la ubicacion
+	 * 		{int} y Coordenada y de la ubicacion
+	 * 		{int} id Es el id del objecto 
+	 * @param {Function} success Funcion callback que es llamada con el resultado 
+	 * obtenido del servidor
+	 * @param {Function} error (optional) Funcion callback que es llamada en caso de error
+	 */
+	getDatosTransporte: function(data, success, error) {
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'getDatosTransporte/');
 	},
 	
 	/**
@@ -63,7 +108,7 @@ usig.Inventario = usig.AjaxComponent.extend({
 	 *    {Object} bbox: Extent que permite realizar busqueda restringidas geograficamente
 	 */
 	buscar: function(text, success, error, options) {
-		
+
 		function buscarResultsHandler (results, callback) {
 			var clases = {}, objetos = [];
 			
@@ -127,6 +172,28 @@ usig.Inventario = usig.AjaxComponent.extend({
 		if (id > 0) {
 			this.lastRequest = this.mkRequest({ id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.server + 'getObjectContent/');						
 		}
+	},
+	
+	
+	/**
+	 * Dado un id de objeto busca informacion en inventario
+	 * @param {Object} data Contiene el id del objeto
+	 * @param {Function} success Funcion callback que es llamada con el resultado obtenido del servidor 
+	 * @param {Function} error (optional) Funcion callback que es llamada en caso de error
+	 */
+	getFeatureInfo: function(data, success, error) {
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'getObjectContent/');
+	},
+	
+	
+	/**
+	 * Dada una coordenada devuelve los objetos cercanos
+	 * @param {Object} data Contiene
+	 * @param {Function} success Funcion callback que es llamada con el resultado obtenido del servidor 
+	 * @param {Function} error (optional) Funcion callback que es llamada en caso de error
+	 */
+	getCloseFeatures: function(data, success, error) {
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'objetosCercanos/');
 	},
 	
 	/**
