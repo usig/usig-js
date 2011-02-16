@@ -10,6 +10,8 @@
 	<script src="../usig.core.js" type="text/javascript"></script>
 	<script src="../jquery.jsonp-1.1.0.1.js" type="text/javascript"></script>
 	<script src="../json.js" type="text/javascript"></script>
+	<script src="../jquery.class.js" type="text/javascript"></script>
+	<script src="../usig.AjaxComponent.js" type="text/javascript"></script>
 	<script src="../usig.Punto.js" type="text/javascript"></script>
 	<script src="../usig.Calle.js" type="text/javascript"></script>
 	<script src="../usig.Direccion.js" type="text/javascript"></script>
@@ -22,7 +24,7 @@
 	<script src="../usig.AutoCompleter.js" type="text/javascript"></script>
 	<script src="../usig.AutoCompleterView.js" type="text/javascript"></script>
 	<script src="../usig.MapaEstatico.js" type="text/javascript"></script>
-	<script type="text/javascript">	
+	<script type="text/javascript">
 	$(document).ready(function() {
 		
 		function afterGeoCoding(pt) {
@@ -53,7 +55,7 @@
 	        		},
 	        		afterGeoCoding: afterGeoCoding
 	        	});
-	        	
+		
 		$('#mainForm').bind("submit", function () {
 			return false;
 		});
