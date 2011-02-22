@@ -78,6 +78,7 @@ usig.Recorridos = usig.AjaxComponent.extend({
 	
 usig.Recorridos.defaults = {
 	debug: false,
-	server: 'http://recorridos.usig.buenosaires.gob.ar/'
-	
+	server: 'http://recorridos.usig.buenosaires.gob.ar/',
+		serverTimeout: 5000,
+		maxRetries: 5
 }
