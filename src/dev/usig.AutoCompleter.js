@@ -24,27 +24,28 @@ if (typeof (usig) == "undefined")
  * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/doc/</a><br/>
  * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleter.html</a>
  * @namespace usig
- * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
+ * Opciones para los suggesters
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
+ * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a buscar. Por defecto: 10
  * @cfg {Integer} serverTimeout Tiempo de maximo de espera antes de reintentar un pedido al servidor. Por defecto: 5000.
+ * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
  * @cfg {Integer} maxRetries Maximo numero de reintentos al servidor ante una falla. Por defecto: 10.
+ * @cfg {Boolean} showError Mostrar mensajes de error. Por defecto: true
+ * Opciones para el AutoCompleterView
  * @cfg {Integer} maxOptions Maximo numero de opciones a mostrar como sugerencia. Por defecto: 10.
+ * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
+ * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
+ * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
+ * @cfg {String} rootUrl Url del servidor donde reside el control.
+ * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'dark' y 'mapabsas'. Por defecto: 'usig'.
+ * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica. Por defecto: true.
+ * Opciones del AutoCompleter
  * @cfg {Function} afterSuggest Callback que es llamada cada vez que se actualizan las sugerencias.
- * @cfg {Function} afterAbort Callback que es llamada cada vez que se aborta un pedido al servidor.
- * @cfg {Function} afterRetry Callback que es llamada cada vez que se reintenta un pedido al servidor.
- * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
- * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
- * sugerencias. El objeto que recibe como parametro puede ser una instancia de usig.Calle, usig.Direccion o bien usig.inventario.Objeto
+ *  sugerencias. El objeto que recibe como parametro puede ser una instancia de usig.Calle, usig.Direccion o bien usig.inventario.Objeto
  * @cfg {Function} beforeGeoCoding Callback que es llamada antes de realizar la geocodificacion de la direccion o el lugar 
  * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar 
  * seleccionado. El objeto que recibe como parametro es una instancia de usig.Punto
- * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica.
- * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
- * @cfg {Boolean} useInventario Usar el inventario para buscar lugares de interes.
- * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>True</code>. Ej: de los italianos s/n.
- * @cfg {Function} onReady Callback que es llamada cuando ya se cargaron los datos del callejero y pueden hacerse 
- *  normalizaciones. 
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -53,17 +54,12 @@ if (typeof (usig) == "undefined")
 usig.AutoCompleter = function(idField, options, viewCtrl) {
 	var field = document.getElementById(idField), 
 		view = viewCtrl,
+		suggesters = [],
 		opts = $.extend({}, usig.AutoCompleter.defaults, options),
 		ic = null,
-		inputTimer = null,
-		inputTimerServerSearch = null,
-		serverTimeout = null,
-		numRetries = 0,
 		focused = true,
-		errorNormalizacion = null,
-		resNormalizacion = [],
-		lugaresEncontrados = [],
-		cleanList = [];
+		cleanList = [],
+		appendResults = false;
 		
 	field.setAttribute("autocomplete","off");
 		
@@ -72,33 +68,30 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
     */		
 	this.unbind = function() {
 		ic.unbind();
-		if (inputTimer)
-			clearTimeout(inputTimer);
-		if (inputTimerServerSearch)
-			clearTimeout(inputTimerServerSearch);
-		if (serverTimeout) {
-			clearTimeout(serverTimeout);
-			opts.inventario.abort();
-		}
+		abort()
 		view.hide();
 	}
 	
 	/**
 	 * Setea los manejadores de eventos sobre el control 
-    */		
+     */		
 	this.bind = function() {
 		ic.bind();
 	}
 
 	/**
-	 * Elimina los bindings y destruye los componentes creados. 
+	 * Elimina los bindings y destruye los componentes creados.
+	 * NOTA: Todo objeto creado dentro de la clase, debe ser agregado al cleanList para su remocion
 	 */
 	this.destroy = function() {
 		this.unbind();
 		view.remove();
 		delete ic;
+		while (suggesters.length > 0) {
+			suggesters.pop();
+		}
 		for (var i=0; i<cleanList.length; i++)
-			delete cleanList[i];		
+			delete cleanList[i];
 	}
 	
 	/**
@@ -117,9 +110,38 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	this.setOptions = function(options) {
 		opts = $.extend({}, opts, options);
 		view.setOptions(options);
-		opts.inventario.setOptions({ debug: opts.debug });
-		opts.geoCoder.setOptions({ debug: opts.debug });
-		opts.normalizadorDirecciones.setOptions({ aceptarCallesSinAlturas: opts.acceptSN });
+	}
+	
+	/**
+	 * Agrega un nuevo suggester al autocompleter. Las options son opcionales.
+	 * @param {usig.Suggester} suggester Instancia de usig.Suggester
+	 * @param {Object} options Opciones del suggester para el autocompleter
+	 */
+	this.addSuggester = function(suggester, options){
+//		if (!(suggester instanceof usig.Suggester)) {
+//			if (opts.debug) usig.debug('El objeto no es instancia de usig.Suggester');
+//			return;
+//		}
+		if (opts.debug) usig.debug('addSuggester('+ suggester.name+')');
+		var noEsta = true;
+		for (var i=0; i<suggesters.length; i++){
+			noEsta = noEsta && (suggesters[i].suggester.name != suggester.name); 
+		}
+		if (noEsta){
+			opt = {
+					inputPause: opts.inputPause,
+					maxSuggestions: opts.maxSuggestions,
+					serverTimeout: opts.serverTimeout,
+					minTextLength: opts.minTextLength,
+					maxRetries: opts.maxRetries,
+					showError: opts.showError
+			};
+			
+ 			opt = $.extend(opt, options);
+			suggesters.push({suggester: suggester, options: opt, inputTimer: null});
+		}else{
+			if (opts.debug) usig.debug('Se intento agregar dos suggesters con el mismo nombre.');
+		}
 	}
 	
 	/**
@@ -148,227 +170,169 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	/**
-	 * Indica si ya se cargaron los datos del callejero y pueden empezar a hacerse normalizaciones.
-	 * @return {Boolean} Retorna True en caso de que ya se hayan cargado los datos del callejero.
+	 * Indica si algun suggester esta listo para responder.
+	 * @return {Boolean} Retorna True en caso de que algun suggester esta listo para responder.
 	 */	
 	this.ready = function() {
-		return opts.normalizadorDirecciones.listo();
+		var retval = false;
+		for (i=0; i<suggesters.length; i++){
+			retval = retval || suggesters[i].suggester.ready();
+		}
+		return retval;
 	}
 	
-	function buscarEnInventario(str) {
-		if (opts.useInventario) {
-			// Solo busca en el inventario si no encontro una direccion
-			if (resNormalizacion && resNormalizacion.length && resNormalizacion[0] instanceof usig.Direccion) {
-				if (opts.debug) usig.debug('not searching inventario, address found');
-			} else {
-				// Solo busca en el inventario si hay lugar para mostrar mas opciones
-				var limit = opts.maxOptions;
-				if (resNormalizacion && resNormalizacion.length) {
-					limit = opts.maxOptions - resNormalizacion.length;
-				} 
-				if (limit > 0) {
-					if (opts.debug) usig.debug('inventario.buscar');
-					lugaresEncontrados = [];
-					opts.inventario.buscar(str, mostrarLugares.createDelegate(this, [str], 1), function(){}, { limit: limit });
-					serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
-					if (typeof(opts.afterServerRequest) == "function") {
-						if (opts.debug) usig.debug('afterServerRequest');
-						opts.afterServerRequest();
-					}
+	/**
+	 * Ejecuta el metodo getSuggestion de sugObj.suggester
+     * @param {Object} sugObj Objeto con el suggester y las opciones.
+     * @param {Strin} str Texto a buscar
+    */	
+	function sugerir(sugObj, str) {
+		var suggester = sugObj.suggester;
+		var sugOpts = sugObj.options;
+		
+		callbackSugerir = function callbackSugerir(results){
+			if (opts.debug) usig.debug(results);
+//			if (opts.debug) usig.debug('sugOpts.showError: '+sugOpts.showError);
+			if(results.getErrorMessage!=undefined){
+				try {
+					if (!appendResults && sugOpts.showError) view.showMessage(results.getErrorMessage());
+				} catch(e) {
+					if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
+				}
+			}else{
+				if (results.length == 0){
+					if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
 				} else {
-					if (opts.debug) usig.debug('not searching inventario, limit reached');				
+					if (opts.debug) usig.debug('usig.Autocompleter.sugerir.callback(results)');
+					// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
+					results = results.map(function(x){ x.suggesterName = suggester.name; return x });
+					if (opts.debug) usig.debug(results);
+					view.show(results, appendResults);
+					appendResults = true;
+					if (!focused)
+						view.hide();
 				}
 			}
-		}		
-	}
-	
-	function normalizar(str) {
-		try {
-			if (opts.debug) usig.debug('normalizar("'+str+'")');
-			errorNormalizacion = null;
-			resNormalizacion = opts.normalizadorDirecciones.normalizar(str);
-			if (opts.debug) usig.debug('view.show');
-			view.show(resNormalizacion);
-			if (!focused)
-				view.hide();
 			if (typeof(opts.afterSuggest) == "function") {
 				if (opts.debug) usig.debug('afterSuggest');
 				opts.afterSuggest();
 			}
-		} catch(error) {
-			if (opts.debug) usig.debug(error);
-			resNormalizacion = null;
-			errorNormalizacion = error;
-			mostrarErrorNormalizacion();
 		}
+		
+		if (opts.debug) usig.debug('sugerir('+ suggester.name+', "'+str+'")');
+		suggester.getSuggestions(str, callbackSugerir, sugOpts.maxSuggestions);
 	}
 	
-	function retry(str) {
-		if (opts.debug) usig.debug('retrying...');
-		if (typeof(opts.inventario.abort) == "function") {
-			abort();
-			opts.inventario.buscar(str);
-			numRetries++;
-			if (numRetries < opts.maxRetries) { 
-				serverTimeout = retry.defer(opts.serverTimeout, this, [str]);
-			} else {
-				if (opts.debug) usig.debug('maxRetries reached. stopping.');
-				numRetries = 0;
-			}
-			if (typeof(opts.afterRetry) == "function") {
-				if (opts.debug) usig.debug('afterRetry');
-				opts.afterRetry();
-			}
-		}
-	}
-	
-	function mostrarLugares(lugares, inputStr) {
-		clearTimeout(serverTimeout);
-		if (lugares instanceof Array && lugares.length > 0) {
-			lugaresEncontrados = lugares;
-			if (opts.debug) usig.debug('view.show');
-			if (errorNormalizacion) 
-				view.update(inputStr);
-			view.show(lugares, true);			
-			if (!focused)
-				view.hide();
-			if (typeof(opts.afterSuggest) == "function") {
-				if (opts.debug) usig.debug('afterSuggest');
-				opts.afterSuggest();
-			}
-		} else if (errorNormalizacion != null) {
-			// El error en la normalizacion solo se muestra si no 
-			// se encuentra ningun lugar
-			mostrarErrorNormalizacion();
-		}
-		if (typeof(opts.afterServerResponse) == "function") {
-			if (opts.debug) usig.debug('afterServerResponse');
-			opts.afterServerResponse();
-		}
-	}
-	
-	function mostrarErrorNormalizacion() {
-		if (!(errorNormalizacion instanceof usig.ErrorEnCargaDelCallejero)) {
-			try {
-				view.showMessage(errorNormalizacion.getErrorMessage());
-			} catch(e) {
-				view.showMessage(opts.texts.nothingFound);
-			}
-		}
-		if (typeof(opts.afterSuggest) == "function") {
-			if (opts.debug) usig.debug('afterSuggest');
-			opts.afterSuggest();
-		}		
-	}
-	
-	function abortIfNecessary() {
-		if (serverTimeout) {
-			clearTimeout(serverTimeout);
-			abort();
-		}		
-	}
-	
+	/**
+	 * Aborta las llamadas asincronicas a servidores realizadas por los suggesters 
+	 * y las llamadas pendientes
+	 */
 	function abort() {
-		if (opts.debug) usig.debug('inventario.abort');					
-		opts.inventario.abort();
+		if (opts.debug) usig.debug('suggester.abort');
+
+        for (var i=0; i<suggesters.length; i++){
+            if (suggesters[i].inputTimer) {
+                clearTimeout(suggesters[i].inputTimer);
+            }
+			suggesters[i].suggester.abort();
+		}
 		if (typeof(opts.afterAbort) == "function") {
 			if (opts.debug) usig.debug('afterAbort');
 			opts.afterAbort();
-		}		
+		}
 	}
 	
+	/**
+	 * Funcion que se ejecuta en el onSelection. Intenta geocodificar la opcion seleccionada
+	 * @param {Object} option Objeto de la opcion seleccionada.
+	 */
 	function selectionHandler(option) {
-		if (opts.debug) usig.debug('usig.AutoCompleter: selection');
-		abortIfNecessary();
-		var newValue = option.toString()+((option instanceof usig.Calle)?' ':'');
-		if (opts.debug) usig.debug('usig.AutoCompleter: setting new value');
+		if (opts.debug) usig.debug('usig.AutoCompleter.selectionHandler('+option+')');
+		if (opts.debug) usig.debug(option);
+
+		abort();
+		var newValue = option.toString();
+		if (opts.debug) usig.debug('usig.AutoCompleter: setting new value '+newValue);
 		ic.setValue(newValue);
 		if (typeof(opts.afterSelection) == "function") {
 			if (opts.debug) usig.debug('usig.AutoCompleter: calling afterSelection');
 			opts.afterSelection(option);
 		}
 		if (typeof(opts.afterGeoCoding) == "function") {
-			if (option instanceof usig.Direccion) {
-				if (typeof(opts.beforeGeoCoding) == "function") {
-					if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
-					opts.beforeGeoCoding();
+			for (var i=0; i<suggesters.length; i++){
+				if (suggesters[i].suggester.name == option.suggesterName){
+					if (typeof(opts.beforeGeoCoding) == "function") {
+						if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
+						opts.beforeGeoCoding();
+					}
+					if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding '+option.suggesterName);
+					suggesters[i].suggester.getGeoCoding(option, opts.afterGeoCoding);
 				}
-				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.Direccion');	
-				try {
-					opts.geoCoder.geoCodificarDireccion(option, opts.afterGeoCoding, (function(error) {
-						if (opts.debug) usig.debug(error);
-					}).createDelegate(this));
-				} catch(error) {
-					if (opts.debug) usig.debug(error);
-				}
-			} else if (option instanceof usig.inventario.Objeto) {
-				if (typeof(opts.beforeGeoCoding) == "function") {
-					if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
-					opts.beforeGeoCoding();
-				}
-				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding usig.inventario.Objeto');
-				opts.inventario.getObjeto(option, afterObjGeoCoding.createDelegate(this), (function(error) {
-						if (opts.debug) usig.debug(error);
-					}).createDelegate(this));
 			}
 		}
-		if (option instanceof usig.Calle) {
-			if (opts.debug) usig.debug('usig.AutoCompleter: restoring focus');
-			ic.setFocus();
-		}
+		ic.setFocus();
 	}
 	
-	function afterObjGeoCoding(obj) {
-		if (opts.debug) usig.debug('usig.AutoCompleter: afterGeoCoding usig.inventario.Objeto');
-		if (obj.direccionAsociada) {
-			opts.afterGeoCoding(obj.direccionAsociada.getCoordenadas());
-		} else if (obj.ubicacion) {
-			opts.afterGeoCoding(obj.ubicacion.getCentroide());
-		}
-	}
-	
+	/**
+	 * Formatea el texto de la sugerencia seleccionada
+	 * @param {Object} item Objeto de la sugerencia seleccionada
+	 * @param {String} linkName
+	 * @param {function} wordMarker
+	 */
 	function optionsFormatter(item, linkName, wordMarker) {
-		if (item instanceof usig.inventario.Objeto) {
+		/*if (item.clase!=undefined && typeof(item.clase.getNombre) == "function") {
 			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.clase.getNombre()+')</span></li>';
-		} else if (item instanceof usig.Calle) {
-			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';
+		} else */
+		if (item.descripcion!=undefined && item.descripcion!='') {
+			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.descripcion+')</span></li>';
 		} else {
-			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';			
+			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';
 		}
 	}
 	
+	/**
+	 * Callback del evento onChange del usig.InputController.
+	 * @param {String} newValue nuevo valor ingresado a buscar.
+	 */
 	function onInputChange(newValue) {
 		try {
+			abort();
 			if (opts.debug) usig.debug('view.update: '+newValue);
-			abortIfNecessary();
 			view.update(newValue);
 		} catch(error) {
 			throw(error);
 		}
-		if (inputTimer) {
-			clearTimeout(inputTimer);
-		}
-		if (inputTimerServerSearch) {
-			clearTimeout(inputTimerServerSearch);
-		}
-		if (newValue.length >= opts.minTextLength) {
-			inputTimer = normalizar.defer(opts.inputPause, this, [newValue]);
-			inputTimerServerSearch = buscarEnInventario.defer(opts.inputPauseBeforeServerSearch, this, [newValue]);
+		appendResults = false;
+		
+		for (var i=0; i<suggesters.length; i++){
+			if (newValue.length >= suggesters[i].options.minTextLength) {
+				suggesters[i].inputTimer = sugerir.defer(suggesters[i].options.inputPause , this, [suggesters[i], newValue]);
+			}
 		}
 	}
 	
-	function onInputKeyUp(keyCode, newValue) {
+	/**
+	 * Callback del evento onKeyUp del usig.InputController.
+	 * @param {String} keyCode codigo de tecla presionada
+	 */
+	function onInputKeyUp(keyCode) {
 		if (opts.debug) usig.debug('view.keyUp');
-		view.keyUp(keyCode);		
+		view.keyUp(keyCode);
 	}
 	
+	/**
+	 * Callback del evento onBlur del usig.InputController.
+	 */
 	function onInputBlur() {
 		focused = false;
 		view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click		
 	}
 	
+	/**
+	 * Callback del evento onFocus del usig.InputController.
+	 */
 	function onInputFocus() {
-		focused = true;		
+		focused = true;
 	}
 	
 	// Inicializacion
@@ -384,42 +348,35 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		throw(error);
 	}
 	
-	if (!opts.normalizadorDirecciones) {
-		opts.normalizadorDirecciones = new usig.NormalizadorDirecciones({ aceptarCallesSinAlturas: opts.acceptSN, onReady: opts.onReady });
-		cleanList.push(opts.normalizadorDirecciones);
-	}
-	
-	if (!opts.inventario && opts.useInventario) {
-		opts.inventario = new usig.Inventario({ debug: opts.debug });
-		cleanList.push(opts.inventario);
-	}
-	
-	if (!opts.geoCoder) {
-		opts.geoCoder = new usig.GeoCoder({ debug: opts.debug });
-		cleanList.push(opts.geoCoder);
+	for (var i=0; i<opts.suggesters.length; i++){
+		this.addSuggester(opts.suggesters[i].suggester, opts.suggesters[i].options);
 	}
 	
 	if (!view) {
-		view = new usig.AutoCompleterView(idField, { rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter });
+		view = new usig.AutoCompleterView(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter });
 		cleanList.push(view);
 	}
-	
 	view.onSelection(selectionHandler.createDelegate(this));
 }
 
 usig.AutoCompleter.defaults = {
-	minTextLength: 3,
-	inputPause: 10,
-	inputPauseBeforeServerSearch: 500,
+/* Opciones para los suggesters */
+	inputPause: 200,
+	maxSuggestions: 10,
 	serverTimeout: 5000,
-	useInventario: true,
-	autoSelect: true,
-	autoHideTimeout: 5000,
-	acceptSN: true,
+	minTextLength: 3,
 	maxRetries: 5,
+	showError: true,
+/* Opciones para el AutoCompleterView */
 	maxOptions: 10,
+	offsetY: -5,
+	zIndex: 10000,
+	autoHideTimeout: 5000,
+	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/',
 	skin: 'usig',
+/* Opciones generales */
+	suggesters: [],
 	debug: false,
 	texts: {
 		nothingFound: 'No se hallaron resultados coincidentes con su b&uacute;squeda.'

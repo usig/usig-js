@@ -10,8 +10,6 @@
 	<script src="../usig.core.js" type="text/javascript"></script>
 	<script src="../jquery.jsonp-1.1.0.1.js" type="text/javascript"></script>
 	<script src="../json.js" type="text/javascript"></script>
-	<script src="../jquery.class.js" type="text/javascript"></script>
-	<script src="../usig.AjaxComponent.js" type="text/javascript"></script>
 	<script src="../usig.Punto.js" type="text/javascript"></script>
 	<script src="../usig.Calle.js" type="text/javascript"></script>
 	<script src="../usig.Direccion.js" type="text/javascript"></script>
@@ -24,51 +22,38 @@
 	<script src="../usig.AutoCompleter.js" type="text/javascript"></script>
 	<script src="../usig.AutoCompleterView.js" type="text/javascript"></script>
 	<script src="../usig.MapaEstatico.js" type="text/javascript"></script>
-
-    <script src="../usig.IndiceCatastral.js" type="text/javascript"></script>
-    <script src="../usig.SeccionCatastral.js" type="text/javascript"></script>
-    <script src="../usig.ManzanaCatastral.js" type="text/javascript"></script>
-    <script src="../usig.ParcelaCatastral.js" type="text/javascript"></script>
-    <script src="../usig.Suggester.js" type="text/javascript"></script>
-    <script src="../usig.SuggesterLugares.js" type="text/javascript"></script>
-	<script src="../usig.SuggesterDirecciones.js" type="text/javascript"></script>
-    <script src="../usig.SuggesterIndiceCatastral.js" type="text/javascript"></script>
-	
-	<script type="text/javascript">
+	<script type="text/javascript">	
 	$(document).ready(function() {
 		
 		function afterGeoCoding(pt) {
-			if (pt instanceof usig.Punto){
-				var imgMapa = usig.MapaEstatico({ x: pt.getX(), y: pt.getY(), marcarPunto: 1, width: 600, desc: $('#b').val() });
-				imgMapa.onload = function() {
-					$('#mapa').html('');
-					$('#mapa').append(imgMapa);
-				}
-				$('#mapa').html('Cargando mapa centrado en '+pt+'...');
-			}		
+			var imgMapa = usig.MapaEstatico({ x: pt.getX(), y: pt.getY(), marcarPunto: 1, width: 600, desc: $('#b').val() });
+			imgMapa.onload = function() {
+				$('#mapa').html('');
+				$('#mapa').append(imgMapa);
+			}
+			$('#mapa').html('Cargando mapa centrado en '+pt+'...');		
 		}
 		
-		var ac = new usig.AutoCompleter('b', {
-       		debug: true,
-       		rootUrl: '../',
-       		skin: 'usig',
-       		onReady: function() {
-       			$('#b').val('').removeAttr('disabled').focus();	        			
-       		},
-       		afterSelection: function(option) {
-       			$('#mapa').html('Se seleccionó la opción: '+option);
-       			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
-       				if ($('#mainForm fieldset input[name=geocode]').is(':checked'))
-       					$('#mapa').html('Buscando coordenadas...');
-       			}
-       		},
-       		afterGeoCoding: afterGeoCoding
-       	});
-
-        ac.addSuggester(new usig.SuggesterDirecciones(), { inputPause: 1, showError: true });
-        ac.addSuggester(new usig.SuggesterIndiceCatastral(), { inputPause: 200, minTextLength: 1, showError: false });
-       	ac.addSuggester(new usig.SuggesterLugares(), { inputPause: 300, showError: false });
+		$('#b').val('Cargando...').attr('disabled', 'disabled');
 		
+		var ac = new usig.AutoCompleter('b', {
+	        		debug: true,
+	        		rootUrl: '../',
+	        		skin: 'usig',
+	        		useInventario: true,
+	        		onReady: function() {
+	        			$('#b').val('').removeAttr('disabled').focus();	        			
+	        		},
+	        		afterSelection: function(option) {
+	        			$('#mapa').html('Se seleccionó la opción: '+option);
+	        			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+	        				if ($('#mainForm fieldset input[name=geocode]').is(':checked'))
+	        					$('#mapa').html('Buscando coordenadas...');
+	        			}
+	        		},
+	        		afterGeoCoding: afterGeoCoding
+	        	});
+	        	
 		$('#mainForm').bind("submit", function () {
 			return false;
 		});
@@ -98,7 +83,7 @@
 			ac.setOptions(options);
 		});
 		$('#mainForm fieldset select').change(function(ev) {
-			ac.changeSkin($('#mainForm fieldset select[name=skin]').val());
+			ac.changeSkin($('#mainForm fieldset select[name=skin]').val());		
 		});
 	});	
 	</script>
@@ -113,23 +98,23 @@
      	<fieldset title="Opciones">
      		<legend>Opciones</legend>
      	    <input type="checkbox" name="debug" id="chk_debug" checked>Debug</input>
-     	    <!--  input type="checkbox" name="useInventario" id="chk_inventario" checked>Usar Inventario</input -->
+     	    <input type="checkbox" name="useInventario" id="chk_inventario" checked>Usar Inventario</input>
      	    <input type="checkbox" name="autoSelect" id="chk_autoselect" checked>Auto Seleccionar</input>
      	    <input type="checkbox" name="geocode" id="chk_geocode" checked>Geocodificar y mostrar mapa</input><br/>
-     	    <!-- input type="checkbox" name="acceptSN" id="chk_acceptsn" checked>Aceptar S/N para calles sin numeración oficial</input -->
+     	    <input type="checkbox" name="acceptSN" id="chk_acceptsn" checked>Aceptar S/N para calles sin numeración oficial</input>
      	    <table>
-     	    <!--  tr>
+     	    <tr>
      	    	<td class="label"><label for="minTextLength">Mínima longitud del texto para activarse:</label></td>
      	    	<td><input type="text" size="3" maxlength=2 name="minTextLength" value="3"/></td>
-     	    </tr -->
+     	    </tr>
      	    <tr>
      	    	<td class="label"><label for="inputPause">Pausa necesaria para activarse (ms):</label></td>
      	    	<td><input type="text" size="5" maxlength=5 name="inputPause" value="300"/></td>
      	    </tr>
-     	    <!-- tr>
+     	    <tr>
      	    	<td class="label"><label for="inputPauseBeforeServerSearch">Pausa necesaria para buscar en inventario (ms):</label></td>
      	    	<td><input type="text" size="5" maxlength=5 name="inputPauseBeforeServerSearch" value="500"/></td>
-     	    </tr -->
+     	    </tr>
      	    <tr>
      	    	<td class="label"><label for="audoHideTimeout">Demora antes de ocultar sugerencias (ms):</label></td>
      	    	<td><input type="text" size="5" maxlength=5 name="autoHideTimeout" value="5000"/></td>

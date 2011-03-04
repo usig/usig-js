@@ -3,14 +3,13 @@ if (typeof (usig) == "undefined")
 	usig = {};
 	
 /**
- * @class SuggesterDirecciones
- * Implementa un suggester de direcciones usando el Normalizador de Direcciones.<br/>
- * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, Normalizador de Direcciones 1.0+, GeoCoder<br/>
+ * @class SuggesterLugares
+ * Implementa un suggester de lugares usando el inventario.<br/>
+ * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, usig.Inventario<br/>
  * @namespace usig
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a devolver
  * @cfg {Integer} serverTimeout Tiempo maximo de espera (en ms) antes de abortar una busqueda en el servidor
  * @cfg {Integer} maxRetries Maximo numero de reintentos a realizar en caso de timeout 
- * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>True</code>. Ej: de los italianos s/n.
  * @cfg {Function} afterAbort Callback que es llamada cada vez que se aborta un pedido al servidor.
  * @cfg {Function} afterRetry Callback que es llamada cada vez que se reintenta un pedido al servidor.
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
@@ -19,39 +18,40 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.SuggesterDirecciones = usig.Suggester.extend({
+usig.SuggesterLugares = usig.Suggester.extend({
 	
 	init: function(options){
-		this._super('Direcciones', options);
-		// El normalizador de direcciones y el geocoder pueden ser opciones para 
-		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
-		if (!this.opts.normalizadorDirecciones) {
-			this.opts.normalizadorDirecciones = new usig.NormalizadorDirecciones({ aceptarCallesSinAlturas: this.opts.acceptSN, onReady: this.opts.onReady });
-			this.cleanList.push(this.opts.normalizadorDirecciones);
-		}	
-		if (!this.opts.geoCoder) {
-			this.opts.geoCoder = new usig.GeoCoder(this.opts);
-			this.cleanList.push(this.opts.geoCoder);
+		if(options!=undefined){
+			var searchOpts = $.extend({}, usig.SuggesterLugares.defaults.searchOptions, options.searchOptions);
+			options.searchOpts = searchOpts;
 		}
+		var opts = $.extend({}, usig.SuggesterLugares.defaults, options);
+		
+        this._super('Inventario', opts);
+		// El indice catastral puede ser opcional para 
+		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
+		if (!this.opts.inventario) {
+            this.opts.inventario = new usig.Inventario(opts);
+			this.cleanList.push(this.opts.inventario);
+		}	
 	},
 	
 	/**
-	 * Dado un string, realiza una busqueda de direcciones y llama al callback con las
+	 * Dado un string, realiza una busqueda en el indice catastral y llama al callback con las
 	 * opciones encontradas.
 	 * @param {String} text Texto de input
 	 * @param {Function} callback Funcion que es llamada con la lista de sugerencias
 	 * @param {Integer} maxSuggestions (optional) Maximo numero de sugerencias a devolver
 	 */
 	getSuggestions: function(text, callback, maxSuggestions) {
-		if (this.opts.debug) usig.debug('usig.SuggesterDirecciones.getSuggestions(\'' + text + '\')');
 		var maxSug = maxSuggestions!=undefined?maxSuggestions:this.opts.maxSuggestions;
 		try {
-		    callback(this.opts.normalizadorDirecciones.normalizar(text, maxSug)); 
+			this.opts.inventario.buscar(text, callback, function (){}, { limit: maxSug });
 		} catch (error) {
 			callback(error);
-		} 
+		}
 	},
-
+	
 	/**
 	 * Dado un objeto de los que devuelve getSuggestions, retorna la geocodificacion correspondiente.
 	 * @param {Object} obj Objeto del tipo devuelto por getSuggestions
@@ -59,12 +59,24 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 	 * (una instancia de usig.Geometria) 
 	 */
 	getGeoCoding: function(obj, callback) {
-		if (this.opts.debug) usig.debug('usig.SuggesterDirecciones.getGoCoding(obj, callback)');
-		if (!(obj instanceof usig.Direccion)) {
+		if (!(obj instanceof usig.inventario.Objeto)) {
 			callback(new usig.Suggester.GeoCodingTypeError());
 		} else {
-			this.opts.geoCoder.geoCodificarDireccion(obj, callback);
-		}
+    		this.opts.inventario.getObjeto(obj, function (objCompleto){
+    			if (objCompleto.direccionAsociada) {
+    				callback(objCompleto.direccionAsociada.getCoordenadas());
+    			} else if (objCompleto.ubicacion) {
+    				callback(objCompleto.ubicacion.getCentroide());
+    			}
+    		},function(){});
+    	}
+	},
+
+	/**
+	 * Permite abortar la ultima consulta realizada 
+	 */
+	abort: function() {
+		this.opts.inventario.abort();
 	},
 	
 	/**
@@ -72,7 +84,7 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 	 * @return {Boolean} Verdadero si el componente se encuentra listo para responder sugerencias
 	 */
 	ready: function() {
-		return this.opts.normalizadorDirecciones.listo();
+		return true;
 	},
 	
 	/**
@@ -81,15 +93,23 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 	 * @param {Object} options Objeto conteniendo overrides para las opciones disponibles
 	 */
 	setOptions: function(options) {
-		opts = $.extend({}, this.opts, options);
-		this._super(opts);
-		this.opts.geoCoder.setOptions(opts);
+		this._super(options);
+		this.opts.inventario.setOptions(options);
 	}
 });
 
-usig.SuggesterDirecciones.defaults = {
-	debug: false,
+usig.SuggesterLugares.defaults = {
 	serverTimeout: 5000,
 	maxRetries: 5,
-	maxSuggestions: 10
+	maxSuggestions: 10,
+	searchOptions: {
+		start: 0,
+		limit: 20,
+		tipoBusqueda: 'ranking',
+		categoria: undefined,
+		clase: undefined,
+		bbox: false,
+		extent: undefined,
+		returnRawData: false
+	}
 }

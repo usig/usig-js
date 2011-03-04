@@ -49,6 +49,13 @@ usig.Suggester = jQuery.Class.create({
 	getGeoCoding: function(obj, callback) {		
 		throw new usig.Suggester.MethodNotImplemented();
 	},
+
+	/**
+	 * Permite abortar la ultima consulta realizada 
+	 */
+	abort: function() {
+		//throw new usig.Suggester.MethodNotImplemented();
+	},
 	
 	/**
 	 * Actualiza la configuracion del componente a partir de un objeto con overrides para las
@@ -86,6 +93,7 @@ usig.Suggester = jQuery.Class.create({
 });
 
 usig.Suggester.defaults = {
+	debug: false,
 	serverTimeout: 5000,
 	maxRetries: 5,
 	maxSuggestions: 10

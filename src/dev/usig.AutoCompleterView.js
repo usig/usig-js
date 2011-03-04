@@ -244,7 +244,7 @@ usig.AutoCompleterView = function(idField, options) {
 				numOptions++;
 			}
 		});
-		if (opts.debug) usig.debug('AutoCompleterView: showing '+numOptions+' options');
+		if (opts.debug) usig.debug('AutoCompleterView: showing '+numOptions+' options: ['+options+']');
 		if ((append === true || !isNaN(parseInt(append))) && $div && $('ul.options li a', $div).length > 0) {
 			if (opts.debug) usig.debug('AutoCompleterView: appending to the end of existing list...');
 			$('ul.options', $div).append(htmlList);

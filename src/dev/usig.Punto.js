@@ -53,9 +53,16 @@ usig.Punto = function(coordX, coordY) {
  * @return {usig.Punto} Punto creado
  */
 usig.Punto.fromWkt = function(wkt) {
-	wkt = wkt.replace('POINT (', '').replace(')', '');
+/*	wkt = wkt.replace('POINT (', '').replace(')', '');
 	var splited = wkt.split(' ');
-	return new usig.Punto(splited[0], splited[1]);
+	return new usig.Punto(splited[0], splited[1]);*/
+	var regExpPunto = /^POINT *\(([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+)\)$/;
+	var res = null;
+	
+	if (resMatch = wkt.match(regExpPunto)){
+		res = new usig.Punto(resMatch[1], resMatch[2]);
+	}
+	return res;
 };
 
 /**

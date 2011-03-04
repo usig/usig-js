@@ -114,8 +114,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	});
         	try {
 	        	this.sd.getSuggestions('ciudad 2849', function(suggestions) {
-	        				test.sd.getGeoCoding(suggestions[0], function() {});
-	        			});
+    				test.sd.getGeoCoding(suggestions[0], function() {});
+    			});
         	} catch(e) {
 	        	Y.Assert.fail(e.toString());
 	        }

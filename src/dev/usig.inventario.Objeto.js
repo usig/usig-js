@@ -24,6 +24,7 @@ usig.inventario.Objeto = function(data, clase) {
 	this.fechaUltimaModificacion = null;	
 	this.datos = {};
 	this.rawData = {};
+	this.descripcion = clase.getNombre();
 	
 	this.fill = function(data) {
 		if (data.id) {

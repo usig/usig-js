@@ -18,6 +18,9 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	document.getElementById('inputText').value = '';
         	$('#inputText').focus();
         	this.ac = new usig.AutoCompleter('inputText', {
+        		normalizadorDirecciones: {},
+        		inventario: { setOptions: function() {}},
+        		geoCoder: { setOptions: function() {}},
         		debug: true
         	}, {onSelection: function() {}, setOptions: function() {} });
         },
@@ -43,7 +46,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         //---------------------------------------------------------------------
         // Test methods - names must begin with "test"
         //---------------------------------------------------------------------
-        
+        /**/
         "Long-enough text should at least try to update view" : function () {
         	var test = this;
         	var mockView = usig.Mock(Y);
@@ -54,27 +57,30 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
-        	
-         	var mockSugDir = usig.Mock(Y);
-        	mockSugDir.name = 'mockSugDir';
-        	mockSugDir.expect({ method: 'getSuggestions' });
-        	mockSugDir.expect({ method: 'abort' });
-        	
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
+        		normalizadorDirecciones: {
+        			normalizar: function(str) {
+        				return [];
+        			},
+        			setOptions: function(opts) {}
+        		},
+        		inventario: mockInv,
+        		afterSuggest: function() {
+	        		test.resume(function() {
+        				mockView.verify();
+	        		});
+        		},
         		inputPause: 200,
         		minTextLength: 3
         	});
-        	this.ac.addSuggester(mockSugDir);
-        	
-            this.simulateType('inputText', 'ciudad', function() {
-                test.resume.defer(500, this, [(function() {
-                    mockView.verify();
-                })]);
-            });
+        	this.simulateType('inputText', 'ciudad');
         	this.wait();
         },
-        
+       
         "Too short text should not try to find suggestions" : function () {
         	var test = this;
         	var mockView = usig.Mock(Y);
@@ -85,229 +91,170 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
-
-         	var mockSugDir = usig.Mock(Y);
-        	mockSugDir.name = 'mockSugDir';
-        	mockSugDir.expect({ method: 'getSuggestions', callCount: 0 });
-        	mockSugDir.expect({ method: 'abort' });
-        	var mockSugLug = usig.Mock(Y);
-        	mockSugLug.name = 'mockSugLug';
-        	mockSugLug.expect({ method: 'getSuggestions', callCount: 0 });
-        	mockSugLug.expect({ method: 'abort' });
-        	var mockSugCat = usig.Mock(Y);
-        	mockSugCat.name = 'mockSugCat';
-        	mockSugCat.expect({ method: 'getSuggestions', callCount: 0 });
-        	mockSugCat.expect({ method: 'abort' });
-        	
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', callCount: 0});
+        	mockND.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
         		inputPause: 200,
         		minTextLength: 3
         	});
-        	this.ac.addSuggester(mockSugDir, {minTextLength: 3});
-        	this.ac.addSuggester(mockSugLug, {minTextLength: 3});
-        	this.ac.addSuggester(mockSugCat, {minTextLength: 3});
-        	
         	this.simulateType('inputText', 'ci', function() {
         		test.resume.defer(500, this, [(function() {
         			mockView.verify();
-        			mockSugDir.verify();
-        			mockSugLug.verify();
-        			mockSugCat.verify();
+        			mockND.verify();
         		})]);
         	});
         	this.wait();
         },
-
-        "Too short text should not try to find suggestions 2" : function () {
-            var test = this;
-            var mockView = usig.Mock(Y);
-            mockView.expect({ method: 'update', args: [['c'], ['ci']], callCount: 2 });
-            mockView.expect({ method: 'show', callCount: 0 });
-            mockView.expect({ method: 'onSelection' });
-            mockView.expect({ method: 'keyUp' });
-            mockView.expect({ method: 'hide' });
-            mockView.expect({ method: 'remove' });
-            mockView.expect({ method: 'setOptions' });
-
-            var mockSugDir = usig.Mock(Y);
-            mockSugDir.name = 'mockSugDir';
-            mockSugDir.expect({ method: 'getSuggestions', callCount: 0 });
-            mockSugDir.expect({ method: 'abort' });
-            var mockSugLug = usig.Mock(Y);
-            mockSugLug.name = 'mockSugLug';
-            mockSugLug.expect({ method: 'getSuggestions', callCount: 0 });
-            mockSugLug.expect({ method: 'abort' });
-            var mockSugCat = usig.Mock(Y);
-            mockSugCat.name = 'mockSugCat';
-            mockSugCat.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugCat.expect({ method: 'abort' });
-            
-            this.ac.setViewControl(mockView);
-            this.ac.setOptions({
-                inputPause: 200,
-                minTextLength: 3
-            });
-            this.ac.addSuggester(mockSugDir, {minTextLength: 3});
-            this.ac.addSuggester(mockSugLug, {minTextLength: 3});
-            this.ac.addSuggester(mockSugCat, {minTextLength: 1});
-            
-            this.simulateType('inputText', 'ci', function() {
-                test.resume.defer(500, this, [(function() {
-                    mockView.verify();
-                    mockSugDir.verify();
-                    mockSugLug.verify();
-                    mockSugCat.verify();
-                })]);
-            });
-            this.wait();
-        },
-        
+        /*
         "Long-enough text should call NormalizadorDirecciones after a delay" : function () {
         	var test = this;
-        	var mockSugDir = usig.Mock(Y);
-        	mockSugDir.name = 'mockSugDir';
-        	mockSugDir.expect({ method: 'getSuggestions', callCount: 1});
-        	mockSugDir.expect({ method: 'abort' });
-        	
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
-        	mockView.expect({ method: 'show' });
-//            mockView.expect({ method: 'show', callCount: 1 });
+        	mockView.expect({ method: 'show', callCount: 1 });
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'keyUp' });
         	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
-        	
-        	this.ac.setViewControl(mockView);
-
-        	this.ac.addSuggester(mockSugDir);
-        	
-        	this.simulateType('inputText', 'ciudad', function() {
-        		test.resume.defer(500, this, [(function() {
-        			mockSugDir.verify();
-        			mockView.verify();
-        		})]);
-        	});
-        	this.wait();
-        },
-
-        "Long-enough text should call Inventario after calling NormalizadorDirecciones" : function () {
-        	var test = this;
-
-            var mockView = usig.Mock(Y);
-            mockView.expect({ method: 'update' });
-            mockView.expect({ method: 'show' });
-            mockView.expect({ method: 'onSelection' });
-            mockView.expect({ method: 'keyUp' });
-            mockView.expect({ method: 'hide' });
-            mockView.expect({ method: 'remove' });
-            mockView.expect({ method: 'setOptions' });
-
-            var mockSugDir = usig.Mock(Y);
-            mockSugDir.name = 'mockSugDir';
-            mockSugDir.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugDir.expect({ method: 'abort' });
-            var mockSugLug = usig.Mock(Y);
-            mockSugLug.name = 'mockSugLug';
-            mockSugLug.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugLug.expect({ method: 'abort' });
-            var mockSugCat = usig.Mock(Y);
-            mockSugCat.name = 'mockSugCat';
-            mockSugCat.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugCat.expect({ method: 'abort' });
-        	
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: mockInv,
+        		afterSuggest: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockView.verify();
+	        		});
+        		},
         		inputPause: 200
         	});
-            this.ac.addSuggester(mockSugDir);
-            this.ac.addSuggester(mockSugLug);
-            this.ac.addSuggester(mockSugCat);
-        	
-            this.simulateType('inputText', 'ciudad', function() {
-                test.resume.defer(1000, this, [(function() {
-                    mockSugDir.verify();
-                    mockSugLug.verify();
-                    mockSugCat.verify();
-                })]);
-            });
-        	this.wait();        	
-        },
-        
-//        "After a timeout on inventario it should retry" : function () {
-//        	var test = this;
-//        	var mockND = usig.Mock(Y);
-//        	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
-//        	mockND.expect({ method: 'setOptions' });
-//        	var mockView = usig.Mock(Y);
-//        	mockView.expect({ method: 'update' });
-//        	mockView.expect({ method: 'show' });
-//        	mockView.expect({ method: 'onSelection' });
-//        	mockView.expect({ method: 'hide' });
-//        	mockView.expect({ method: 'keyUp' });
-//        	mockView.expect({ method: 'remove' });
-//        	mockView.expect({ method: 'setOptions' });
-//        	var mockInv = usig.Mock(Y);
-//        	mockInv.expect({ method: 'buscar', callCount: 2 });
-//        	mockInv.expect({ method: 'abort', callCount: 1 });
-//        	mockInv.expect({ method: 'setOptions' });
-//        	this.ac.setViewControl(mockView);
-//        	this.ac.setOptions({
-//        		normalizadorDirecciones: mockND,
-//        		inventario: mockInv,
-//        		afterRetry: function() {
-//	        		test.resume(function() {
-//	        			mockND.verify();
-//	        			mockInv.verify();
-//	        		});
-//        		},
-//				inputPauseBeforeServerSearch: 200,
-//        		inputPause: 200,
-//        		serverTimeout: 200
-//        	});
-//        	this.simulateType('inputText', 'ciudad');
-//        	this.wait();
-//        },        
-        
-        "Running search should be aborted on input change" : function () {
-        	var test = this;
-            var mockView = usig.Mock(Y);
-            mockView.expect({ method: 'update' });
-            mockView.expect({ method: 'show' });
-            mockView.expect({ method: 'onSelection' });
-            mockView.expect({ method: 'keyUp' });
-            mockView.expect({ method: 'hide' });
-            mockView.expect({ method: 'remove' });
-            mockView.expect({ method: 'setOptions' });
-        	
-            var mockSugDir = usig.Mock(Y);
-            mockSugDir.name = 'mockSugDir';
-            mockSugDir.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugDir.expect({ method: 'abort', callCount: 6 });
-
-        	this.ac.setViewControl(mockView);
-            this.ac.addSuggester(mockSugDir);
-
-            this.simulateType('inputText', 'ciudad', function() {
-                test.resume.defer(500, this, [(function() {
-                    mockSugDir.verify();
-                })]);
-            });
+        	this.simulateType('inputText', 'ciudad');
         	this.wait();
         },
         
-        "Search should be aborted on user selection" : function () {
+        "Long-enough text should call Inventario after calling NormalizadorDirecciones" : function () {
         	var test = this;
-
-            var mockSugDir = usig.Mock(Y);
-            mockSugDir.name = 'mockSugDir';
-            mockSugDir.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugDir.expect({ method: 'abort', callCount: 7 });
-            this.ac.addSuggester(mockSugDir);
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
+        	var mockView = usig.Mock(Y);
+        	mockView.expect({ method: 'update' });
+        	mockView.expect({ method: 'show' });
+        	mockView.expect({ method: 'onSelection' });
+        	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
+        	mockView.expect({ method: 'remove' });
+        	mockView.expect({ method: 'setOptions' });
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'abort'});
+        	mockInv.expect({ method: 'setOptions' });
+        	this.ac.setViewControl(mockView);
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: mockInv,
+        		afterServerRequest: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockInv.verify();
+	        		});
+        		},
+				inputPauseBeforeServerSearch: 500,
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+        	this.wait();        	
+        },
             
-            this.ac.setViewControl({
+        "After a timeout on inventario it should retry" : function () {
+        	var test = this;
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
+        	var mockView = usig.Mock(Y);
+        	mockView.expect({ method: 'update' });
+        	mockView.expect({ method: 'show' });
+        	mockView.expect({ method: 'onSelection' });
+        	mockView.expect({ method: 'hide' });
+        	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'remove' });
+        	mockView.expect({ method: 'setOptions' });
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 2 });
+        	mockInv.expect({ method: 'abort', callCount: 1 });
+        	mockInv.expect({ method: 'setOptions' });
+        	this.ac.setViewControl(mockView);
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: mockInv,
+        		afterRetry: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockInv.verify();
+	        		});
+        		},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200,
+        		serverTimeout: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+        	this.wait();
+        },        
+            
+        "Running inventario search should be aborted on input change" : function () {
+        	var test = this;
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', callCount: 1});
+        	mockND.expect({ method: 'setOptions' });
+        	var mockView = usig.Mock(Y);
+        	mockView.expect({ method: 'update' });
+        	mockView.expect({ method: 'show' });
+        	mockView.expect({ method: 'onSelection' });
+        	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
+        	mockView.expect({ method: 'remove' });
+        	mockView.expect({ method: 'setOptions' });
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'abort', callCount: 1 });
+        	mockInv.expect({ method: 'setOptions' });
+        	this.ac.setViewControl(mockView);
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: mockInv,
+        		afterAbort: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockInv.verify();
+	        		});
+        		},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+      		(function() { this.simulateType('inputText', ' de'); }).defer(200, this);
+        	this.wait();
+        },
+            
+        "Running inventario search should be aborted on user selection" : function () {
+        	var test = this;
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar'});
+        	mockND.expect({ method: 'setOptions'});
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'abort', callCount: 1 });
+        	mockInv.expect({ method: 'setOptions' });
+        	this.ac.setViewControl({
         		update: function() {},
         		show: function() {},
         		hide: function() {},
@@ -318,18 +265,28 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		remove: function() {},
         		setOptions: function() {}
         	});
-        	
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: mockInv,
+        		afterAbort: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockInv.verify();
+	        		});        			
+        		},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200,
+        		serverTimeout: 1000
+        	});
         	this.simulateType('inputText', 'ciudad');
-            Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-            Y.one('#inputText').simulate("keyup", { keyCode: 13 });
-            test.resume.defer(500, this, [(function() {
-                    mockSugDir.verify();
-                })]);
         	this.wait();
         },
-        
-        "Succesful search should update suggestions" : function () {
+            
+        "Succesful inventario search should update suggestions" : function () {
         	var test = this;
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', args: [['ciudad']], callCount: 1});
+        	mockND.expect({ method: 'setOptions'});
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
         	mockView.expect({ method: 'show', callCount: 2 });
@@ -338,72 +295,69 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'hide' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
-
-            var mockSugDir = {
-            	name: 'mockSugDir',
-            	getSuggestions: function (str, callbackSugerir, maxSuggestions) {
-            		callbackSugerir(['Ciudad Universitaria']);
-            	},
-            	abort: function () {}
-            }
-
-            var mockSugLug = {
-            	name: 'mockSugLug', 
-                getSuggestions: function (str, callbackSugerir, maxSuggestions) {
-                    callbackSugerir(['Ciudad Universitaria']);
-                },
-                abort: function () {}
-            }
-
-            this.ac.addSuggester(mockSugDir);
-            this.ac.addSuggester(mockSugLug);
         	this.ac.setViewControl(mockView);
-
-            this.simulateType('inputText', 'ciudad', function() {
-                test.resume.defer(500, this, [(function() {
-                    mockView.verify();
-                })]);
-            });
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: {
+        			buscar: function(str, success, error) {
+        				if (typeof(success) == "function") {
+        					success(['Ciudad Universitaria']);
+        				}
+        			},
+        			abort: function () {},
+        			setOptions: function() {}
+        		},
+        		afterServerResponse: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockView.verify();
+	        		});
+        		},
+        		setOptions: function() {},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
         	this.wait();
         },
         
-        "Unsuccesful search should not re-update suggestions" : function () {
-            var test = this;
-            var mockView = usig.Mock(Y);
-            mockView.expect({ method: 'update' });
-            mockView.expect({ method: 'show', callCount: 1 });
-            mockView.expect({ method: 'onSelection' });
-            mockView.expect({ method: 'keyUp' });
-            mockView.expect({ method: 'hide' });
-            mockView.expect({ method: 'remove' });
-            mockView.expect({ method: 'setOptions' });
-
-            var mockSugDir = {
-                name: 'mockSugDir',
-                getSuggestions: function (str, callbackSugerir, maxSuggestions) {
-                    callbackSugerir(['Ciudad Universitaria']);
-                },
-                abort: function () {}
-            }
-
-            var mockSugLug = {
-                name: 'mockSugLug', 
-                getSuggestions: function (str, callbackSugerir, maxSuggestions) {
-                    callbackSugerir([]);
-                },
-                abort: function () {}
-            }
-
-            this.ac.addSuggester(mockSugDir);
-            this.ac.addSuggester(mockSugLug);
-            this.ac.setViewControl(mockView);
-
-            this.simulateType('inputText', 'ciudad', function() {
-                test.resume.defer(500, this, [(function() {
-                    mockView.verify();
-                })]);
-            });
-            this.wait();
+        "Unsuccesful inventario search should not re-update suggestions" : function () {
+        	var test = this;
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', args: [['ciudad']]});
+        	mockND.expect({ method: 'setOptions'});
+        	var mockView = usig.Mock(Y);
+        	mockView.expect({ method: 'update' });
+        	mockView.expect({ method: 'show', callCount: 1 });
+        	mockView.expect({ method: 'onSelection' });
+        	mockView.expect({ method: 'keyUp' });
+        	mockView.expect({ method: 'hide' });
+        	mockView.expect({ method: 'remove' });
+        	mockView.expect({ method: 'setOptions' });
+        	this.ac.setViewControl(mockView);
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: {
+        			buscar: function(str, success, error) {
+        				if (typeof(success) == "function") {
+        					success([]);
+        				}
+        			},
+        			abort: function () {},
+        			setOptions: function() {}
+        		},
+        		afterServerResponse: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockView.verify();
+	        		});
+        		},
+        		setOptions: function() {},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+        	this.wait();
         },
         
         "Every keystroke should be passed to the view control" : function () {
@@ -416,124 +370,128 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'onSelection' });
         	mockView.expect({ method: 'remove' });
         	mockView.expect({ method: 'setOptions' });
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar'});
+        	mockND.expect({ method: 'setOptions'});
         	this.ac.setViewControl(mockView);
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND
+        	});
         	this.simulateType('inputText', 'ciudad');
   			Y.one('#inputText').simulate("keyup", { keyCode: 38 });
   			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
 			mockView.verify();
     	},
         
-//        "User selection should trigger callback" : function () {
-//        	usig.debug("User selection should trigger callback");
-//        	var test = this;
-//        	var mockND = usig.Mock(Y);
-//        	mockND.expect({ method: 'normalizar', callCount: 1 });
-//        	mockND.expect({ method: 'setOptions'});
-//        	var mockInv = usig.Mock(Y);
-//        	mockInv.expect({ method: 'buscar', callCount: 1 });
-//        	mockInv.expect({ method: 'abort'});
-//        	mockInv.expect({ method: 'setOptions'});
-//        	this.ac.setViewControl({
-//        		update: function() {},
-//        		show: function() {},
-//        		hide: function() {},
-//        		keyUp: function() {},
-//        		onSelection: function(callback) {
-//        			callback.defer(600, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
-//        		},
-//        		remove: function() {},
-//        		setOptions: function() {}
-//        	});
-//        	this.ac.setOptions({
-//        		normalizadorDirecciones: mockND,
-//        		inventario: mockInv,
-//        		afterSelection: function() {
-//	        		test.resume(function() {
-//	        			mockND.verify();
-//	        			mockInv.verify();
-//	        		});
-//        		},
-//				inputPauseBeforeServerSearch: 200,
-//        		inputPause: 200
-//        	});
-//        	this.simulateType('inputText', 'ciudad');
-//        	this.wait();
-//        },
-          
-//        "User selection should trigger callback with the real NormalizadorDirecciones" : function () {
-//        	var test = this;
-//        	var mockInv = usig.Mock(Y);
-//        	mockInv.expect({ method: 'buscar', callCount: 1 });
-//        	mockInv.expect({ method: 'abort'});
-//        	mockInv.expect({ method: 'setOptions'});
-//        	this.ac.setViewControl({
-//        		update: function() {},
-//        		show: function() {},
-//        		keyUp: function() {},
-//        		hide: function() {},
-//        		onSelection: function(callback) {
-//        			callback.defer(600, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
-//        		},
-//        		remove: function() {},
-//        		setOptions: function() {}
-//        	});
-//        	this.ac.setOptions({
-//        		normalizadorDirecciones: new usig.NormalizadorDirecciones(),
-//        		inventario: mockInv,
-//        		afterSelection: function() {
-//	        		test.resume(function() {
-//	        			mockInv.verify();
-//	        		});
-//        		},
-//				inputPauseBeforeServerSearch: 200,
-//        		inputPause: 200
-//        	});
-//        	this.simulateType('inputText', 'ciudad');
-//        	this.wait();
-//        },
+        "User selection should trigger callback" : function () {
+        	usig.debug("User selection should trigger callback");
+        	var test = this;
+        	var mockND = usig.Mock(Y);
+        	mockND.expect({ method: 'normalizar', callCount: 1 });
+        	mockND.expect({ method: 'setOptions'});
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'abort'});
+        	mockInv.expect({ method: 'setOptions'});
+        	this.ac.setViewControl({
+        		update: function() {},
+        		show: function() {},
+        		hide: function() {},
+        		keyUp: function() {},
+        		onSelection: function(callback) {
+        			callback.defer(600, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
+        		},
+        		remove: function() {},
+        		setOptions: function() {}
+        	});
+        	this.ac.setOptions({
+        		normalizadorDirecciones: mockND,
+        		inventario: mockInv,
+        		afterSelection: function() {
+	        		test.resume(function() {
+	        			mockND.verify();
+	        			mockInv.verify();
+	        		});
+        		},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+        	this.wait();
+        }*/
+        /*,
+        
+        "User selection should trigger callback with the real NormalizadorDirecciones" : function () {
+        	var test = this;
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'abort'});
+        	mockInv.expect({ method: 'setOptions'});
+        	this.ac.setViewControl({
+        		update: function() {},
+        		show: function() {},
+        		keyUp: function() {},
+        		hide: function() {},
+        		onSelection: function(callback) {
+        			callback.defer(600, this, [new usig.Calle(3174, 'CORRIENTES AV.')]);
+        		},
+        		remove: function() {},
+        		setOptions: function() {}
+        	});
+        	this.ac.setOptions({
+        		normalizadorDirecciones: new usig.NormalizadorDirecciones(),
+        		inventario: mockInv,
+        		afterSelection: function() {
+	        		test.resume(function() {
+	        			mockInv.verify();
+	        		});
+        		},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200
+        	});
+        	this.simulateType('inputText', 'ciudad');
+        	this.wait();
+        },
         
         "If afterGeoCoding is set, user selection of an address should try to geocode it" : function () {
         	var test = this;
-
-            var mockSugDir = usig.Mock(Y);
-            mockSugDir.name = 'mockSugDir';
-            mockSugDir.getSuggestions = function (str, callbackSugerir, maxSuggestions) {
-                callbackSugerir(['CORRIENTES AV. 3174']);
-            };
-            mockSugDir.expect({ method: 'getGeoCoding', callCount: 1 });
-            mockSugDir.expect({ method: 'abort' });
-            this.ac.addSuggester(mockSugDir);
-
-            var mockView = usig.Mock(Y);
-            mockView.expect({ method: 'update' });
-            mockView.expect({ method: 'show', callCount: 1 });
-            mockView.onSelection = function(callback) {
-                var opt = new usig.Calle(3174, 'CORRIENTES AV.');
-                opt.suggesterName = 'mockSugDir';
-                callback.defer(600, this, [opt]);
-            };
-            mockView.expect({ method: 'keyUp' });
-            mockView.expect({ method: 'hide' });
-            mockView.expect({ method: 'remove' });
-            mockView.expect({ method: 'setOptions' });
-            this.ac.setViewControl(mockView);
-            
-        	this.ac.setOptions({
-        		afterGeoCoding: function(res) {},
-        		inputPause: 200
+        	var mockInv = usig.Mock(Y);
+        	mockInv.expect({ method: 'buscar', callCount: 1 });
+        	mockInv.expect({ method: 'abort'});
+        	mockInv.expect({ method: 'setOptions'});
+        	this.ac.setViewControl({
+        		update: function() {},
+        		show: function() {},
+        		keyUp: function() {},
+        		onSelection: function(callback) {
+        			callback.defer(600, this, [new usig.Direccion(new usig.Calle(3174, 'CORRIENTES AV.'), 1234)]);
+        		},
+        		remove: function() {},
+        		setOptions: function() {}
         	});
-        	this.simulateType('inputText', 'corrientes 3174');
-            Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-            Y.one('#inputText').simulate("keyup", { keyCode: 13 });
-            test.resume.defer(1000, this, [(function() {
-                    mockSugDir.verify();
-                })]);
+        	this.ac.setOptions({
+        		normalizadorDirecciones: new usig.NormalizadorDirecciones(),
+        		inventario: mockInv,
+        		geoCoder: {
+        			geoCodificarDireccion: function(dir, success, error, metodo) {
+        				success(new usig.Punto(100000, 100000));
+        			},
+        			setOptions: function() {}
+        		},
+				inputPauseBeforeServerSearch: 200,
+        		inputPause: 200,
+        		afterGeoCoding: function(res) {
+	        		test.resume(function() {
+	        			Y.Assert.isInstanceOf(usig.Punto, res);
+	        		});
+        		}
+        	});
+        	this.simulateType('inputText', 'ciudad 2849');
         	this.wait();
-        }/**/
+        }*/
+		
     });
     
-/*************************************************************************/
-/*************************************************************************/
     Y.AutoCompleter.test.IntegracionTestCaseDirecciones = new Y.Test.Case({
     
         //name of the test case - if not provided, one is auto-generated
@@ -553,10 +511,9 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.ac = new usig.AutoCompleter('inputText', {
         		debug: true,
         		rootUrl: '../',
-        		skin: 'usig'
-//        		suggesters: [{ suggester: sgDir }],
+        		skin: 'usig',
+        		suggesters: [sgDir],
         	});
-        	this.ac.addSuggester(sgDir);
         },
         
         /*
@@ -588,13 +545,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.areEqual(3, $('ul.options').children().length);
-//	        			Y.Assert.areEqual('CIUDAD DE LA PAZ', $('ul.options').children().children()[0]);
-//	        			Y.Assert.areEqual('CIUDAD DE SABADELL', $('ul.options').children().children()[1].textContent);
-//	        			Y.Assert.areEqual('CIUDADELA', $('ul.options').children().children()[2].textContent);
+	        			Y.Assert.areEqual('CIUDAD DE LA PAZ', $('ul.options').children().children()[0].textContent);
+	        			Y.Assert.areEqual('CIUDAD DE SABADELL', $('ul.options').children().children()[1].textContent);
+	        			Y.Assert.areEqual('CIUDADELA', $('ul.options').children().children()[2].textContent);
 	        		});        			
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', 'ciudad');
         	this.wait();
@@ -614,12 +571,12 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		});
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', 'ciudad');
         	this.wait();
         },
-
+        
         "Selecting an address should put its name as value of the control" : function () {
         	var test = this;
         	this.ac.setOptions({
@@ -634,7 +591,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		});
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', 'ciudad 2849');
         	this.wait();
@@ -647,7 +604,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-	        			Y.Assert.areEqual("No pudo hallarse ninguna calle existente que coincidiera con su búsqueda. Por favor, revise el nombre ingresado y vuelva a intentarlo.", $('div.message')[0].innerHTML);
+	        			Y.Assert.areEqual("No pudo hallarse ninguna calle existente que coincidiera con su búsqueda. Por favor, revise el nombre ingresado y vuelva a intentarlo.", $('div.message')[0].textContent);
+	        			console.log($('div.message')[0].textContent);
 	        		});
         		},
         		inputPause: 200,
@@ -656,6 +614,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.simulateType('inputText', 'asdf');
         	this.wait();
         },
+        
         "Non-existing intersection should show an explanatory message" : function () {
         	var test = this;
         	this.ac.setOptions({
@@ -663,7 +622,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-	        			usig.debug($('div.message')[0].textContent);
+	        			console.log($('div.message')[0].textContent);
 	        		});
         		},
         		inputPause: 200,
@@ -680,7 +639,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-	        			usig.debug($('div.message')[0].textContent);
+	        			console.log($('div.message')[0].textContent);
 	        		});
         		},
         		inputPause: 200,
@@ -697,7 +656,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-	        			usig.debug($('div.message')[0].textContent);
+	        			console.log($('div.message')[0].textContent);
 	        		});
         		},
         		inputPause: 200,
@@ -720,20 +679,40 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        			Y.Assert.areEqual('CIUDAD DE LA PAZ 2849', $('#inputText').val());
 	        			Y.Assert.areEqual('100028.56071', obj.getX());
 	        			Y.Assert.areEqual('108089.39333', obj.getY());
-	        			usig.debug($('#inputText').val());
-	        			usig.debug(obj);
+	        			console.log($('#inputText').val());
+	        			console.log(obj);
 	        		});
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', 'ciudad 2849');
         	this.wait();        	
-        }/**/
+        },
+        /*
+        "If acceptSN is set it should accept addresses with S/N" : function () {
+        	var test = this;
+        	this.ac.setOptions({
+        		afterSuggest: function() {
+		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+        		},
+        		afterSelection: function(obj) {
+	        		test.resume(function() {
+	        			Y.Assert.isInstanceOf(usig.Direccion, obj);
+	        			Y.Assert.areEqual('DE LOS ITALIANOS AV. S/N', $('#inputText').val());
+	        		});        			
+        		},
+        		inputPause: 200,
+        		minTextLength: 3,
+        		aceptarCallesSinAlturas: true,
+        	});
+        	this.simulateType('inputText', 'italianos s/n');
+        	this.wait();        	
+        }
+        */
     });
 
-/*************************************************************************/
-/*************************************************************************/
     Y.AutoCompleter.test.IntegracionTestCaseLugares = new Y.Test.Case({
         
         //name of the test case - if not provided, one is auto-generated
@@ -754,9 +733,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		debug: true,
         		rootUrl: '../',
         		skin: 'usig',
-        		suggesters: [ { suggester: sgLug, options: {inputPause: 200} } ]
+        		suggesters: [sgLug],
         	});
-//        	this.ac.addSuggester(sgLug);
         },
         
         /*
@@ -788,11 +766,11 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.areEqual(4, $('ul.options').children().length);
-	        			usig.debug($('ul.options').children().children());
+	        			console.log($('ul.options').children().children());
 	        		});        			
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', 'club boca');
         	this.wait();
@@ -830,7 +808,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.isInstanceOf(usig.inventario.Objeto, obj);
 	        			Y.Assert.areEqual('Museo de Arte Latinoamericano de Buenos Aires - Colección Costantini (MALBA)', $('#inputText').val());
-	        			usig.debug($('#inputText').val());
+	        			console.log($('#inputText').val());
 	        		});        			
         		},
         		inputPause: 200,
@@ -847,8 +825,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-//	        			Y.Assert.areEqual("No se hallaron resultados coincidentes con su búsqueda.", $('div.message')[0].textContent);
-	        			usig.debug($('div.message')[0].textContent);
+	        			Y.Assert.areEqual("No se hallaron resultados coincidentes con su búsqueda.", $('div.message')[0].textContent);
+	        			console.log($('div.message')[0].textContent);
 	        		});
         		},
         		inputPause: 200,
@@ -872,20 +850,18 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        			Y.Assert.areEqual('MALBA', $('#inputText').val());
 	        			Y.Assert.areEqual('105463.9127909999951953', obj.getX());
 	        			Y.Assert.areEqual('105768.5586849999963306', obj.getY());
-	        			usig.debug($('#inputText').val());
-	        			usig.debug(obj);
+	        			console.log($('#inputText').val());
+	        			console.log(obj);
 	        		});
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', 'malba');
         	this.wait();
-        }
+        },
     });
 
-/*************************************************************************/
-/*************************************************************************/
     Y.AutoCompleter.test.IntegracionTestCaseCatastro = new Y.Test.Case({
         
         //name of the test case - if not provided, one is auto-generated
@@ -906,9 +882,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		debug: true,
         		rootUrl: '../',
         		skin: 'usig',
-        		suggesters: []
+        		suggesters: [sgCat],
         	});
-        	this.ac.addSuggester(sgCat, {inputPause: 100});
         },
         
         /*
@@ -941,12 +916,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.areEqual(2, $('ul.options').children().length);
 	        			Y.Assert.areEqual(2, $('ul.options').children().length);
-//	        			Y.Assert.areEqual('05-022-019B', $('ul.options').children().children()[1].textContent);
-	        			usig.debug($('ul.options').children().children());
+	        			Y.Assert.areEqual('05-022-019A', $('ul.options').children().children()[0].textContent);
+	        			Y.Assert.areEqual('05-022-019B', $('ul.options').children().children()[1].textContent);
+	        			console.log($('ul.options').children().children());
 	        		});        			
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', '05-022-019');
         	this.wait();
@@ -981,7 +957,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
-	        			usig.debug($('#inputText').val());
+	        			console.log($('#inputText').val());
 	        			Y.Assert.isInstanceOf(usig.ParcelaCatastral, obj);
 	        			Y.Assert.areEqual('05-022-010', $('#inputText').val());
 	        		});        			
@@ -1000,8 +976,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-//	        			Y.Assert.areEqual("Los parametros ingresados son incorrectos.", $('div.message')[0].textContent);
-	        			usig.debug($('div.message')[0].textContent);
+	        			Y.Assert.areEqual("No se hallaron resultados coincidentes con su búsqueda.", $('div.message')[0].textContent);
+	        			console.log($('div.message')[0].textContent);
 	        		});
         		},
         		inputPause: 200,
@@ -1025,23 +1001,24 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        			Y.Assert.areEqual('05-022-019A', $('#inputText').val());
 	        			Y.Assert.areEqual('106820.707651072', obj.getX());
 	        			Y.Assert.areEqual('102679.4015', obj.getY());
-	        			usig.debug($('#inputText').val());
-	        			usig.debug(obj);
+	        			console.log($('#inputText').val());
+	        			console.log(obj);
 	        		});
         		},
         		inputPause: 200,
-        		minTextLength: 3
+        		minTextLength: 3,
         	});
         	this.simulateType('inputText', '05-022-019A');
         	this.wait();
-        }
+        },
     });
 
+    
     Y.AutoCompleter.test.AutoCompleterSuite = new Y.Test.Suite("AutoCompleter");
     Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.EventsTestCase);
-    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCaseDirecciones);
-    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCaseLugares);
-    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCaseCatastro);
+//    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCaseDirecciones);
+//    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCaseLugares);
+//    Y.AutoCompleter.test.AutoCompleterSuite.add(Y.AutoCompleter.test.IntegracionTestCaseCatastro);
     
     //create the console
     var r = new Y.Console({
