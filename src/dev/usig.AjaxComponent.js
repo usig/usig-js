@@ -140,6 +140,7 @@ usig.AjaxComponent = jQuery.Class.create({
 });
 
 usig.AjaxComponent.defaults = {
+	debug: false,
 	serverTimeout: 5000,
 	maxRetries: 5
 }
