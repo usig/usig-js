@@ -230,17 +230,25 @@ usig.FotosParcela = function(smp, opts) {
 	 * o el componente no se encuentra inicializado
 	 */
 	this.fechaFoto = function(id) {
-		if (fotosParcela) {
+		if (fotosParcela) {			
 			if (currentFoto >= 0) {
-				if (typeof(id) == "undefined")
-					id = currentFoto;
+				if (typeof(id) == "undefined") id = currentFoto;
 				return fotosParcela[id].fecha;
 			} else {
 				return '';
 			}
 		}
 	};
-	
+	this.anioFoto = function(id) {
+		if (fotosParcela) {	
+			if (currentFoto >= 0) {
+				if (typeof(id) == "undefined") id = currentFoto;
+				return fotosParcela[id].fecha.substr(6,4);
+			} else {
+				return '';
+			}
+		}
+	};	
 	/**
 	 * Escribe (asincronicamente) la fecha de una foto en un contenedor jQuery
 	 * @param {jQueryObject} $container Contenedor jQuery donde escribir la fecha de la foto

@@ -54,6 +54,7 @@ usig.Recorridos = usig.AjaxComponent.extend({
      *		{boolean} opciones_medios_tren: Es true si esta marcada la opcion de tener en cuenta trenes para buscar el recorrido <br/>
      *		Si la consulta es de recorrido en auto: <br/>
      *		{String} opciones_prioridad: Toma los valores "avenidas" o "corto" <br/>
+     *		{Boolean} opciones_incluir_autopistas: Es true si se deben tomar en cuenta las autopistas <br/>
 	 * @param {String} tipo: Toma los valores 'transporte', 'auto' o 'pie'
 	 * @param {Function} success Funcion callback que es llamada con el resultado obtenido del servidor
 	 * @param {Function} error Funcion callback que es llamada en caso de error

@@ -170,6 +170,7 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 
 usig.GeoCoder.defaults = {
 	debug: false,
-	server: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder',
+	//server: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder',
+	server: 'http://ws.usig.buenosaires.gob.ar/geocoder/2.2/geocoding/',
 	metodo: undefined
 }
