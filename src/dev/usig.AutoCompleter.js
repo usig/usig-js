@@ -43,6 +43,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} beforeGeoCoding Callback que es llamada antes de realizar la geocodificacion de la direccion o el lugar 
  * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar 
  * seleccionado. El objeto que recibe como parametro es una instancia de usig.Punto
+ * @cfg {Function} onReady Callback que es llamada cuando el componente esta listo para usar 
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -123,7 +124,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			if (typeof(suggester) == 'string') {
 				try {
 					if (opts.debug) usig.debug('Creating Suggester: '+ name);
-					sgObj = usig.createSuggester(name);
+					sgObj = usig.createSuggester(name, { onReady: opts.onReady });
 				} catch(e) {
 					if (opts.debug) usig.debug('ERROR: Suggester: '+ name+' creation failed.');
 					return false;
