@@ -27,8 +27,8 @@ usig.SuggesterLugares = usig.Suggester.extend({
 		}
 		var opts = $.extend({}, usig.SuggesterLugares.defaults, options);
 		
-        this._super('Inventario', opts);
-		// El indice catastral puede ser opcional para 
+        this._super('Lugares', opts);
+		// El inventario puede ser opcional para 
 		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
 		if (!this.opts.inventario) {
             this.opts.inventario = new usig.Inventario(opts);
@@ -112,4 +112,6 @@ usig.SuggesterLugares.defaults = {
 		extent: undefined,
 		returnRawData: false
 	}
-}
+};
+
+usig.registerSuggester('Lugares', usig.SuggesterLugares);

@@ -21,4 +21,4 @@ usig.SeccionCatastral = function(seccion) {
 	this.toString = function() {
 		return this.codigoSeccion;
 	}
-}
+};

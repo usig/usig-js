@@ -24,14 +24,12 @@ if (typeof (usig) == "undefined")
  * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/doc/</a><br/>
  * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleter.html</a>
  * @namespace usig
- * Opciones para los suggesters
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a buscar. Por defecto: 10
  * @cfg {Integer} serverTimeout Tiempo de maximo de espera antes de reintentar un pedido al servidor. Por defecto: 5000.
  * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
  * @cfg {Integer} maxRetries Maximo numero de reintentos al servidor ante una falla. Por defecto: 10.
  * @cfg {Boolean} showError Mostrar mensajes de error. Por defecto: true
- * Opciones para el AutoCompleterView
  * @cfg {Integer} maxOptions Maximo numero de opciones a mostrar como sugerencia. Por defecto: 10.
  * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
  * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
@@ -39,7 +37,6 @@ if (typeof (usig) == "undefined")
  * @cfg {String} rootUrl Url del servidor donde reside el control.
  * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'dark' y 'mapabsas'. Por defecto: 'usig'.
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica. Por defecto: true.
- * Opciones del AutoCompleter
  * @cfg {Function} afterSuggest Callback que es llamada cada vez que se actualizan las sugerencias.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
  *  sugerencias. El objeto que recibe como parametro puede ser una instancia de usig.Calle, usig.Direccion o bien usig.inventario.Objeto
@@ -55,6 +52,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	var field = document.getElementById(idField), 
 		view = viewCtrl,
 		suggesters = [],
+		suggestersByName = {},
 		opts = $.extend({}, usig.AutoCompleter.defaults, options),
 		ic = null,
 		focused = true,
@@ -113,22 +111,26 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	/**
-	 * Agrega un nuevo suggester al autocompleter. Las options son opcionales.
-	 * @param {usig.Suggester} suggester Instancia de usig.Suggester
-	 * @param {Object} options Opciones del suggester para el autocompleter
+	 * Agrega un nuevo suggester al autocompleter.
+	 * @param {usig.Suggester/String} suggester Instancia de usig.Suggester o nombre de un suggester registrado
+	 * @param {Object} options (optional) Opciones del suggester para el autocompleter
 	 */
 	this.addSuggester = function(suggester, options){
-//		if (!(suggester instanceof usig.Suggester)) {
-//			if (opts.debug) usig.debug('El objeto no es instancia de usig.Suggester');
-//			return;
-//		}
-		if (opts.debug) usig.debug('addSuggester('+ suggester.name+')');
-		var noEsta = true;
-		for (var i=0; i<suggesters.length; i++){
-			noEsta = noEsta && (suggesters[i].suggester.name != suggester.name); 
-		}
-		if (noEsta){
-			opt = {
+		var name = typeof(suggester) == 'string'?suggester:suggester.name;
+		if (opts.debug) usig.debug('addSuggester('+name+')');
+		if (typeof(suggestersByName[name])=="undefined") {
+			var sgObj = suggester;
+			if (typeof(suggester) == 'string') {
+				try {
+					if (opts.debug) usig.debug('Creating Suggester: '+ name);
+					sgObj = usig.createSuggester(name);
+				} catch(e) {
+					if (opts.debug) usig.debug('ERROR: Suggester: '+ name+' creation failed.');
+					return false;
+				}
+			}
+			suggestersByName[name]=sgObj;
+			var opt = {
 					inputPause: opts.inputPause,
 					maxSuggestions: opts.maxSuggestions,
 					serverTimeout: opts.serverTimeout,
@@ -138,10 +140,57 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			};
 			
  			opt = $.extend(opt, options);
-			suggesters.push({suggester: suggester, options: opt, inputTimer: null});
-		}else{
+			suggesters.push({suggester: sgObj, options: opt, inputTimer: null});
+		} else {
 			if (opts.debug) usig.debug('Se intento agregar dos suggesters con el mismo nombre.');
 		}
+	}
+	
+	/**
+	 * Elimina un suggester previamente registrado
+	 * @param {String} name Nombre del suggester a eliminar
+	 */
+	this.removeSuggester = function(name) {
+		if (typeof(suggestersByName[name])!="undefined") {
+			if (opts.debug) usig.debug('removeSuggester("'+name+'")');			
+			suggestersByName[name] = undefined;
+			for (var i=0; i<suggesters.length; i++) {
+				if (suggesters[i].suggester.name == name) {
+					if (opts.debug) usig.debug('Quitando suggester "'+name+'".');			
+					suggesters.removeObject(suggesters[i]);
+					break;
+				}
+			}
+		} else {
+			if (opts.debug) usig.debug('Se intento borrar un suggester no registrado previamente.');			
+		}
+	}
+	
+	/**
+	 * Setea las opciones para el suggester indicado 
+	 * @param {String} name Nombre del suggester a configurar
+	 * @param {Object} options Objeto conteniendo opciones
+	 */
+	this.setSuggesterOptions = function(name, options) {
+		if (opts.debug) usig.debug('setSuggesterOptions('+name+')');			
+		if (typeof(suggestersByName[name])!="undefined") {
+			for (var i=0; i<suggesters.length; i++) {
+				if (suggesters[i].suggester.name == name) {
+					suggesters[i].options = $.extend(suggesters[i].options, options);
+					break;
+				}
+			}
+		} else {
+			if (opts.debug) usig.debug('Se intento setear opciones para un suggester no registrado previamente.');			
+		}		
+	}
+	
+	this.getSuggesters = function() {
+		var toReturn = {};
+		for (var i=0; i<suggesters.length; i++) {
+			toReturn[suggesters[i].suggester.name]= $.extend({}, suggesters[i].options);
+		}		
+		return toReturn;
 	}
 	
 	/**
@@ -181,7 +230,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		return retval;
 	}
 	
-	/**
+	/*
 	 * Ejecuta el metodo getSuggestion de sugObj.suggester
      * @param {Object} sugObj Objeto con el suggester y las opciones.
      * @param {Strin} str Texto a buscar
@@ -223,7 +272,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		suggester.getSuggestions(str, callbackSugerir, sugOpts.maxSuggestions);
 	}
 	
-	/**
+	/*
 	 * Aborta las llamadas asincronicas a servidores realizadas por los suggesters 
 	 * y las llamadas pendientes
 	 */
@@ -242,7 +291,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		}
 	}
 	
-	/**
+	/*
 	 * Funcion que se ejecuta en el onSelection. Intenta geocodificar la opcion seleccionada
 	 * @param {Object} option Objeto de la opcion seleccionada.
 	 */
@@ -259,21 +308,17 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			opts.afterSelection(option);
 		}
 		if (typeof(opts.afterGeoCoding) == "function") {
-			for (var i=0; i<suggesters.length; i++){
-				if (suggesters[i].suggester.name == option.suggesterName){
-					if (typeof(opts.beforeGeoCoding) == "function") {
-						if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
-						opts.beforeGeoCoding();
-					}
-					if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding '+option.suggesterName);
-					suggesters[i].suggester.getGeoCoding(option, opts.afterGeoCoding);
-				}
+			if (typeof(opts.beforeGeoCoding) == "function") {
+				if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
+				opts.beforeGeoCoding();
 			}
+			if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding '+option.suggesterName);
+			suggestersByName[option.suggesterName].getGeoCoding(option, opts.afterGeoCoding);
 		}
 		ic.setFocus();
 	}
 	
-	/**
+	/*
 	 * Formatea el texto de la sugerencia seleccionada
 	 * @param {Object} item Objeto de la sugerencia seleccionada
 	 * @param {String} linkName
@@ -290,7 +335,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		}
 	}
 	
-	/**
+	/*
 	 * Callback del evento onChange del usig.InputController.
 	 * @param {String} newValue nuevo valor ingresado a buscar.
 	 */
@@ -311,7 +356,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		}
 	}
 	
-	/**
+	/*
 	 * Callback del evento onKeyUp del usig.InputController.
 	 * @param {String} keyCode codigo de tecla presionada
 	 */
@@ -320,7 +365,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		view.keyUp(keyCode);
 	}
 	
-	/**
+	/*
 	 * Callback del evento onBlur del usig.InputController.
 	 */
 	function onInputBlur() {
@@ -328,7 +373,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click		
 	}
 	
-	/**
+	/*
 	 * Callback del evento onFocus del usig.InputController.
 	 */
 	function onInputFocus() {
@@ -360,23 +405,30 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 }
 
 usig.AutoCompleter.defaults = {
-/* Opciones para los suggesters */
+    // Opciones para los suggesters
 	inputPause: 200,
 	maxSuggestions: 10,
 	serverTimeout: 5000,
 	minTextLength: 3,
 	maxRetries: 5,
 	showError: true,
-/* Opciones para el AutoCompleterView */
+	// Opciones para el AutoCompleterView
 	maxOptions: 10,
 	offsetY: -5,
 	zIndex: 10000,
-	autoHideTimeout: 5000,
+	autoHideTimeout: 10000,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/',
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',
 	skin: 'usig',
-/* Opciones generales */
-	suggesters: [],
+	// Opciones generales
+	suggesters: [{ 	
+					suggester: 'Direcciones', 
+					options: { inputPause: 10, minTextLength: 3 } 
+				}, 
+				{
+					suggester: 'Lugares',
+					options: { inputPause: 500, minTextLength: 3 }
+				}],
 	debug: false,
 	texts: {
 		nothingFound: 'No se hallaron resultados coincidentes con su b&uacute;squeda.'

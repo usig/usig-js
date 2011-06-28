@@ -15,7 +15,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Sets up data that is needed by each test.
          */
         setUp : function () {
-    		this.sic = new usig.SuggesterIndiceCatastral({ debug: true });
+    		this.sic = new usig.SuggesterCatastro({ debug: true });
         },
         
         /*

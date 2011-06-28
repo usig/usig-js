@@ -124,13 +124,12 @@ usig.IndiceCatastral.WrongParameters = function() {
 	this.getErrorMessage = function() {
 		return this.msg;
 	}
-}
+};
 
 usig.IndiceCatastral.defaults = {
 	debug: false,
-//	server: 'http://inventario.usig.buenosaires.gob.ar/catastro/',
-	server: 'http://panda-dev.usig.gcba.gov.ar:8000/',
+	server: 'http://inventario.usig.buenosaires.gob.ar/indice_catastral/',
 	maxSuggestions: 10,
 	buscarSMP: true,
 	buscarPM: true
-}
+};

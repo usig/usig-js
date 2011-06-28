@@ -129,6 +129,7 @@ body {
 	display:block;
 	color: #555;
 	font-size: 11px;
+	margin-bottom: 10px;
 }
 
 #page #acciones {
@@ -149,4 +150,12 @@ body {
 #page fieldset table td.label {
 	text-align: right;
 	padding-right: 10px;
+}
+
+table.suggester_options {
+	margin-left: 50px;
+	display: none;
+}
+#mapa {
+	margin-bottom: 20px;
 }

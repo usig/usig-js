@@ -97,18 +97,18 @@ usig.Suggester.defaults = {
 	serverTimeout: 5000,
 	maxRetries: 5,
 	maxSuggestions: 10
-}
+};
 
 usig.Suggester.MethodNotImplemented = function() {
 	this.msg = 'Suggester: Method Not Implemented.';
 	this.toString = function() {
 		return this.msg;
 	}
-}
+};
 
 usig.Suggester.GeoCodingTypeError = function() {
 	this.msg = 'Suggester: Wrong object type for geocoding.';
 	this.toString = function() {
 		return this.msg;
 	}
-}
+};

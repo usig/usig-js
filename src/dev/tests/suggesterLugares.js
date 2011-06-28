@@ -82,8 +82,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         			test.sl.getGeoCoding(suggestions[0], function(pt) {
 			        	test.resume(function() {
 			        		Y.Assert.isInstanceOf(usig.Punto, pt);
-			        		Y.Assert.areEqual("107968.1267077130905818", pt.getX());
-			        		Y.Assert.areEqual("102302.8369099519186420", pt.getY());
+			        		Y.Assert.areEqual("107946.3483390000037616", pt.getX());
+			        		Y.Assert.areEqual("102284.8366810000006808", pt.getY());
 			        	});
 			        });
 	        	});

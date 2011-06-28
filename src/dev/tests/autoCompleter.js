@@ -18,7 +18,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	document.getElementById('inputText').value = '';
         	$('#inputText').focus();
         	this.ac = new usig.AutoCompleter('inputText', {
-        		debug: true
+        		debug: true, suggesters: []
         	}, {onSelection: function() {}, setOptions: function() {} });
         },
         
@@ -119,7 +119,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.wait();
         },
 
-        "Too short text should not try to find suggestions 2" : function () {
+        "A suggester's minTextLength should override the default" : function () {
             var test = this;
             var mockView = usig.Mock(Y);
             mockView.expect({ method: 'update', args: [['c'], ['ci']], callCount: 2 });
@@ -163,7 +163,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             this.wait();
         },
         
-        "Long-enough text should call NormalizadorDirecciones after a delay" : function () {
+        "Long-enough text should try to get suggestions" : function () {
         	var test = this;
         	var mockSugDir = usig.Mock(Y);
         	mockSugDir.name = 'mockSugDir';
@@ -193,7 +193,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.wait();
         },
 
-        "Long-enough text should call Inventario after calling NormalizadorDirecciones" : function () {
+        "An suggester's inputPause override should be honored" : function () {
         	var test = this;
 
             var mockView = usig.Mock(Y);
@@ -211,29 +211,22 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             mockSugDir.expect({ method: 'abort' });
             var mockSugLug = usig.Mock(Y);
             mockSugLug.name = 'mockSugLug';
-            mockSugLug.expect({ method: 'getSuggestions', callCount: 1 });
+            mockSugLug.expect({ method: 'getSuggestions', callCount: 0 });
             mockSugLug.expect({ method: 'abort' });
-            var mockSugCat = usig.Mock(Y);
-            mockSugCat.name = 'mockSugCat';
-            mockSugCat.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugCat.expect({ method: 'abort' });
         	
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
         		inputPause: 200
         	});
             this.ac.addSuggester(mockSugDir);
-            this.ac.addSuggester(mockSugLug);
-            this.ac.addSuggester(mockSugCat);
+            this.ac.addSuggester(mockSugLug, { inputPause: 1000 });
+            // this.ac.addSuggester(mockSugCat);
         	
-            this.simulateType('inputText', 'ciudad', function() {
-                test.resume.defer(1000, this, [(function() {
-                    mockSugDir.verify();
-                    mockSugLug.verify();
-                    mockSugCat.verify();
-                })]);
-            });
-        	this.wait();        	
+            this.simulateType('inputText', 'ciudad');
+        	this.wait(function() {
+                mockSugDir.verify();
+                mockSugLug.verify();        		
+        	}, 400);        	
         },
         
 //        "After a timeout on inventario it should retry" : function () {
@@ -284,11 +277,15 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	
             var mockSugDir = usig.Mock(Y);
             mockSugDir.name = 'mockSugDir';
-            mockSugDir.expect({ method: 'getSuggestions', callCount: 1 });
-            mockSugDir.expect({ method: 'abort', callCount: 6 });
+            mockSugDir.expect({ method: 'getSuggestions', callCount: 6 });
+            // Se esperan 6 aborts porque es responsabilidad de los suggesters
+            // determinar si es realmente necesario hacer un abort en un momento
+            // determinado y por lo tanto el autocompleter hace un abort por cada
+            // cambio en el input
+            mockSugDir.expect({ method: 'abort', callCount: 6 });           
 
         	this.ac.setViewControl(mockView);
-            this.ac.addSuggester(mockSugDir);
+            this.ac.addSuggester(mockSugDir, { minTextLength: 1, inputPause: 0 });
 
             this.simulateType('inputText', 'ciudad', function() {
                 test.resume.defer(500, this, [(function() {
@@ -342,7 +339,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             var mockSugDir = {
             	name: 'mockSugDir',
             	getSuggestions: function (str, callbackSugerir, maxSuggestions) {
-            		callbackSugerir(['Ciudad Universitaria']);
+            		callbackSugerir(['Ciudad de la paz']);
             	},
             	abort: function () {}
             }
@@ -381,7 +378,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             var mockSugDir = {
                 name: 'mockSugDir',
                 getSuggestions: function (str, callbackSugerir, maxSuggestions) {
-                    callbackSugerir(['Ciudad Universitaria']);
+                    callbackSugerir(['Ciudad de la paz']);
                 },
                 abort: function () {}
             }
@@ -551,7 +548,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	$('#inputText').focus();
         	var sgDir = new usig.SuggesterDirecciones({ debug: true });
         	this.ac = new usig.AutoCompleter('inputText', {
-        		debug: true,
+        		debug: true, suggesters: [],
         		rootUrl: '../',
         		skin: 'usig'
 //        		suggesters: [{ suggester: sgDir }],
@@ -585,13 +582,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-	        		test.resume(function() {
+	        		test.resume.defer(500, this, [(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.areEqual(3, $('ul.options').children().length);
 //	        			Y.Assert.areEqual('CIUDAD DE LA PAZ', $('ul.options').children().children()[0]);
 //	        			Y.Assert.areEqual('CIUDAD DE SABADELL', $('ul.options').children().children()[1].textContent);
 //	        			Y.Assert.areEqual('CIUDADELA', $('ul.options').children().children()[2].textContent);
-	        		});        			
+	        		})]);        			
         		},
         		inputPause: 200,
         		minTextLength: 3
@@ -656,6 +653,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	this.simulateType('inputText', 'asdf');
         	this.wait();
         },
+        
         "Non-existing intersection should show an explanatory message" : function () {
         	var test = this;
         	this.ac.setOptions({
@@ -751,7 +749,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	$('#inputText').focus();
         	var sgLug = new usig.SuggesterLugares({ debug: true });
         	this.ac = new usig.AutoCompleter('inputText', {
-        		debug: true,
+        		debug: true, suggesters: [],
         		rootUrl: '../',
         		skin: 'usig',
         		suggesters: [ { suggester: sgLug, options: {inputPause: 200} } ]
@@ -901,9 +899,9 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         setUp : function () {
         	document.getElementById('inputText').value = '';
         	$('#inputText').focus();
-        	var sgCat = new usig.SuggesterIndiceCatastral({ debug: true });
+        	var sgCat = new usig.SuggesterCatastro({ debug: true });
         	this.ac = new usig.AutoCompleter('inputText', {
-        		debug: true,
+        		debug: true, suggesters: [],
         		rootUrl: '../',
         		skin: 'usig',
         		suggesters: []

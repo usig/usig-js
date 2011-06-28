@@ -59,7 +59,7 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 	 * (una instancia de usig.Geometria) 
 	 */
 	getGeoCoding: function(obj, callback) {
-		if (this.opts.debug) usig.debug('usig.SuggesterDirecciones.getGoCoding(obj, callback)');
+		if (this.opts.debug) usig.debug('usig.SuggesterDirecciones.getGeoCoding(obj, callback)');
 		if (!(obj instanceof usig.Direccion)) {
 			callback(new usig.Suggester.GeoCodingTypeError());
 		} else {
@@ -92,4 +92,6 @@ usig.SuggesterDirecciones.defaults = {
 	serverTimeout: 5000,
 	maxRetries: 5,
 	maxSuggestions: 10
-}
+};
+
+usig.registerSuggester('Direcciones', usig.SuggesterDirecciones);

@@ -3,7 +3,7 @@ if (typeof (usig) == "undefined")
 	usig = {};
 	
 /**
- * @class SuggesterIndiceCatastral
+ * @class SuggesterCatastro
  * Implementa un suggester de codigos catastrales usando el Indice Catastral.<br/>
  * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, usig.IndiceCatastral<br/>
  * @namespace usig
@@ -18,11 +18,11 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.SuggesterIndiceCatastral = usig.Suggester.extend({
+usig.SuggesterCatastro = usig.Suggester.extend({
 	
 	init: function(options){
-		var opts = $.extend({}, usig.SuggesterIndiceCatastral.defaults, options);
-		this._super('IndiceCatastral', opts);
+		var opts = $.extend({}, usig.SuggesterCatastro.defaults, options);
+		this._super('Catastro', opts);
 		// El indice catastral puede ser opcional para 
 		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
 		if (!this.opts.indiceCatastral) {
@@ -88,9 +88,11 @@ usig.SuggesterIndiceCatastral = usig.Suggester.extend({
 	}
 });
 
-usig.SuggesterIndiceCatastral.defaults = {
+usig.SuggesterCatastro.defaults = {
 	debug: false,
 	serverTimeout: 5000,
 	maxRetries: 5,
 	maxSuggestions: 10
-}
+};
+
+usig.registerSuggester('Catastro', usig.SuggesterCatastro);
