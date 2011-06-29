@@ -124,7 +124,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			if (typeof(suggester) == 'string') {
 				try {
 					if (opts.debug) usig.debug('Creating Suggester: '+ name);
-					sgObj = usig.createSuggester(name, { onReady: opts.onReady });
+					sgObj = usig.createSuggester(name, { onReady: opts.onReady, debug: opts.debug });
 				} catch(e) {
 					if (opts.debug) usig.debug('ERROR: Suggester: '+ name+' creation failed.');
 					return false;
@@ -240,37 +240,41 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		var suggester = sugObj.suggester;
 		var sugOpts = sugObj.options;
 		
-		callbackSugerir = function callbackSugerir(results){
-			if (opts.debug) usig.debug(results);
-//			if (opts.debug) usig.debug('sugOpts.showError: '+sugOpts.showError);
-			if(results.getErrorMessage!=undefined){
-				try {
-					if (!appendResults && sugOpts.showError) view.showMessage(results.getErrorMessage());
-				} catch(e) {
-					if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
+		callbackSugerir = function callbackSugerir(results, inputStr){
+			if (field.value == inputStr) {
+				if (opts.debug) usig.debug(results);
+	//			if (opts.debug) usig.debug('sugOpts.showError: '+sugOpts.showError);
+				if(results.getErrorMessage!=undefined){
+					try {
+						if (!appendResults && sugOpts.showError) view.showMessage(results.getErrorMessage());
+					} catch(e) {
+						if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
+					}
+				}else{
+					if (results.length == 0){
+						if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
+					} else {
+						if (opts.debug) usig.debug('usig.Autocompleter.sugerir.callback(results)');
+						// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
+						results = results.map(function(x){ x.suggesterName = suggester.name; return x });
+						if (opts.debug) usig.debug(results);
+						view.show(results, appendResults);
+						appendResults = true;
+						if (!focused)
+							view.hide();
+					}
 				}
-			}else{
-				if (results.length == 0){
-					if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
-				} else {
-					if (opts.debug) usig.debug('usig.Autocompleter.sugerir.callback(results)');
-					// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
-					results = results.map(function(x){ x.suggesterName = suggester.name; return x });
-					if (opts.debug) usig.debug(results);
-					view.show(results, appendResults);
-					appendResults = true;
-					if (!focused)
-						view.hide();
+				if (typeof(opts.afterSuggest) == "function") {
+					if (opts.debug) usig.debug('afterSuggest');
+					opts.afterSuggest();
 				}
-			}
-			if (typeof(opts.afterSuggest) == "function") {
-				if (opts.debug) usig.debug('afterSuggest');
-				opts.afterSuggest();
+			} else {
+				if (opts.debug) usig.debug('ERROR: Respuesta a destiempo. Llegaron resultados para "'+inputStr+'" pero el valor actual es "'+field.value+'"');				
 			}
 		}
 		
 		if (opts.debug) usig.debug('sugerir('+ suggester.name+', "'+str+'")');
-		suggester.getSuggestions(str, callbackSugerir, sugOpts.maxSuggestions);
+		suggester.getSuggestions(str, callbackSugerir.createDelegate(this, [str], 1), sugOpts.maxSuggestions);
 	}
 	
 	/*
@@ -428,7 +432,7 @@ usig.AutoCompleter.defaults = {
 				}, 
 				{
 					suggester: 'Lugares',
-					options: { inputPause: 500, minTextLength: 3 }
+					options: { inputPause: 500, minTextLength: 3, showError: false }
 				}],
 	debug: false,
 	texts: {

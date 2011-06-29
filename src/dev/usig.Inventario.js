@@ -211,8 +211,11 @@ usig.Inventario = usig.AjaxComponent.extend({
 	 */
 	abort: function() {
 		if (this.lastRequest) {
+			if (this.opts.debug) usig.debug('Inventario: aborting last request.');
 			this.lastRequest.abort();
 			this.lastRequest = null;
+		} else {
+			if (this.opts.debug) usig.debug('Inventario: abort failed. Too late!');			
 		}
 	}
 	

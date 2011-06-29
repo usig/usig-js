@@ -47,7 +47,7 @@ div.usig_acv div.footer div.bar
 {
 	height: 6px;
 	overflow: hidden;
-	background-color: #fff;
+	background-color: #eff8fd;
 	background-image: url(img-usig2/ul_bg_bot.gif);
 	background-repeat: repeat-x;
 }
@@ -60,7 +60,7 @@ div.usig_acv div.content
 {
 	padding: 5px 10px;
 	color: #007baf;
-	background-color: #fff;
+	background-color: #eff8fd;
 	border-left: 1px solid #0996d2;	
 	border-right: 1px solid #0996d2;	
 }
@@ -71,11 +71,11 @@ div.usig_acv ul.options
 	margin: 0 0 -4px 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #fff;
+	background-color: #eff8fd;
 }
 div.usig_acv ul.options li
 {
-	color: #333;
+	color: #222;
 	padding: 0;
 	margin: 0 4px 4px;
 	text-align: left;
@@ -86,7 +86,7 @@ div.usig_acv ul.options li.message
 }
 div.usig_acv ul.options li a
 {
-	color: #333;
+	color: #222;
 	display: block;
 	text-decoration: none;
 	background-color: transparent;
@@ -96,15 +96,17 @@ div.usig_acv ul.options li a
 }
 div.usig_acv ul.options li a:hover
 {
-	background-color: #dcedbc;
+	background-color: #83caee;
 	-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px;
 	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px;	
 }
 div.usig_acv ul.options li.highlight a:hover
 {
-	background-color: #dcedbc;
+	background-color: #83caee;
 }
-
+div.usig_acv ul.options li a:hover em {
+	color:#fff;
+}
 div.usig_acv ul.options li a span
 {
 	display: block;
@@ -115,18 +117,18 @@ div.usig_acv ul.options li a span
 div.usig_acv ul.options li a span small
 {
 	font-weight: normal;
-	color: #333;
+	color: #222;
 }
 
 div.usig_acv ul.options li.highlight a span small
 {
-	color: #333;
+	color: #222;
 }
 
 div.usig_acv ul.options li.highlight a
 {
-	color: #333;
-	background-color: #dcedbc;
+	color: #222;
+	background-color: #83caee;
 	-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px;
 	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px;	
 }
@@ -178,10 +180,12 @@ div.usig_acv ul.options em
 	font-style: normal;
 	color: #007baf;
 }
-
+div.usig_acv ul.options li.highlight em {
+	color: #fff;
+}
 div.usig_acv div.content div.message
 {
-	color: #333;
+	color: #222;
 	margin: 4px;
 }
 div.usig_acv div.content div.message ul {
