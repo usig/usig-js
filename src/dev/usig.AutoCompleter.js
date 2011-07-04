@@ -43,9 +43,11 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} beforeGeoCoding Callback que es llamada antes de realizar la geocodificacion de la direccion o el lugar 
  * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar 
  * seleccionado. El objeto que recibe como parametro es una instancia de usig.Punto
+ * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
+ * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {Function} onReady Callback que es llamada cuando el componente esta listo para usar 
  * @constructor 
- * @param {String} idField Identificador del input control en la pagina
+  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
  * @param {Object} viewCtrl (optional) Controlador de la vista para mostrar las sugerencias del autocompleter
 */	
@@ -58,6 +60,8 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		ic = null,
 		focused = true,
 		cleanList = [],
+		pendingRequests = {},
+		numPendingRequests = 0,
 		appendResults = false;
 		
 	field.setAttribute("autocomplete","off");
@@ -124,13 +128,27 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			if (typeof(suggester) == 'string') {
 				try {
 					if (opts.debug) usig.debug('Creating Suggester: '+ name);
-					sgObj = usig.createSuggester(name, { onReady: opts.onReady, debug: opts.debug });
+					sgObj = usig.createSuggester(name, { 
+						onReady: opts.onReady, 
+						debug: opts.debug, 
+						afterServerRequest: onServerRequest.createDelegate(this, [name], 1), 
+						afterServerResponse: onServerResponse.createDelegate(this, [name], 1),
+						afterAbort: onAbort.createDelegate(this, [name], 1)
+					});
 				} catch(e) {
 					if (opts.debug) usig.debug('ERROR: Suggester: '+ name+' creation failed.');
 					return false;
 				}
+			} else {
+				sgObj.setOptions({
+					debug: opts.debug, 
+					afterServerRequest: onServerRequest.createDelegate(this, [name], 1), 
+					afterServerResponse: onServerResponse.createDelegate(this, [name], 1), 
+					afterAbort: onAbort.createDelegate(this, [name], 1)
+				});
 			}
 			suggestersByName[name]=sgObj;
+			pendingRequests[name]=0;
 			var opt = {
 					inputPause: opts.inputPause,
 					maxSuggestions: opts.maxSuggestions,
@@ -383,6 +401,46 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	 */
 	function onInputFocus() {
 		focused = true;
+	}
+	
+	/*
+	 * Callback del evento afterAbort de los suggesters.
+	 */
+	function onAbort(suggesterName) {
+		if (pendingRequests[suggesterName] > 0) {
+			pendingRequests[suggesterName]--;
+			numPendingRequests--;
+		}
+		if (opts.debug) usig.debug('usig.AutoCompleter.onAbort. Num Pending Requests: '+numPendingRequests);
+		if (opts.debug) usig.debug(pendingRequests);
+	}
+	
+	/*
+	 * Callback del evento afterServerRequest de los suggesters.
+	 */
+	function onServerRequest(suggesterName) {
+		pendingRequests[suggesterName]++;
+		numPendingRequests++;
+		if (opts.debug) usig.debug('usig.AutoCompleter.onServerRequest. Num Pending Requests: '+numPendingRequests);
+		if (opts.debug) usig.debug(pendingRequests);
+		if (typeof(opts.afterServerRequest) == "function") {
+			opts.afterServerRequest();
+		}
+	}
+	
+	/*
+	 * Callback del evento afterServerResponse de los suggesters.
+	 */
+	function onServerResponse(suggesterName) {
+		if (pendingRequests[suggesterName] > 0) {
+			pendingRequests[suggesterName]--;
+			numPendingRequests--;
+		}
+		if (opts.debug) usig.debug('usig.AutoCompleter.onServerResponse. Num Pending Requests: '+numPendingRequests);
+		if (opts.debug) usig.debug(pendingRequests);
+		if (typeof(opts.afterServerRequest) == "function" && numPendingRequests == 0) {
+			opts.afterServerRequest();
+		}
 	}
 	
 	// Inicializacion

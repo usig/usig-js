@@ -103,6 +103,9 @@ usig.IndiceCatastral = usig.AjaxComponent.extend({
 		if (this.lastRequest) {
 			this.lastRequest.abort();
 			this.lastRequest = null;
+	       	if (typeof(this.opts.afterAbort) == "function") {
+	       		this.opts.afterAbort();
+	       	}
 		}
 	},
 	
