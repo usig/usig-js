@@ -91,7 +91,8 @@ usig.SuggesterDirecciones.defaults = {
 	debug: false,
 	serverTimeout: 5000,
 	maxRetries: 5,
-	maxSuggestions: 10
+	maxSuggestions: 10,
+	acceptSN: true
 };
 
 usig.registerSuggester('Direcciones', usig.SuggesterDirecciones);
