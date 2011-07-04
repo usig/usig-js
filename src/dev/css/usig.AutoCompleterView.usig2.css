@@ -189,6 +189,7 @@ div.usig_acv div.content div.message
 	margin: 4px;
 }
 div.usig_acv div.content div.message ul {
+	padding-top: 5px;
 	padding-left: 20px;
 }
 div.usig_acv div.content div.message ul li

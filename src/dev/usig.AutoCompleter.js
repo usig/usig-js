@@ -336,7 +336,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 				opts.beforeGeoCoding();
 			}
 			if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding '+option.suggesterName);
-			suggestersByName[option.suggesterName].getGeoCoding(option, opts.afterGeoCoding);
+			suggestersByName[option.suggesterName].getGeoCoding(option, onAfterGeoCoding);
 		}
 		ic.setFocus();
 	}
@@ -438,9 +438,19 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		}
 		if (opts.debug) usig.debug('usig.AutoCompleter.onServerResponse. Num Pending Requests: '+numPendingRequests);
 		if (opts.debug) usig.debug(pendingRequests);
-		if (typeof(opts.afterServerRequest) == "function" && numPendingRequests == 0) {
-			opts.afterServerRequest();
+		if (typeof(opts.afterServerResponse) == "function" && numPendingRequests == 0) {
+			opts.afterServerResponse();
 		}
+	}
+
+	/*
+	 * Callback del evento afterGeoCoding de los suggesters.
+	 */
+	function onAfterGeoCoding(result) {
+		if (result instanceof usig.Suggester.GeoCodingTypeError) {
+			field.value = field.value+' ';
+		}
+		opts.afterGeoCoding(result);
 	}
 	
 	// Inicializacion
