@@ -59,6 +59,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockSugDir.name = 'mockSugDir';
         	mockSugDir.expect({ method: 'getSuggestions' });
         	mockSugDir.expect({ method: 'abort' });
+        	mockSugDir.expect({ method: 'setOptions' });
         	
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
@@ -90,14 +91,17 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockSugDir.name = 'mockSugDir';
         	mockSugDir.expect({ method: 'getSuggestions', callCount: 0 });
         	mockSugDir.expect({ method: 'abort' });
+        	mockSugDir.expect({ method: 'setOptions' });
         	var mockSugLug = usig.Mock(Y);
         	mockSugLug.name = 'mockSugLug';
         	mockSugLug.expect({ method: 'getSuggestions', callCount: 0 });
         	mockSugLug.expect({ method: 'abort' });
+        	mockSugLug.expect({ method: 'setOptions' });
         	var mockSugCat = usig.Mock(Y);
         	mockSugCat.name = 'mockSugCat';
         	mockSugCat.expect({ method: 'getSuggestions', callCount: 0 });
         	mockSugCat.expect({ method: 'abort' });
+        	mockSugCat.expect({ method: 'setOptions' });
         	
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
@@ -134,14 +138,17 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             mockSugDir.name = 'mockSugDir';
             mockSugDir.expect({ method: 'getSuggestions', callCount: 0 });
             mockSugDir.expect({ method: 'abort' });
+            mockSugDir.expect({ method: 'setOptions' });
             var mockSugLug = usig.Mock(Y);
             mockSugLug.name = 'mockSugLug';
             mockSugLug.expect({ method: 'getSuggestions', callCount: 0 });
             mockSugLug.expect({ method: 'abort' });
+            mockSugLug.expect({ method: 'setOptions' });
             var mockSugCat = usig.Mock(Y);
             mockSugCat.name = 'mockSugCat';
             mockSugCat.expect({ method: 'getSuggestions', callCount: 1 });
             mockSugCat.expect({ method: 'abort' });
+            mockSugCat.expect({ method: 'setOptions' });
             
             this.ac.setViewControl(mockView);
             this.ac.setOptions({
@@ -169,6 +176,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockSugDir.name = 'mockSugDir';
         	mockSugDir.expect({ method: 'getSuggestions', callCount: 1});
         	mockSugDir.expect({ method: 'abort' });
+        	mockSugDir.expect({ method: 'setOptions' });
         	
         	var mockView = usig.Mock(Y);
         	mockView.expect({ method: 'update' });
@@ -209,10 +217,12 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             mockSugDir.name = 'mockSugDir';
             mockSugDir.expect({ method: 'getSuggestions', callCount: 1 });
             mockSugDir.expect({ method: 'abort' });
+            mockSugDir.expect({ method: 'setOptions' });
             var mockSugLug = usig.Mock(Y);
             mockSugLug.name = 'mockSugLug';
             mockSugLug.expect({ method: 'getSuggestions', callCount: 0 });
             mockSugLug.expect({ method: 'abort' });
+            mockSugLug.expect({ method: 'setOptions' });
         	
         	this.ac.setViewControl(mockView);
         	this.ac.setOptions({
@@ -283,6 +293,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             // determinado y por lo tanto el autocompleter hace un abort por cada
             // cambio en el input
             mockSugDir.expect({ method: 'abort', callCount: 6 });           
+            mockSugDir.expect({ method: 'setOptions'});           
 
         	this.ac.setViewControl(mockView);
             this.ac.addSuggester(mockSugDir, { minTextLength: 1, inputPause: 0 });
@@ -302,6 +313,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             mockSugDir.name = 'mockSugDir';
             mockSugDir.expect({ method: 'getSuggestions', callCount: 1 });
             mockSugDir.expect({ method: 'abort', callCount: 7 });
+            mockSugDir.expect({ method: 'setOptions'});
             this.ac.addSuggester(mockSugDir);
             
             this.ac.setViewControl({
@@ -341,7 +353,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             	getSuggestions: function (str, callbackSugerir, maxSuggestions) {
             		callbackSugerir(['Ciudad de la paz']);
             	},
-            	abort: function () {}
+            	abort: function () {},
+            	setOptions: function() {}
             }
 
             var mockSugLug = {
@@ -349,7 +362,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
                 getSuggestions: function (str, callbackSugerir, maxSuggestions) {
                     callbackSugerir(['Ciudad Universitaria']);
                 },
-                abort: function () {}
+                abort: function () {},
+            	setOptions: function() {}
             }
 
             this.ac.addSuggester(mockSugDir);
@@ -380,7 +394,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
                 getSuggestions: function (str, callbackSugerir, maxSuggestions) {
                     callbackSugerir(['Ciudad de la paz']);
                 },
-                abort: function () {}
+                abort: function () {},
+            	setOptions: function() {}
             }
 
             var mockSugLug = {
@@ -388,7 +403,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
                 getSuggestions: function (str, callbackSugerir, maxSuggestions) {
                     callbackSugerir([]);
                 },
-                abort: function () {}
+                abort: function () {},
+            	setOptions: function() {}
             }
 
             this.ac.addSuggester(mockSugDir);
@@ -499,6 +515,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             };
             mockSugDir.expect({ method: 'getGeoCoding', callCount: 1 });
             mockSugDir.expect({ method: 'abort' });
+            mockSugDir.expect({ method: 'setOptions' });
             this.ac.addSuggester(mockSugDir);
 
             var mockView = usig.Mock(Y);
