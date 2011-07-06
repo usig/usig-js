@@ -448,7 +448,8 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	 */
 	function onAfterGeoCoding(result) {
 		if (result instanceof usig.Suggester.GeoCodingTypeError) {
-			field.value = field.value+' ';
+			if (opts.debug) usig.debug('usig.AutoCompleter: adding space...');
+			ic.setValue(field.value+' ');
 		}
 		opts.afterGeoCoding(result);
 	}
