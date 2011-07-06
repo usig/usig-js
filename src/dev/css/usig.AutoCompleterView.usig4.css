@@ -1,7 +1,7 @@
 div.usig_acv
 {
 	position: absolute;
-	background-image: url(img-usig3/pointer.gif);
+	background-image: url(img-usig4/pointer.gif);
 	background-position: 20px 0;
 	background-repeat: no-repeat;
 	padding: 9px 0 0 0;
@@ -9,6 +9,7 @@ div.usig_acv
 	filter: alpha(opacity=95);
 	font-size: 8pt;
 	font-weight: bold;
+	color: #555;
 }
 
 div.usig_acv div.header,
@@ -17,14 +18,14 @@ div.usig_acv div.footer
 	position: relative;
 	height: 6px;
 	padding: 0 6px;
-	background-image: url(img-usig3/ul_corner_tr.gif);
+	background-image: url(img-usig4/ul_corner_tr.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 	overflow: hidden;
 }
 div.usig_acv div.footer
 {
-	background-image: url(img-usig3/ul_corner_br.gif);
+	background-image: url(img-usig4/ul_corner_br.gif);
 }
 
 div.usig_acv div.header div.corner,
@@ -35,35 +36,35 @@ div.usig_acv div.footer div.corner
 	left: 0;
 	height: 6px;
 	width: 6px;
-	background-image: url(img-usig3/ul_corner_tl.gif);
+	background-image: url(img-usig4/ul_corner_tl.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 div.usig_acv div.footer div.corner
 {
-	background-image: url(img-usig3/ul_corner_bl.gif);
+	background-image: url(img-usig4/ul_corner_bl.gif);
 }
 div.usig_acv div.header div.bar,
 div.usig_acv div.footer div.bar
 {
 	height: 6px;
 	overflow: hidden;
-	background-color: #fff;
-	background-image: url(img-usig3/ul_bg_bot.gif);
+	background-color: #f8f8f8;
+	background-image: url(img-usig4/ul_bg_bot.gif);
 	background-repeat: repeat-x;
 }
 
 div.usig_acv div.header div.bar {
-	background-image: url(img-usig3/ul_bg_top.gif);
+	background-image: url(img-usig4/ul_bg_top.gif);
 }
 
 div.usig_acv div.content
 {
 	padding: 5px 10px;
 	color: #007baf;
-	background-color: #fff;
-	border-left: 1px solid #469c23;	
-	border-right: 1px solid #469c23;	
+	background-color: #f8f8f8;
+	border-left: 1px solid #0996d2;	
+	border-right: 1px solid #0996d2;	
 }
 
 div.usig_acv ul.options
@@ -72,11 +73,10 @@ div.usig_acv ul.options
 	margin: 0 0 -4px 0;
 	padding: 0;
 	overflow: hidden;
-	background-color: #fff;
+	background-color: #f8f8f8;
 }
 div.usig_acv ul.options li
 {
-	color: #666;
 	padding: 0;
 	margin: 0 4px 4px;
 	text-align: left;
@@ -87,24 +87,26 @@ div.usig_acv ul.options li.message
 }
 div.usig_acv ul.options li a
 {
-	color: #666;
 	display: block;
 	text-decoration: none;
 	background-color: transparent;
 	position: relative;
 	padding: 0;
 	width: 100%;
+	color: #555;
 }
 div.usig_acv ul.options li a:hover
 {
-	background-color: #daedc5;
-	color: #333;
+	background-color: #dcdcdc;
+	color: #222;
 	-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px;
 	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px;	
 }
 div.usig_acv ul.options li.highlight a:hover
 {
-	background-color: #daedc5;
+	background-color: #dcdcdc;
+}
+div.usig_acv ul.options li a:hover em {
 }
 div.usig_acv ul.options li a span
 {
@@ -114,18 +116,16 @@ div.usig_acv ul.options li a span
 
 div.usig_acv ul.options li a span small
 {
-	color: #666;
 }
 
 div.usig_acv ul.options li.highlight a span small
 {
-	color: #666;
 }
 
 div.usig_acv ul.options li.highlight a
 {
-	color: #333;
-	background-color: #daedc5;
+	background-color: #dcdcdc;
+	color: #222;
 	-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px;
 	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px;	
 }
@@ -169,18 +169,20 @@ div.usig_acv ul.options li span.clase {
 	padding-left: 6px;
 	font-size: xx-small;
 	font-weight: normal;
+	color: #555;
 }
 div.usig_acv ul.options li span.clase em {
 }
 div.usig_acv ul.options em
 {
 	font-style:normal;
-	font-weight: bold;
-	color: #007baf;
+	font-style: bold;
+	color: #a91313;
+}
+div.usig_acv ul.options li.highlight em {
 }
 div.usig_acv div.content div.message
 {
-	color: #666;
 	margin: 4px;
 }
 div.usig_acv div.content div.message ul {
@@ -189,7 +191,7 @@ div.usig_acv div.content div.message ul {
 }
 div.usig_acv div.content div.message ul li
 {
-	color: #007baf;
+	color: #a91313;
 	margin: 0 4px 4px;
 	font-size: 80%;
 }
