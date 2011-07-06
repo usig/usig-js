@@ -183,6 +183,7 @@ div.usig_acv ul.options li.highlight em {
 }
 div.usig_acv div.content div.message
 {
+	color: #555;
 	margin: 4px;
 }
 div.usig_acv div.content div.message ul {
