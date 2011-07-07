@@ -16,6 +16,8 @@ if (typeof (usig) == "undefined")
  * @cfg {String} rootUrl Url del servidor donde reside el control.
  * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'dark' y 'mapabsas'. Por defecto: 'usig'.
  * @cfg {Function} onSelection Callback que es llamada cada vez que se selecciona un elemento de la lista.
+ * @cfg {Function} onEnterWithoutSelection Callback que es llamada cada vez que el usuario presiona ENTER habiendo sugerencias 
+ *  disponibles pero sin haber seleccionado ninguna. La funcion declarada recibira como parametro el texto ingresado por el usuario.
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica. Por defecto: true.
  * @constructor 
  * @param {String} idField Identificador del input control en la pagina
@@ -292,11 +294,20 @@ usig.AutoCompleterView = function(idField, options) {
 				highlight(highlighted);
 			}
 		}
-		if (keyCodes.enter == keyCode && (highlighted >= 0 || numOptions == 1)) {
-			if (highlighted >= 0) {
-				selectionHandler(itemsRef[id+highlighted]);
+		if (keyCodes.enter == keyCode) { 
+			if ($div.css('display') != 'block') {
+				$div.show();
 			} else {
-				selectionHandler(itemsRef[id+'0']);
+				if (highlighted >= 0 || numOptions == 1) {
+					if (highlighted >= 0) {
+						selectionHandler(itemsRef[id+highlighted]);
+					} else {
+						selectionHandler(itemsRef[id+'0']);
+					}
+				} else if (numOptions > 0 && typeof(opts.onEnterWithoutSelection) == "function") {
+					if (opts.debug) usig.debug('AutoCompleterView: ENTER without selection...');
+					opts.onEnterWithoutSelection(fieldValue);
+				}
 			}
 		}
 		if (keyCodes.esc == keyCode) {

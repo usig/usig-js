@@ -21,8 +21,11 @@ usig.InputController = function(idField, options) {
 
 	var opts = $.extend({}, usig.InputController.defaults, options);
 	
-	var onEvent = function(ev) {
-		var key = (window.event) ? window.event.keyCode : ev.keyCode;
+	var onEvent = function(ev) {		
+		var key = ev.keyCode;
+		if (window.event && window.event.keyCode > 0) {
+			key = window.event.keyCode;
+		}
 		if (ev.type != "blur" && ev.type != "focus" && typeof(opts.onKeyUp) == "function") {
 			opts.onKeyUp(key, field.value);
 		}

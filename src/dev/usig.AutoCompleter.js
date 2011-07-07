@@ -40,6 +40,8 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} afterSuggest Callback que es llamada cada vez que se actualizan las sugerencias.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
  *  sugerencias. El objeto que recibe como parametro puede ser una instancia de usig.Calle, usig.Direccion o bien usig.inventario.Objeto
+ * @cfg {Function} onEnterWithoutSelection Callback que es llamada cada vez que el usuario presiona ENTER habiendo sugerencias 
+ *  disponibles pero sin haber seleccionado ninguna. La funcion declarada recibira como parametro el texto ingresado por el usuario.
  * @cfg {Function} beforeGeoCoding Callback que es llamada antes de realizar la geocodificacion de la direccion o el lugar 
  * @cfg {Function} afterGeoCoding Callback que es llamada al finalizar la geocodificacion de la direccion o el lugar 
  * seleccionado. El objeto que recibe como parametro es una instancia de usig.Punto
@@ -235,6 +237,13 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	 */
 	this.selectOption = function(num) {
 		return view.selectOption(num);
+	}
+	
+	/**
+	 * Oculta las sugerencias que se esten mostrando
+	 */
+	this.hide = function() {
+		view.hide();
 	}
 	
 	/**
@@ -472,7 +481,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	if (!view) {
-		view = new usig.AutoCompleterView(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter });
+		view = new usig.AutoCompleterView(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter, onEnterWithoutSelection: opts.onEnterWithoutSelection });
 		cleanList.push(view);
 	}
 	view.onSelection(selectionHandler.createDelegate(this));
