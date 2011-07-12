@@ -30,6 +30,7 @@ usig.AutoCompleterView = function(idField, options) {
 		id = 'usig_acv_'+idField,
 		hideTimeout = null,
 		highlighted = -1,
+		autoSelected = false;
 		numOptions = 0,
 		$div = null,
 		itemsRef = {},
@@ -107,6 +108,13 @@ usig.AutoCompleterView = function(idField, options) {
 		
 		// hide dialog after an interval
 		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);		
+	}
+	
+	function clearHighlight() {
+		if ($div) {
+			highlighted = -1;
+			$('ul.options li.highlight', $div).removeClass('highlight');
+		}
 	}
 	
 	function highlight(n) {
@@ -249,6 +257,10 @@ usig.AutoCompleterView = function(idField, options) {
 		if (opts.debug) usig.debug('AutoCompleterView: showing '+numOptions+' options: ['+options+']');
 		if ((append === true || !isNaN(parseInt(append))) && $div && $('ul.options li a', $div).length > 0) {
 			if (opts.debug) usig.debug('AutoCompleterView: appending to the end of existing list...');
+			if (numOptions > 1 && autoSelected) {
+				autoSelected = false;
+				clearHighlight();
+			}
 			$('ul.options', $div).append(htmlList);
 		} else {
 			if (opts.debug) usig.debug('AutoCompleterView: creating suggestions list...');
@@ -264,6 +276,7 @@ usig.AutoCompleterView = function(idField, options) {
 		}).createDelegate(this));
 		if (opts.autoSelect && numOptions == 1) {
 			highlighted = 0;
+			autoSelected = true;
 			highlight(highlighted);
 		}
 	}
