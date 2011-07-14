@@ -5,13 +5,13 @@ if (typeof (usig) == "undefined")
 /**
  * @class AutoCompleter
  * Esta clase implementa un autocompleter de lugares y direcciones para inputs de texto.<br/>
- * Requiere: jQuery-1.3.2+, usig.core 1.0+, Normalizador de Direcciones 1.0+, usig.Inventario 2.0+, usig.GeoCoder 2.0+
+ * Requiere: jQuery-1.3.2+, usig.core 2.1+, usig.Suggester 1.0+
  * Ejemplo de uso:
  * <pre><code>
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * // El usig.AutoCompleterFull.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.0/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.1/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.AutoCompleter('inputField', {
  *              afterSelection: function(option) {
@@ -20,9 +20,9 @@ if (typeof (usig) == "undefined")
  *          });
  * 
  * </code></pre> 
- * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/demos/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/demo/autoCompleter.html</a><br/>
- * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/doc/</a><br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleter.html</a>
+ * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demos/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demo/autoCompleter.html</a><br/>
+ * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/</a><br/>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/tests/autoCompleter.html</a>
  * @namespace usig
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a buscar. Por defecto: 10

@@ -9,13 +9,23 @@ if (typeof (usig) == "undefined")
 /**
  Loads the specified script dynamically on the current page
  @param {String} filename Url of the js script to load
+ @param {Function} callback (optional) A callback function to be called when the script is loaded
  */
-usig.loadJs = function(filename) {
-	var fileref=document.createElement('script')
-	fileref.setAttribute("type","text/javascript")
-	fileref.setAttribute("src", filename)
-	if (typeof fileref!="undefined")
-		document.getElementsByTagName("head")[0].appendChild(fileref)
+usig.loadJs = function(filename, callback) {
+	var scriptElem = document.createElement("script"),
+		head = document.getElementsByTagName("head")[0],
+		scriptdone = false;
+    scriptElem.onload = scriptElem.onreadystatechange = function () {
+        if ((scriptElem.readyState && scriptElem.readyState !== "complete" && scriptElem.readyState !== "loaded") || scriptdone) {
+            return false;
+        }
+        scriptElem.onload = scriptElem.onreadystatechange = null;
+        scriptdone = true;
+        if (typeof(callback)=="function")
+        	callback();
+    };
+    scriptElem.src = filename;
+    head.insertBefore(scriptElem, head.firstChild);
 };
 
 /**
@@ -23,10 +33,10 @@ usig.loadJs = function(filename) {
  @param {String} filename Url of the css script to load
  */
 usig.loadCss = function(filename) {
-	var fileref=document.createElement("link")
-	fileref.setAttribute("rel", "stylesheet")
-	fileref.setAttribute("type", "text/css")
-	fileref.setAttribute("href", filename)	
+	var fileref=document.createElement("link");
+	fileref.setAttribute("rel", "stylesheet");
+	fileref.setAttribute("type", "text/css");
+	fileref.setAttribute("href", filename);	
 	if (typeof fileref!="undefined")
 		document.getElementsByTagName("head")[0].appendChild(fileref)
 };

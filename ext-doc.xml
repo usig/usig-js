@@ -71,6 +71,7 @@
 	<source src="src/dev/usig.Suggester.js"/>
 	<source src="src/dev/usig.SuggesterDirecciones.js"/>
 	<source src="src/dev/usig.AjaxComponent.js"/>
+	<source src="src/dev/usig.MapaInteractivo.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>
