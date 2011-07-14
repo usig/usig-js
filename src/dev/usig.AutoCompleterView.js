@@ -30,7 +30,7 @@ usig.AutoCompleterView = function(idField, options) {
 		id = 'usig_acv_'+idField,
 		hideTimeout = null,
 		highlighted = -1,
-		autoSelected = false;
+		autoSelected = false,
 		numOptions = 0,
 		$div = null,
 		itemsRef = {},
@@ -309,6 +309,9 @@ usig.AutoCompleterView = function(idField, options) {
 		}
 		if (keyCodes.enter == keyCode) { 
 			if ($div.css('display') != 'block') {
+				if (typeof(opts.onEnterWithoutSelection) == "function") {
+					opts.onEnterWithoutSelection(fieldValue);					
+				}
 				$div.show();
 			} else {
 				if (highlighted >= 0 || numOptions == 1) {
