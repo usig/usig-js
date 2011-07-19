@@ -30,18 +30,19 @@
     <script src="../usig.SuggesterLugares.js" type="text/javascript"></script>
 	<script src="../usig.SuggesterDirecciones.js" type="text/javascript"></script>
     <script src="../usig.SuggesterCatastro.js" type="text/javascript"></script>
-	
+    
 	<script type="text/javascript">
 	$(document).ready(function() {
+		var selectedOption = null;
 		
 		function afterGeoCoding(pt) {
-			if (pt instanceof usig.Punto){
-				var imgMapa = usig.MapaEstatico({ x: pt.getX(), y: pt.getY(), marcarPunto: 1, width: 600, desc: $('#b').val() });
-				imgMapa.onload = function() {
-					$('#mapa').html('');
-					$('#mapa').append(imgMapa);
-				}
-				$('#mapa').html('Cargando mapa centrado en '+pt+'...');
+			if (pt instanceof usig.Punto) {
+				if (selectedOption instanceof usig.Direccion) {
+					selectedOption.setCoordenadas(pt);
+				}				
+				var dirId = mapa.addMarker(selectedOption, true, function(ev, place) {
+					alert('Click en '+place.toString());
+				});
 			}		
 		}
 		
@@ -53,10 +54,8 @@
        			$('#b').val('').removeAttr('disabled').focus();	        			
        		},
        		afterSelection: function(option) {
-       			$('#mapa').html('Se seleccionó la opción: '+option);
        			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
-       				if ($('#mainForm fieldset input[name=geocode]').is(':checked'))
-       					$('#mapa').html('Buscando coordenadas...');
+       				selectedOption = option;
        			}
        		},
        		afterGeoCoding: afterGeoCoding
@@ -69,9 +68,21 @@
 		$('#mapa').css('width', 600).css('height', 450);
 		
 		mapa = new usig.MapaInteractivo('mapa', {
-			rootUrl: '../'
+			rootUrl: '../',
+			// OpenLayersCSS: 'http://ameba.usig.gcba.gov.ar/wk/OpenLayers/theme/default/style.css',
+			onReady: function() {
+				/* Ejemplo de marcador personalizado
+				
+				var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png'
+					iconSize = new OpenLayers.Size(41, 41),
+					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize)),
+					customMarker.desc = 'Mi marcador';
+				
+				var markerId = mapa.addMarker(customMarker, true, function(ev, place) { alert(place.desc); });
+				*/
+			}
 		});
-		
+
 		
 	});	
 	</script>

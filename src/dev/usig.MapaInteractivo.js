@@ -34,10 +34,10 @@ usig.MapaInteractivo = function(idDiv, options) {
 		$div = $('#'+idDiv),
 		mapWidth = parseInt($div.css('width')),
 		mapHeight = parseInt($div.css('height')),
-		direccionesMap = {},
+		markersMap = {},
 		$indicatorImage = $('<img src="'+opts.rootUrl+'images/animated_indicator_medium.gif" alt="'+opts.texts.loading+'"/>');
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-bottomleft: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-bottomright: 10px; -webkit-border-bottom-right-radius: 10px;"></div>'),
-		map = navBar = panZoomBar = scalebar = overviewMap = sombrasDirecciones = direcciones = null;
+		map = navBar = panZoomBar = scalebar = overviewMap = markersShadows = myMarkers = null;
 
 	function init() {
 		$divIndicator.remove();
@@ -110,8 +110,8 @@ usig.MapaInteractivo = function(idDiv, options) {
 	    map.addControl(overviewMap);	
 	    
 		//Direcciones
-        sombrasDirecciones = new OpenLayers.Layer.Vector(
-                "Sombras de Direcciones", // Direcciones que ya no son lo que fueron
+        markersShadows = new OpenLayers.Layer.Vector(
+                "MarkersShadows", 
                 {
                     styleMap: new OpenLayers.StyleMap({
                         // Set the external graphic and background graphic images.
@@ -139,11 +139,14 @@ usig.MapaInteractivo = function(idDiv, options) {
                 }
         );
         
-		direcciones = new OpenLayers.Layer.Markers("Direcciones");
+		myMarkers = new OpenLayers.Layer.Markers("MyMarkers");
 
-		map.addLayer(sombrasDirecciones);
-		map.addLayer(direcciones);
+		map.addLayer(markersShadows);
+		map.addLayer(myMarkers);
 	    
+		if (typeof(opts.onReady) == "function") {
+			opts.onReady();
+		}
 	};
 	
 	function getLayerURLs(layerName) {
@@ -174,71 +177,103 @@ usig.MapaInteractivo = function(idDiv, options) {
 			navBar.selectMap(layerName);
 	}
 	
-	//Direcciones
-	this.addDir = function(dir, goTo, onClick) {
-		// fijarse si el marker ya existe...
-		// statusBar.activate(opts.texts.processing, true);
-		var size = new OpenLayers.Size(20, 36);
-		var offset = new OpenLayers.Pixel(-5, -size.h);
-		var icon = new OpenLayers.Icon(opts.rootUrl+'images/pincho_inclinado.png', size, offset);
+	function getMarkerFromPlace(place) {
+		if (place instanceof OpenLayers.Marker) {
+			return place;
+		}
+		
+		var size = new OpenLayers.Size(20, 36),
+			offset = new OpenLayers.Pixel(-5, -size.h),
+			icon = new OpenLayers.Icon(opts.rootUrl+'images/pincho_inclinado.png', size, offset),
+			pt = null;
+			
+		if (place.x != undefined && place.y != undefined) {
+			pt = new OpenLayers.LonLat(place.x,place.y)
+		}
+		
+		if (usig.Direccion && place instanceof usig.Direccion) {
+			pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
+		}
+		
+		if (usig.inventario.Objeto && place instanceof usig.inventario.Objeto) {
+			pt = new OpenLayers.LonLat(place.ubicacion.getCentroide().x, place.ubicacion.getCentroide().y);			
+		}
 		// le agregamos una clase Marker para cambiar el puntero del mouse en el over
 		icon.imageDiv.className = 'Marker';  
-		var marker =  new OpenLayers.Marker(new OpenLayers.LonLat(dir.x,dir.y), icon);
-        var markerShadow = new OpenLayers.Feature.Vector(
-            new OpenLayers.Geometry.Point(dir.x, dir.y)
-        );
-		marker.dir = dir;
-		marker.shadow = markerShadow;
+		return new OpenLayers.Marker(pt, icon);
+	}
+	
+	/**
+	 * Agrega un marcador en el mapa
+	 * @param {OpenLayers.Marker o usig.Direccion o usig.inventario.Objeto o usig.DireccionMapabsas} place Lugar que se desea marcar
+	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
+	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador
+	 * @return {Integer} Id del marcador agregado
+	 */
+	this.addMarker = function(place, goTo, onClick) {
+		// fijarse si el marker ya existe...
+		// statusBar.activate(opts.texts.processing, true);
+		var marker = getMarkerFromPlace(place);
+		var random = Math.floor(Math.random()*100001);
+		var id = new Date()*1 +random;
+		marker.place = place;
+		markersMap[''+id] = marker;
+		myMarkers.addMarker(marker);
+		
+		if (!(place instanceof OpenLayers.Marker)) {
+	    	var markerShadow = new OpenLayers.Feature.Vector(
+	            new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat)	            
+	        );
+			marker.shadow = markerShadow;
+			markersShadows.addFeatures(markerShadow);
+		}
+	        
 		marker.events.registerPriority('click', marker, function(ev) {
 			OpenLayers.Event.stop(ev, false);
 			if (typeof(onClick) == "function") {
-				onClick(ev, dir);
+				onClick(ev, place);
 			}
 		});
-		// controlToolTip.onClickDir.createDelegate(controlToolTip, [dir], 0));
 		
-		direccionesMap[''+dir.id] = marker;
-		direcciones.addMarker(marker);
-		sombrasDirecciones.addFeatures(markerShadow);
 		// statusBar.deactivate();
 		
 		if(goTo) {
-			this.goTo(dir, true);
+			this.goTo(marker.lonlat, true);
 		}
+		return id;
         // controlToolTip.onClickDir(dir);
 	}
 	
 	//Remueve una direccion
-	this.removeDir = function(dir)	{
-		marker = direccionesMap[''+dir.id];			
-		direcciones.removeMarker(marker);
-		sombrasDirecciones.removeFeatures(marker.shadow);
+	this.removeMarker = function(id)	{
+		marker = markersMap[''+id];			
+		myMarkers.removeMarker(marker);
+		if (marker.shadow)
+			markersShadows.removeFeatures(marker.shadow);
 		marker.destroy();
 		marker = undefined;
-		direccionesMap[dir.id] = undefined;
+		markersMap[id] = undefined;
 	}
 	
-	this.delDirs = function(dir) {
-		displayDir(dir,true);
-	}	
-	
-	this.displayDir = function(dir, display) {
-		direccionesMap[dir.id].display(display);
-		if (!display)
-			sombrasDirecciones.removeFeatures(direccionesMap[dir.id].shadow);
-		else
-			sombrasDirecciones.addFeatures(direccionesMap[dir.id].shadow);			
+	this.toggleMarker = function(id, display) {
+		markersMap[''+id].display(display);
+		if (markersMap[''+id].shadow) {
+			if (!display)
+				markersShadows.removeFeatures(markersMap[''+id].shadow);
+			else
+				markersShadows.addFeatures(markersMap[''+id].shadow);
+		}
 	}
 	
 	this.goTo = function(point, zoomIn) {
 		if (zoomIn) {
 			if (map.getZoom() == opts.goToZoomLevel) {
-				map.panTo(new OpenLayers.LonLat(point.x,point.y));
+				map.panTo(new OpenLayers.LonLat(point.lon,point.lat));
 			} else {
-				map.moveTo(new OpenLayers.LonLat(point.x,point.y), opts.goToZoomLevel);
+				map.moveTo(new OpenLayers.LonLat(point.lon,point.lat), opts.goToZoomLevel);
 			}
 		} else {
-			map.panTo(new OpenLayers.LonLat(point.x,point.y));				
+			map.panTo(new OpenLayers.LonLat(point.lon,point.lat));				
 		}
 	}
 		
@@ -276,8 +311,8 @@ usig.MapaInteractivo.defaults = {
 	
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-1/theme/default/style.css',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-1/OpenLayers.js',
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-3/theme/default/style.css',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-3/OpenLayers.js',
 	overviewOptions: {
 		layer:'referencia',
 		resolutions: [130,70,30,15,7.5,4],
