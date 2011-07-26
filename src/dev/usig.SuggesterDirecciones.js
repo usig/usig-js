@@ -26,7 +26,7 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 		// El normalizador de direcciones y el geocoder pueden ser opciones para 
 		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
 		if (!this.opts.normalizadorDirecciones) {
-			this.opts.normalizadorDirecciones = new usig.NormalizadorDirecciones({ aceptarCallesSinAlturas: this.opts.acceptSN, onReady: this.opts.onReady });
+			this.opts.normalizadorDirecciones = usig.NormalizadorDirecciones.init({ aceptarCallesSinAlturas: this.opts.acceptSN, onReady: this.opts.onReady });
 			this.cleanList.push(this.opts.normalizadorDirecciones);
 		}	
 		if (!this.opts.geoCoder) {

@@ -133,7 +133,7 @@ debug:$(FILES)
 	cat $(SUGGESTER_LUGARES_FILES) > $(SRC)/usig.SuggesterLugares-debug.js
 	cat $(SUGGESTER_CATASTRO_FILES) > $(SRC)/usig.SuggesterCatastro-debug.js
 	cat $(INDICE_CATASTRAL_FILES) > $(SRC)/usig.IndiceCatastral-debug.js
-	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gov.ar/nd-js/1.0/normalizadorDirecciones.min.js
+	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js
 	
 clean:
 	rm -f $(SRC)/*-debug.js

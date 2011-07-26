@@ -159,7 +159,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
     $.ajax({
         type: 'GET',
         cache: true,
-        url: usig.Callejero.defaults.server,
+        url: usig.defaults.Callejero.server,
         data: { full: 1 },
         dataType: 'jsonp',
         success: function(data) { 
