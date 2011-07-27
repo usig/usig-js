@@ -24,7 +24,8 @@ if (typeof (usig) == "undefined")
  * @namespace usig
  * @cfg {Integer} width Ancho del mapa a construir (en pixeles).
  * @cfg {Integer} height Alto del mapa a construir (en pixeles).
- * @cfg {Function} onReady Callback que es llamada cuando el componente finalizo de cargar 
+ * @cfg {Function} onReady Callback que es llamada cuando el componente finalizo de cargar
+ * @cfg {Function} onMapClick Callback que es llamada cuando se hace click sobre el mapa  
  * @constructor 
   * @param {String} idDiv Identificador del div en el que construir el mapa
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -35,9 +36,9 @@ usig.MapaInteractivo = function(idDiv, options) {
 		mapWidth = parseInt($div.css('width')),
 		mapHeight = parseInt($div.css('height')),
 		markersMap = {},
-		$indicatorImage = $('<img src="'+opts.rootUrl+'images/animated_indicator_medium.gif" alt="'+opts.texts.loading+'"/>');
+		$indicatorImage = null,
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-bottomleft: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-bottomright: 10px; -webkit-border-bottom-right-radius: 10px;"></div>'),
-		map = navBar = panZoomBar = scalebar = overviewMap = markersShadows = myMarkers = null;
+		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = markersShadows = myMarkers = null;
 
 	function init() {
 		$divIndicator.remove();
@@ -51,7 +52,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	    }
 	    
     	opts.baseLayer = opts.initLocation?'mapabsas_'+opts.initLocation.map:opts.baseLayer;
-		setBaseLayer(opts.baseLayer);
+		this.setBaseLayer(opts.baseLayer);
 		
 		map.zoomToExtent(opts.OpenLayersOptions.initBounds);
 		if (opts.initLocation) {
@@ -81,16 +82,16 @@ usig.MapaInteractivo = function(idDiv, options) {
 	    navBar = new OpenLayers.Control.NavToolbar($.extend({}, opts.texts.navBar, {
 	    	mapList: opts.mapList,
 	    	activeMap: opts.baseLayer,
-	    	mapSelectorTrigger: function(map) {
+	    	mapSelectorTrigger: (function(map) {
 	    		if (map != 'none') {
-	    			setBaseLayer(map);
+	    			this.setBaseLayer(map);
 	    		} else {
-	    			setBaseLayer(usig.mapabsas2.mapasTematicos.getMapaActivo());
+	    			this.setBaseLayer(opts.baseLayer);
 	    		}
-	    	},
-	    	clickHandler: function() {},
+	    	}).createDelegate(this),
+	    	clickHandler: opts.onMapClick,
 	    	handleRightClicks: true,
-	    	rightClickHandler: function() {}
+	    	rightClickHandler: opts.onMapClick
 	    }));
 	    
 	    map.addControl(navBar); // Si ponemos el navBar no hace falta el Navigation
@@ -108,6 +109,9 @@ usig.MapaInteractivo = function(idDiv, options) {
 	       	}});
 	       	
 	    map.addControl(overviewMap);	
+	    
+	    statusBar = new OpenLayers.Control.StatusBar();
+	    map.addControl(statusBar);
 	    
 		//Direcciones
         markersShadows = new OpenLayers.Layer.Vector(
@@ -145,7 +149,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		map.addLayer(myMarkers);
 	    
 		if (typeof(opts.onReady) == "function") {
-			opts.onReady();
+			opts.onReady(this);
 		}
 	};
 	
@@ -158,7 +162,23 @@ usig.MapaInteractivo = function(idDiv, options) {
 		return urls;
 	}
 	
-	function setBaseLayer(layerName) {
+	/**
+	 * Setea las opciones del componente
+     * @param {Object} options Un objeto conteniendo overrides para las opciones disponibles 
+    */	
+	this.setOptions = function(options) {
+		opts = $.extend({}, opts, options);
+	}
+	
+	this.updateSize = function(){
+		map.updateSize.defer(200, map);
+	}
+	
+	this.getMarkers =function(){
+		return myMarkers;
+	}
+	
+	this.setBaseLayer = function(layerName) {
 		var currentLayer = map.baseLayer;
 		if(currentLayer == undefined) {
 			var layerUrls = getLayerURLs(layerName) ;
@@ -212,7 +232,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 */
 	this.addMarker = function(place, goTo, onClick) {
 		// fijarse si el marker ya existe...
-		// statusBar.activate(opts.texts.processing, true);
+		statusBar.activate(opts.texts.processing, true);
 		var marker = getMarkerFromPlace(place);
 		var random = Math.floor(Math.random()*100001);
 		var id = new Date()*1 +random;
@@ -235,7 +255,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 			}
 		});
 		
-		// statusBar.deactivate();
+		statusBar.deactivate();
 		
 		if(goTo) {
 			this.goTo(marker.lonlat, true);
@@ -276,8 +296,18 @@ usig.MapaInteractivo = function(idDiv, options) {
 			map.panTo(new OpenLayers.LonLat(point.lon,point.lat));				
 		}
 	}
+
+	this.showStatus = function(text, showIndicator) {
+		statusBar.activate(text, showIndicator);
+	}
+		
+	this.hideStatus = function() {
+		statusBar.deactivate();
+	}
+		
 		
 	if (typeof(OpenLayers) == "undefined") {
+		$indicatorImage = $('<img src="'+opts.rootUrl+'images/animated_indicator_medium.gif" alt="'+opts.texts.loading+'"/>');
 		$indicatorImage.css('padding', '10px');
 		$divIndicator.css('background-color', '#fff')
 			.css('width', '52px')
@@ -294,7 +324,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		usig.loadCss(opts.OpenLayersCSS);
 		usig.loadJs(opts.OpenLayersJS, init.createDelegate(this));
 	} else {
-		init();
+		init.defer(200,this);
 	}
 	
 };
@@ -348,11 +378,6 @@ usig.MapaInteractivo.defaults = {
 	texts: {
 		processing: 'Procesando...',
 		loading: 'Cargando...',
-		actionBar: {
-			printing: 'Imprimir Mapa',
-			linking: 'Enlace a la vista actual',
-			mailing: 'Enviar la vista actual por e-mail'
-		},
 		tituloMailing: 'Enviar vista actual por e-mail',
 		panZoomBar:{
 	      textAcercar: 'Acercar',
