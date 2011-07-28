@@ -54,9 +54,9 @@
         <source src="ext" match="Ext*.js"/>-->
 	<source src="src/dev/usig.core.js"/>
 	<source src="src/dev/usig.util.js"/>
-	<source src="src/dev/usig.InputController.js"/>
+	<!--<source src="src/dev/usig.InputController.js"/>-->
 	<source src="src/dev/usig.AutoCompleter.js"/>
-	<source src="src/dev/usig.AutoCompleterView.js"/>
+	<!--<source src="src/dev/usig.AutoCompleterView.js"/>-->
 	<source src="src/dev/usig.Inventario.js"/>
 	<source src="src/dev/usig.Recorridos.js"/>
 	<source src="src/dev/usig.inventario.Objeto.js"/>
@@ -70,6 +70,8 @@
 	<source src="src/dev/usig.Punto.js"/>
 	<source src="src/dev/usig.Suggester.js"/>
 	<source src="src/dev/usig.SuggesterDirecciones.js"/>
+	<source src="src/dev/usig.SuggesterLugares.js"/>
+	<source src="src/dev/usig.SuggesterCatastro.js"/>
 	<source src="src/dev/usig.AjaxComponent.js"/>
 	<source src="src/dev/usig.MapaInteractivo.js"/>
     </sources>

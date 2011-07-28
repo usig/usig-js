@@ -116,6 +116,11 @@ INDICE_CATASTRAL_FILES=\
       $(SRC)/usig.ParcelaCatastral.js \
       $(SRC)/usig.IndiceCatastral.js
 
+MAPA_INTERACTIVO_FILES=\
+      $(SRC)/usig.core.js \
+      $(SRC)/usig.util.js \
+      $(SRC)/usig.MapaInteractivo.js
+
 all: prepare
 
 debug:$(FILES)
@@ -133,6 +138,7 @@ debug:$(FILES)
 	cat $(SUGGESTER_LUGARES_FILES) > $(SRC)/usig.SuggesterLugares-debug.js
 	cat $(SUGGESTER_CATASTRO_FILES) > $(SRC)/usig.SuggesterCatastro-debug.js
 	cat $(INDICE_CATASTRAL_FILES) > $(SRC)/usig.IndiceCatastral-debug.js
+	cat $(MAPA_INTERACTIVO_FILES) > $(SRC)/usig.MapaInteractivo-debug.js
 	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js
 	
 clean:
@@ -170,6 +176,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterLugares-debug.js -o $(REL)/usig.SuggesterLugares.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterCatastro-debug.js -o $(REL)/usig.SuggesterCatastro.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.IndiceCatastral-debug.js -o $(REL)/usig.IndiceCatastral.min.js
+	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaInteractivo-debug.js -o $(REL)/usig.MapaInteractivo.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterFull.min.js
@@ -179,6 +186,7 @@ prepare: docs debug
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	rsync -avz --exclude '.svn' $(SRC)/demos/css $(REL)/demos/
 	rsync -avz --exclude '.svn' $(SRC)/css $(REL)/
+	rsync -avz --exclude '.svn' $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
 	$(MAKE) clean
 	

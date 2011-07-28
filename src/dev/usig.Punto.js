@@ -11,8 +11,8 @@ if (typeof (usig) == "undefined")
  * @param {Float} coordY Coordenada Y del punto 
 */	
 usig.Punto = function(coordX, coordY) {
-	this.x = coordX;
-	this.y = coordY;
+	this.x = this.lon = coordX;
+	this.y = this.lat = coordY;
 	/**
 	 * Devuelve la coordenada x del punto
 	 * @return {Float} La coordenada x del punto

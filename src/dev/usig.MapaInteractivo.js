@@ -4,7 +4,7 @@ if (typeof (usig) == "undefined")
 	
 /**
  * @class MapaInteractivo
- * Esta clase implementa un mapa interactivo de Buenos Aires embebible en cualquier página web.<br/>
+ * Esta clase implementa un mapa interactivo de Buenos Aires embebible en cualquier pagina web.<br/>
  * Requiere: jQuery-1.3.2+, usig.core 2.1+, usig.util 2.1+, OpenLayers
  * Ejemplo de uso:
  * <pre><code>
@@ -14,16 +14,17 @@ if (typeof (usig) == "undefined")
  * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.1/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.MapaInteractivo('id-div-mapa', {
- *              width: 600, // ancho en pixels
- *              height: 450 // alto en pixels
+ *              onReady: function() {
+ *              	...
+ *              }
  *          });
  * 
  * </code></pre> 
  * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demo/mapaInteractivo.html</a><br/>
  * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/</a><br/>
  * @namespace usig
- * @cfg {Integer} width Ancho del mapa a construir (en pixeles).
- * @cfg {Integer} height Alto del mapa a construir (en pixeles).
+ * @cfg {Boolean} includeToolbar Incluir el toolbar en el mapa (por default es True)  
+ * @cfg {Boolean} includePanZoomBar Incluir el pan-zoom-bar en el mapa (por default es True)  
  * @cfg {Function} onReady Callback que es llamada cuando el componente finalizo de cargar
  * @cfg {Function} onMapClick Callback que es llamada cuando se hace click sobre el mapa  
  * @constructor 
@@ -45,6 +46,9 @@ usig.MapaInteractivo = function(idDiv, options) {
 		opts.OpenLayersOptions.maxExtent = new OpenLayers.Bounds(opts.bounds[0], opts.bounds[1], opts.bounds[2], opts.bounds[3]);
 		opts.OpenLayersOptions.initBounds = new OpenLayers.Bounds(opts.initBounds[0], opts.initBounds[1], opts.initBounds[2], opts.initBounds[3]);
 	    map = new OpenLayers.Map(idDiv, opts.OpenLayersOptions);
+	    /**
+	     * API de OpenLayers para manipular el mapa. Ver documentacion disponible en http://docs.openlayers.org/
+	     */
 	    this.api = map;
 
 	    this.api.zoomToMaxExtent = function(options) {
@@ -69,46 +73,53 @@ usig.MapaInteractivo = function(idDiv, options) {
 	           });
 	    map.addControl(scalebar);
 	 	
-		panZoomBar = new OpenLayers.Control.PanZoomBar({
-		      panner: true, 
-		      zoomWorldIcon:true, 
-		      textAcercar: opts.texts.panZoomBar.textAcercar,
-		      textAlejar: opts.texts.panZoomBar.textAlejar,
-		      verMapaCompleto: opts.texts.panZoomBar.verMapaCompleto
-		  });
-	 	// map.addControl(new OpenLayers.Control.Navigation()); 
-		map.addControl(panZoomBar); 
+	    if (opts.includePanZoomBar) {
+			panZoomBar = new OpenLayers.Control.PanZoomBar({
+			      panner: true, 
+			      zoomWorldIcon:true, 
+			      textAcercar: opts.texts.panZoomBar.textAcercar,
+			      textAlejar: opts.texts.panZoomBar.textAlejar,
+			      verMapaCompleto: opts.texts.panZoomBar.verMapaCompleto
+			  });
+			  
+			map.addControl(panZoomBar);
+	    
+		    overviewMap = new OpenLayers.Control.OverviewMap({
+			    layers: [new OpenLayers.Layer.WMS("Referencia",getLayerURLs('referencia'), {layers: opts.overviewOptions.layer})],			
+			    size: new OpenLayers.Size(opts.overviewOptions.size[0], opts.overviewOptions.size[1]),
+			    minRatio: 12, 
+			    maxRatio: 24,
+		       	mapOptions: {
+	        		projection: opts.OpenLayersOptions.projection, 
+	        		units: opts.OpenLayersOptions.units, 
+	        		maxExtent: opts.OpenLayersOptions.maxExtent, 
+		       		resolutions: opts.overviewOptions.resolutions
+		       	}});
+		       	
+		    map.addControl(overviewMap);	
+	    }
 		
-	    navBar = new OpenLayers.Control.NavToolbar($.extend({}, opts.texts.navBar, {
-	    	mapList: opts.mapList,
-	    	activeMap: opts.baseLayer,
-	    	mapSelectorTrigger: (function(map) {
-	    		if (map != 'none') {
-	    			this.setBaseLayer(map);
-	    		} else {
-	    			this.setBaseLayer(opts.baseLayer);
-	    		}
-	    	}).createDelegate(this),
-	    	clickHandler: opts.onMapClick,
-	    	handleRightClicks: true,
-	    	rightClickHandler: opts.onMapClick
-	    }));
-	    
-	    map.addControl(navBar); // Si ponemos el navBar no hace falta el Navigation
-	    
-	    overviewMap = new OpenLayers.Control.OverviewMap({
-		    layers: [new OpenLayers.Layer.WMS("Referencia",getLayerURLs('referencia'), {layers: opts.overviewOptions.layer})],			
-		    size: new OpenLayers.Size(opts.overviewOptions.size[0], opts.overviewOptions.size[1]),
-		    minRatio: 12, 
-		    maxRatio: 24,
-	       	mapOptions: {
-        		projection: opts.OpenLayersOptions.projection, 
-        		units: opts.OpenLayersOptions.units, 
-        		maxExtent: opts.OpenLayersOptions.maxExtent, 
-	       		resolutions: opts.overviewOptions.resolutions
-	       	}});
-	       	
-	    map.addControl(overviewMap);	
+	    if (opts.includeToolbar) {
+		    navBar = new OpenLayers.Control.NavToolbar($.extend({}, opts.texts.navBar, {
+		    	mapList: opts.mapList,
+		    	activeMap: opts.baseLayer,
+		    	mapSelectorText: opts.texts.mapSelectorDefault,
+		    	mapSelectorTrigger: (function(map) {
+		    		if (map != 'none') {
+		    			this.setBaseLayer(map);
+		    		} else {
+		    			this.setBaseLayer(opts.baseLayer);
+		    		}
+		    	}).createDelegate(this),
+		    	clickHandler: opts.onMapClick,
+		    	handleRightClicks: true,
+		    	rightClickHandler: opts.onMapClick
+		    }));
+		    
+		    map.addControl(navBar); // Si ponemos el navBar no hace falta el Navigation
+	    } else {
+		 	map.addControl(new OpenLayers.Control.Navigation()); 	    	
+	    }
 	    
 	    statusBar = new OpenLayers.Control.StatusBar();
 	    map.addControl(statusBar);
@@ -225,7 +236,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	
 	/**
 	 * Agrega un marcador en el mapa
-	 * @param {OpenLayers.Marker o usig.Direccion o usig.inventario.Objeto o usig.DireccionMapabsas} place Lugar que se desea marcar
+	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} place Lugar que se desea marcar
 	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
 	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador
 	 * @return {Integer} Id del marcador agregado
@@ -264,7 +275,10 @@ usig.MapaInteractivo = function(idDiv, options) {
         // controlToolTip.onClickDir(dir);
 	}
 	
-	//Remueve una direccion
+	/**
+	 * Borra un marcador del mapa
+	 * @param {Integer} id Id del marcador que se desea eliminar obtenido mediante addMarker
+	 */
 	this.removeMarker = function(id)	{
 		marker = markersMap[''+id];			
 		myMarkers.removeMarker(marker);
@@ -275,6 +289,11 @@ usig.MapaInteractivo = function(idDiv, options) {
 		markersMap[id] = undefined;
 	}
 	
+	/**
+	 * Permite prender/apagar un marcador sobre el mapa
+	 * @param {Integer} id Id del marcador
+	 * @param {Boolean} display True para prender el marcador y False para apagarlo
+	 */
 	this.toggleMarker = function(id, display) {
 		markersMap[''+id].display(display);
 		if (markersMap[''+id].shadow) {
@@ -285,6 +304,12 @@ usig.MapaInteractivo = function(idDiv, options) {
 		}
 	}
 	
+	/**
+	 * Permite moverse/hacer zoom sobre un punto determinado del mapa
+	 * @param {OpenLayers.LonLat/usig.Punto} point Coordenadas de la posicion sobre la que 
+	 * se desea centrar el mapa
+	 * @param {Boolean} zoomIn Indica si se desea hacer zoom sobre la coordenada elegida
+	 */
 	this.goTo = function(point, zoomIn) {
 		if (zoomIn) {
 			if (map.getZoom() == opts.goToZoomLevel) {
@@ -330,6 +355,8 @@ usig.MapaInteractivo = function(idDiv, options) {
 };
 
 usig.MapaInteractivo.defaults = {
+	includePanZoomBar: true,
+	includeToolbar: true,
 	bounds: [54340,54090,172855,140146],
 	initBounds: [93500,96750,112000,106750],
 	OpenLayersOptions: {
@@ -379,6 +406,7 @@ usig.MapaInteractivo.defaults = {
 		processing: 'Procesando...',
 		loading: 'Cargando...',
 		tituloMailing: 'Enviar vista actual por e-mail',
+		mapSelectorDefault: 'Mapa',
 		panZoomBar:{
 	      textAcercar: 'Acercar',
 	      textAlejar: 'Alejar',
