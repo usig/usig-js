@@ -68,9 +68,9 @@ usig.HoldingDiv = function(idField, content, options) {
 		//hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);		
 		//killTimeout.createDelegate(this));
 
-	this.esconderHD = function(){
+	this.hide = function(speed){
 		clearTimeout(hideTimeout);
-		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);
+		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this, [speed]);
 	}
 		
 	function killTimeout() {
@@ -82,8 +82,12 @@ usig.HoldingDiv = function(idField, content, options) {
 		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);
 	};
 	
-	function hideSuggestions() {
- 		$div.fadeOut('slow');
+	function hideSuggestions(speed) {
+		if (speed) {
+ 			$div.fadeOut(speed);
+		} else {
+			$div.hide();
+		}
 	};
 
 }
