@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>USIG - Mapa Interactivo de Buenos Aires</title>
+    <link rel="stylesheet" type="text/css" href="css/demos.css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script src="http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js" type="text/javascript"></script>
+	<script src="../usig.core.js" type="text/javascript"></script>
+	<script src="../usig.util.js" type="text/javascript"></script>
+	<script src="../jquery.jsonp-1.1.0.1.js" type="text/javascript"></script>
+	<script src="../json.js" type="text/javascript"></script>
+	<script src="../jquery.class.js" type="text/javascript"></script>
+	<script src="../usig.AjaxComponent.js" type="text/javascript"></script>
+	<script src="../usig.Punto.js" type="text/javascript"></script>
+	<script src="../usig.Calle.js" type="text/javascript"></script>
+	<script src="../usig.Direccion.js" type="text/javascript"></script>
+	<script src="../usig.GeoCoder.js" type="text/javascript"></script>
+	<script src="../usig.inventario.Clase.js" type="text/javascript"></script>
+	<script src="../usig.inventario.Objeto.js" type="text/javascript"></script>
+	<script src="../usig.inventario.Ubicacion.js" type="text/javascript"></script>
+	<script src="../usig.Inventario.js" type="text/javascript"></script>
+	<script src="../usig.InputController.js" type="text/javascript"></script>
+	<script src="../usig.AutoCompleter.js" type="text/javascript"></script>
+	<script src="../usig.AutoCompleterView.js" type="text/javascript"></script>
+	<script src="../usig.MapaInteractivo.js" type="text/javascript"></script>
+	<script src="../usig.ToolTip.js" type="text/javascript"></script>
+
+    <script src="../usig.Suggester.js" type="text/javascript"></script>
+    <script src="../usig.SuggesterLugares.js" type="text/javascript"></script>
+	<script src="../usig.SuggesterDirecciones.js" type="text/javascript"></script>
+    <script src="../usig.SuggesterCatastro.js" type="text/javascript"></script>
+    
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var selectedOption = null;
+		
+		function afterGeoCoding(pt) {
+			if (pt instanceof usig.Punto) {
+				if (selectedOption instanceof usig.Direccion) {
+					selectedOption.setCoordenadas(pt);
+				}
+				
+//              Ejemplo con el onClick		
+
+// 				var dirId = mapa.addMarker(selectedOption, true, function(ev, place, framedCloud) {
+// 					framedCloud.show();
+// 				});
+				
+//              Ejemplo con texto				
+				contentHTML = "Texto de ejemplo";
+				var dirId = mapa.addMarker(selectedOption, true, contentHTML);
+				
+			}		
+		}
+		
+		var ac = new usig.AutoCompleter('b', {
+       		debug: true,
+       		rootUrl: '../',
+       		skin: 'usig2',
+       		onReady: function() {
+       			$('#b').val('').removeAttr('disabled').focus();	        			
+       		},
+       		afterSelection: function(option) {
+       			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+       				selectedOption = option;
+       			}
+       		},
+       		afterGeoCoding: afterGeoCoding
+       	});
+		
+		$('#mainForm').bind("submit", function () {
+			return false;
+		});
+		
+		$('#mapa').css('width', 600).css('height', 450);
+		
+		mapa = new usig.MapaInteractivo('mapa', {
+			rootUrl: '../',
+			OpenLayersJS: "http://lion-dev.usig.gcba.gov.ar/wk/vendor/OpenLayers/OpenLayers.js",
+			onReady: function() {
+				/* Ejemplo de marcador personalizado
+				
+				var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png'
+					iconSize = new OpenLayers.Size(41, 41),
+					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize)),
+					customMarker.desc = 'Mi marcador';
+				
+				var markerId = mapa.addMarker(customMarker, true, function(ev, place) { alert(place.desc); });
+				*/
+			}
+		});
+
+		
+	});	
+	</script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div id="logo"><h1>USIG - Mapa Interactivo (Popup Demo)</h1></div>
+      </div>
+      <div id="buscador">
+       <form id="mainForm" accept-charset="iso-8859-1">
+      	<label for="b">Buscar</label>
+     	<input type="text" size="40" name="b" id="b" title="Lugar a buscar" class="text"/>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+	    <div id="mapa"></div>
+       </form>
+      </div>
+      <div id="footer">
+        <p>&copy; 2011 USIG - Unidad de Sistemas de Información Geográfica</p>
+      </div>
+    </div>
+  </body>
+</html>
