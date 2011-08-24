@@ -234,6 +234,9 @@ usig.MapaInteractivo = function(idDiv, options) {
 		return new OpenLayers.Marker(pt, icon);
 	}
 	
+	this.addToolTip = function(id, marker, contentHTML) {
+	}
+	
 	/**
 	 * Agrega un marcador en el mapa
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} place Lugar que se desea marcar
@@ -247,6 +250,28 @@ usig.MapaInteractivo = function(idDiv, options) {
 		var marker = getMarkerFromPlace(place);
 		var random = Math.floor(Math.random()*100001);
 		var id = new Date()*1 +random;
+		// muestra el place por default
+		var contentHTML = place;
+		
+		if (typeof(onClick) != "function") {
+			contentHTML = onClick;
+		}
+		
+		var framedCloud =  null;
+		framedCloud = new OpenLayers.Popup.FramedCloud(
+				id,
+				marker.lonlat,
+                new OpenLayers.Size(10, 10),
+                contentHTML,
+                marker.icon,
+				true,
+				null);
+		
+		marker.popup = framedCloud;
+		framedCloud.hide();
+		map.addPopup(framedCloud);		
+		
+		//
 		marker.place = place;
 		markersMap[''+id] = marker;
 		myMarkers.addMarker(marker);
@@ -258,11 +283,14 @@ usig.MapaInteractivo = function(idDiv, options) {
 			marker.shadow = markerShadow;
 			markersShadows.addFeatures(markerShadow);
 		}
-	        
+		
 		marker.events.registerPriority('click', marker, function(ev) {
 			OpenLayers.Event.stop(ev, false);
+			
 			if (typeof(onClick) == "function") {
-				onClick(ev, place);
+				onClick(ev, place, framedCloud);
+			} else {
+				framedCloud.show();
 			}
 		});
 		
@@ -280,7 +308,9 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 * @param {Integer} id Id del marcador que se desea eliminar obtenido mediante addMarker
 	 */
 	this.removeMarker = function(id)	{
-		marker = markersMap[''+id];			
+		marker = markersMap[''+id];
+		map.removePopup(marker.popup);
+		marker.popup.destroy();
 		myMarkers.removeMarker(marker);
 		if (marker.shadow)
 			markersShadows.removeFeatures(marker.shadow);
