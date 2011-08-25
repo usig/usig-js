@@ -398,8 +398,8 @@ usig.MapaInteractivo.defaults = {
 	
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-3/theme/default/style.css',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-3/OpenLayers.js',
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/theme/default/style.css',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
 	overviewOptions: {
 		layer:'referencia',
 		resolutions: [130,70,30,15,7.5,4],
