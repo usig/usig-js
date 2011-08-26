@@ -234,9 +234,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 		return new OpenLayers.Marker(pt, icon);
 	}
 	
-	this.addToolTip = function(id, marker, contentHTML) {
-	}
-	
 	/**
 	 * Agrega un marcador en el mapa
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} place Lugar que se desea marcar
@@ -255,23 +252,8 @@ usig.MapaInteractivo = function(idDiv, options) {
 		
 		if (typeof(onClick) != "function") {
 			contentHTML = onClick;
-		}
+		}	
 		
-		var framedCloud =  null;
-		framedCloud = new OpenLayers.Popup.FramedCloud(
-				id,
-				marker.lonlat,
-                new OpenLayers.Size(10, 10),
-                contentHTML,
-                marker.icon,
-				true,
-				null);
-		
-		marker.popup = framedCloud;
-		framedCloud.hide();
-		map.addPopup(framedCloud);		
-		
-		//
 		marker.place = place;
 		markersMap[''+id] = marker;
 		myMarkers.addMarker(marker);
@@ -286,6 +268,19 @@ usig.MapaInteractivo = function(idDiv, options) {
 		
 		marker.events.registerPriority('click', marker, function(ev) {
 			OpenLayers.Event.stop(ev, false);
+
+			var framedCloud = new OpenLayers.Popup.FramedCloud(
+					id,
+					marker.lonlat,
+	                new OpenLayers.Size(10, 10),
+	                contentHTML,
+	                marker.icon,
+					true,
+					null);
+			
+			marker.popup = framedCloud;
+			framedCloud.hide();
+			map.addPopup(framedCloud, true);	
 			
 			if (typeof(onClick) == "function") {
 				onClick(ev, place, framedCloud);
