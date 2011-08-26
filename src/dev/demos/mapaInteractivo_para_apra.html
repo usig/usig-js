@@ -32,6 +32,9 @@
     <script src="../usig.SuggesterCatastro.js" type="text/javascript"></script>
     
 	<script type="text/javascript">
+	// Acá irían las mediciones obtenidas de la base de datos
+	datos_sensores = {1308: {decibeles: 22 } };
+	
 	$(document).ready(function() {
 		var selectedOption = null;
 		
@@ -109,8 +112,12 @@
 							contentHTML += "TMI: " + features[feat].attributes['TMI'];
 							contentHTML += "<br />";
 							contentHTML += "BARRIO: " + features[feat].attributes['BARRIO'];
-
-			            	var markerId = mapa.addMarker(customMarker, false, contentHTML);
+							// y acá se combinan los datos 
+							if (typeof(datos_sensores[features[feat].attributes['TMI']]) != "undefined"){
+								contentHTML += "<br />";
+								contentHTML += "Decibeles: " + datos_sensores[features[feat].attributes['TMI']].decibeles;
+							}
+							var markerId = mapa.addMarker(customMarker, false, contentHTML);
 						}
 		            }
 				});
