@@ -259,6 +259,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
 	
 	var markerId = mapa.addMarker(customMarker, true, function(ev, place, framedCloud) {
+		framedCloud.setContentHTML("Ac&aacute; va el contenido html");
 		framedCloud.show();
 	});
 ...
