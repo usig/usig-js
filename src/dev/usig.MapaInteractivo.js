@@ -235,10 +235,37 @@ usig.MapaInteractivo = function(idDiv, options) {
 	}
 	
 	/**
-	 * Agrega un marcador en el mapa
+	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. Tambi&eacute;n es posible personalizar el &iacute;cono del marcador.
+	 * Existen dos formas de agregar un contenido al popup. 
+	 * La primera consiste en pasar un string como par&aacute;metro en lugar del onClick.
+	 * Primer ejemplo (va adentro de la funci&oacute;n onReady)
+	 * <pre><code>
+...
+	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+		iconSize = new OpenLayers.Size(41, 41),
+		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
+	
+	var contentHTML = "Contenido de ejemplo en html";
+	var markerId = mapa.addMarker(customMarker, true, contentHTML);
+...
+	</code></pre>
+	 * 
+	 * La segunda consiste en generar el contenido html dentro de la funci&oacute;n onClick y luego mostrar el tooltip.
+	 * Segundo ejemplo:
+	 * <pre><code>
+...
+	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+		iconSize = new OpenLayers.Size(41, 41),
+		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
+	
+	var markerId = mapa.addMarker(customMarker, true, function(ev, place, framedCloud) {
+		framedCloud.show();
+	});
+...
+	</code></pre>
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} place Lugar que se desea marcar
 	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
-	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador
+	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
 	 * @return {Integer} Id del marcador agregado
 	 */
 	this.addMarker = function(place, goTo, onClick) {
