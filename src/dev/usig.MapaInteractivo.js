@@ -235,10 +235,16 @@ usig.MapaInteractivo = function(idDiv, options) {
 	}
 	
 	/**
-	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. Tambi&eacute;n es posible personalizar el &iacute;cono del marcador.
+	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. 
+	 * 
+	 * Ejemplo:
+...
+	var markerId = mapa.addMarker(new usig.Punto(102224.9040681,103284.11371559), true, "Texto de prueba");
+...
+	 * Tambi&eacute;n es posible personalizar el &iacute;cono del marcador.
 	 * Existen dos formas de agregar un contenido al popup. 
 	 * La primera consiste en pasar un string como par&aacute;metro en lugar del onClick.
-	 * Primer ejemplo (va adentro de la funci&oacute;n onReady)
+	 * Primer ejemplo (va adentro de la funci&oacute;n onReady):
 	 * <pre><code>
 ...
 	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
