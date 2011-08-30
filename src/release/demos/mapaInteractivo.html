@@ -18,9 +18,7 @@
 				if (selectedOption instanceof usig.Direccion) {
 					selectedOption.setCoordenadas(pt);
 				}				
-				var dirId = mapa.addMarker(selectedOption, true, function(ev, place, popup) {
-					popup.show();
-				});
+				var dirId = mapa.addMarker(selectedOption, true);
 			}		
 		}
 		
