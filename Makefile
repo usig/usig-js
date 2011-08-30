@@ -184,11 +184,13 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterDireccionesFull.min.js
-	rsync -avz --exclude '.svn' $(SRC)/demos/css $(REL)/demos/
-	rsync -avz --exclude '.svn' $(SRC)/ejemplos $(REL)/
-	rsync -avz --exclude '.svn' $(SRC)/css $(REL)/
-	rsync -avz --exclude '.svn' $(SRC)/images $(REL)/
+	rsync -avz --exclude '.svn' --delete $(SRC)/demos/css $(REL)/demos/
+	rsync -avz --exclude '.svn' --delete $(SRC)/ejemplos $(REL)/
+	rsync -avz --exclude '.svn' --delete $(SRC)/css $(REL)/
+	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
+	rm $(REL)/ejemplos.tar.gz
+	tar czf $(REL)/ejemplos.tar.gz $(SRC)/ejemplos
 	$(MAKE) clean
 	
 docs:

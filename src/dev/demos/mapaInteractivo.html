@@ -40,9 +40,13 @@
 				if (selectedOption instanceof usig.Direccion) {
 					selectedOption.setCoordenadas(pt);
 				}				
-				var dirId = mapa.addMarker(selectedOption, true, function(ev, place) {
-					alert('Click en '+place.toString());
+//              Ejemplo con el onClick		
+				var dirId = mapa.addMarker(selectedOption, true, function(ev, place, popup) {
+					popup.show();
 				});
+// 				var dirId = mapa.addMarker(selectedOption, true, function(ev, place) {
+// 					alert('Click en '+place.toString());
+// 				});
 			}		
 		}
 		
