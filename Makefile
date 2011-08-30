@@ -189,8 +189,10 @@ prepare: docs debug
 	rsync -avz --exclude '.svn' --delete $(SRC)/css $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
-	rm $(REL)/ejemplos.tar.gz
-	tar czf $(REL)/ejemplos.tar.gz $(SRC)/ejemplos
+	rm -f $(REL)/ejemplos.tar.gz
+	# cd $(SRC); tar -cz --exclude='.svn' -f ejemplos.tar.gz ejemplos; cd -
+	cd $(SRC); rar a -xejemplos/.svn -x*/*/.svn ejemplos.rar ejemplos; cd -
+	mv $(SRC)/ejemplos.rar $(REL)
 	$(MAKE) clean
 	
 docs:

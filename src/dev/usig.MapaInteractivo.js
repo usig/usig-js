@@ -22,7 +22,7 @@ if (typeof (usig) == "undefined")
  * </code></pre> 
  * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demo/mapaInteractivo.html</a><br/>
  * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos/</a><br/>
- * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos.tar.gz">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos.tar.gz</a><br/>
+ * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos.rar</a><br/>
  * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/</a><br/>
  * @namespace usig
  * @cfg {Boolean} includeToolbar Incluir el toolbar en el mapa (por default es True)  
