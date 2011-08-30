@@ -185,6 +185,7 @@ prepare: docs debug
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	rsync -avz --exclude '.svn' $(SRC)/demos/css $(REL)/demos/
+	rsync -avz --exclude '.svn' $(SRC)/ejemplos $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/css $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/

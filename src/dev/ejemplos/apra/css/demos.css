@@ -1,0 +1,161 @@
+body {
+  background-color: white;
+  margin: auto;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 650px;
+  color: #333;
+  font-family: Lucida Grande, Bitstream Vera Sans, Verdana, sans-serif;
+  font-size: 13px;
+}
+
+#page {
+  border: 1px solid #ccc;
+  padding: 25px;
+  padding-top: 0px;
+}
+
+#logo {
+  background-color: white;
+}
+
+#logo h1 {
+  color: #05a;
+  font-size: 20px;
+}
+
+#logo span {
+  display: none;
+}
+
+#page p {
+  margin-top: 0;
+}
+#page p span.weak {
+  color: #333;
+}
+
+#page p.weak {
+  margin-top: -5px;
+  color: #333;
+  text-align: center;
+}
+
+#page h2 {
+  font-size: 12pt;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+#content h3 {
+	font-size: 10pt;
+}
+
+#footer {
+  clear: left;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+  font-size: x-small;
+}
+
+#content {
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+#buscador {
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+#buscador input.text {
+	border: 1px solid #ccc;
+	margin-bottom: 4px;
+}
+
+#buscador label {
+	display: block;
+	margin-top: 1em;
+}
+
+#page #authors,
+#page #info {
+  width: 48%;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+#page #authors {
+  float: left;
+  font-size: 10pt;
+  padding-right: 2%;
+  border-right: 1px solid #ccc;
+}
+
+#page #info {
+  margin-left: 52%;
+  padding-top: 2ex;
+}
+
+#page #content h3,
+#page #content h4 {
+  margin: 0;
+}
+
+#page #content ul {
+  margin-bottom: 10px;
+}
+
+#page #content select {
+  width: 600px;
+  margin-bottom: 10px;
+}
+
+#page #footer {
+  text-align: center;
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+
+#resultados LI {
+	padding-bottom: 5px;
+}
+
+#resultados .puntoSobreMapa {
+	position: relative;
+}
+#ejemplo {
+	display:block;
+	color: #555;
+	font-size: 11px;
+	margin-bottom: 10px;
+}
+
+#page #acciones {
+	padding: 10px;
+	text-align: right; 
+}
+
+#page a {
+	text-decoration: none;
+	color: #05f;
+}
+#page fieldset {
+ border: 1px solid #ccc;
+}
+#page fieldset table td {
+	vertical-align: text-top;
+}
+#page fieldset table td.label {
+	text-align: right;
+	padding-right: 10px;
+}
+
+table.suggester_options {
+	margin-left: 50px;
+	display: none;
+}
+#mapa {
+	margin-bottom: 20px;
+}
