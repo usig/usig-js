@@ -1,7 +1,8 @@
 // Definicion del namespace
 if (typeof (usig) == "undefined")
 	usig = {};
-	
+
+if (typeof(usig.Calle) == "undefined") {	
 /**
  * @class Calle
  * @namespace usig 
@@ -70,4 +71,6 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 			return cruces.indexOf(calle.codigo) >= 0;
 		}
 	}
+}
+
 }

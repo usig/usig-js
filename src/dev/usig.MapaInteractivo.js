@@ -39,6 +39,12 @@ usig.MapaInteractivo = function(idDiv, options) {
 		mapWidth = parseInt($div.css('width')),
 		mapHeight = parseInt($div.css('height')),
 		markersMap = {},
+		paraNormalizar = {},
+		paraGeocodificar = {},		
+		geoCoder = null,
+		cargandoNormalizador = false,
+		cargandoGeoCoder = false,
+		myself = this,
 		$indicatorImage = null,
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-bottomleft: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-bottomright: 10px; -webkit-border-bottom-right-radius: 10px;"></div>'),
 		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = markersShadows = myMarkers = null;
@@ -221,14 +227,14 @@ usig.MapaInteractivo = function(idDiv, options) {
 			pt = null;
 			
 		if (place.x != undefined && place.y != undefined) {
-			pt = new OpenLayers.LonLat(place.x,place.y)
+			pt = new OpenLayers.LonLat(place.x,place.y);
 		}
 		
 		if (usig.Direccion && place instanceof usig.Direccion) {
 			pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
 		}
 		
-		if (usig.inventario.Objeto && place instanceof usig.inventario.Objeto) {
+		if (usig.inventario && usig.inventario.Objeto && place instanceof usig.inventario.Objeto) {
 			pt = new OpenLayers.LonLat(place.ubicacion.getCentroide().x, place.ubicacion.getCentroide().y);			
 		}
 		// le agregamos una clase Marker para cambiar el puntero del mouse en el over
@@ -236,57 +242,83 @@ usig.MapaInteractivo = function(idDiv, options) {
 		return new OpenLayers.Marker(pt, icon);
 	}
 	
-	/**
-	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. 
-	 * 
-	 * Ejemplo:
-...
-	var markerId = mapa.addMarker(new usig.Punto(102224.9040681,103284.11371559), true, "Texto de prueba");
-...
-	 * Tambi&eacute;n es posible personalizar el &iacute;cono del marcador.
-	 * Existen dos formas de agregar un contenido al popup. 
-	 * La primera consiste en pasar un string como par&aacute;metro en lugar del onClick.
-	 * Primer ejemplo (va adentro de la funci&oacute;n onReady):
-	 * <pre><code>
-...
-	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
-		iconSize = new OpenLayers.Size(41, 41),
-		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
+	function cargarNormalizadorDirecciones() {
+		if (usig.NormalizadorDirecciones) {
+			if (opts.debug) usig.debug('Normalizador de direcciones cargado.');
+			cargandoNormalizador = false;
+			try {
+				if (usig.NormalizadorDirecciones.listo()) {
+					if (opts.debug) usig.debug('Normalizador listo.');
+					procesarColaNormalizacion();
+				}				
+			} catch(e){
+				if (opts.debug) usig.debug('Inicializando Normalizador...');
+				usig.NormalizadorDirecciones.init({onReady: cargarNormalizadorDirecciones.createDelegate(this), loadFullDatabase: true });				
+			}
+		} else if (!cargandoNormalizador) {
+			cargandoNormalizador = true;
+			if (opts.debug) usig.debug('Cargando normalizador de direcciones...');
+			usig.loadJs(opts.NormalizadorDireccionesJS, cargarNormalizadorDirecciones.createDelegate(this));			
+		}		
+	}
 	
-	var contentHTML = "Contenido de ejemplo en html";
-	var markerId = mapa.addMarker(customMarker, true, contentHTML);
-...
-	</code></pre>
-	 * 
-	 * La segunda consiste en generar el contenido html dentro de la funci&oacute;n onClick y luego mostrar el tooltip.
-	 * Segundo ejemplo:
-	 * <pre><code>
-...
-	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
-		iconSize = new OpenLayers.Size(41, 41),
-		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
+	function procesarColaNormalizacion() {
+		var numPendientes = 0;
+		if (usig.NormalizadorDirecciones) {
+			if (opts.debug) usig.debug('Procesando cola paraNormalizar...');
+			$.each(paraNormalizar, function(id, params) {
+				try {
+					var res = usig.NormalizadorDirecciones.normalizar(params.place);
+					if (res.length > 0) {
+						paraGeocodificar[id] = { place: res[0], goTo: params.goTo, onClick: params.onClick };
+						numPendientes++;
+					}
+				} catch(e) { }
+				delete paraNormalizar[id];
+			});
+			if (numPendientes > 0)
+				procesarColaGeocodificacion();
+		} else {
+			cargarNormalizadorDirecciones();
+		}
+	}
 	
-	var markerId = mapa.addMarker(customMarker, true, function(ev, place, framedCloud) {
-		framedCloud.setContentHTML("Ac&aacute; va el contenido html");
-		framedCloud.show();
-	});
-...
-	</code></pre>
-	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} place Lugar que se desea marcar
-	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
-	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
-	 * @return {Integer} Id del marcador agregado
-	 */
-	this.addMarker = function(place, goTo, onClick) {
+	function procesarColaGeocodificacion() {
+		if (geoCoder) {
+			if (opts.debug) usig.debug('Procesando cola paraGeocodificar...');
+			$.each(paraGeocodificar, function(id, params) {
+				geoCoder.geoCodificarDireccion(params.place, function(pt) { 
+					params.place.setCoordenadas(pt); 
+					_addMarker(params.place, id, params.goTo, params.onClick); 
+				});
+				delete paraGeocodificar[id];
+			});
+		} else {
+			cargarGeoCoder();
+		}
+	}
+	
+	function cargarGeoCoder() {
+		if (usig.GeoCoder) {
+			if (opts.debug) usig.debug('GeoCoder cargado.');
+			cargandoGeoCoder = false;
+			geoCoder = new usig.GeoCoder();
+			procesarColaGeocodificacion();
+		} else if (!cargandoGeoCoder){
+			cargandoGeoCoder = true;
+			if (opts.debug) usig.debug('Cargando geocoder...');
+			usig.loadJs(opts.GeoCoderJS, cargarGeoCoder.createDelegate(this));			
+		}		
+	}
+	
+	function _addMarker(place, id, goTo, onClick) {
 		// fijarse si el marker ya existe...
 		statusBar.activate(opts.texts.processing, true);
 		var marker = getMarkerFromPlace(place);
-		var random = Math.floor(Math.random()*100001);
-		var id = new Date()*1 +random;
 		// muestra el place por default
 		var contentHTML = place;
 		
-		if (typeof(onClick) != "function") {
+		if (onClick && typeof(onClick) != "function") {
 			contentHTML = onClick;
 		}	
 		
@@ -304,7 +336,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 		
 		marker.events.registerPriority('click', marker, function(ev) {
 			OpenLayers.Event.stop(ev, false);
-
 			var framedCloud = new OpenLayers.Popup.FramedCloud(
 					id,
 					marker.lonlat,
@@ -331,7 +362,61 @@ usig.MapaInteractivo = function(idDiv, options) {
 			this.goTo(marker.lonlat, true);
 		}
 		return id;
-        // controlToolTip.onClickDir(dir);
+	}
+	
+	/**
+	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. 
+	 * 
+	 * Ejemplo:
+	 * <pre><code>
+...
+	var markerId = mapa.addMarker(new usig.Punto(102224.9040681,103284.11371559), true, "Texto de prueba");
+...
+	</code></pre>
+	 * Tambi&eacute;n es posible personalizar el &iacute;cono del marcador.
+	 * Existen dos formas de agregar un contenido al popup. 
+	 * La primera consiste en pasar un string como par&aacute;metro en lugar del onClick.
+	 * Ejemplo (va adentro de la funci&oacute;n onReady):
+	 * <pre><code>
+...
+	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+		iconSize = new OpenLayers.Size(41, 41),
+		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
+	
+	var contentHTML = "Contenido de ejemplo en html";
+	var markerId = mapa.addMarker(customMarker, true, contentHTML);
+...
+	</code></pre>
+	 * 
+	 * La segunda consiste en generar el contenido html dentro de la funci&oacute;n onClick y luego mostrar el tooltip.
+	 * Segundo ejemplo:
+	 * <pre><code>
+...
+	var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+		iconSize = new OpenLayers.Size(41, 41),
+		customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
+	
+	var markerId = mapa.addMarker(customMarker, true, function(ev, place, popup) {
+		popup.setContentHTML("Ac&aacute; va el contenido html");
+		popup.show();
+	});
+...
+	</code></pre>
+	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto/String} place Lugar que se desea marcar. Es posible indicar un string conteniendo una direccion valida
+	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
+	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
+	 * @return {Integer} Id del marcador agregado
+	 */
+	this.addMarker = function(place, goTo, onClick) {
+		var random = Math.floor(Math.random()*100001);
+		var id = new Date()*1 +random;
+		if (typeof(place) == "string") {
+			if (opts.debug) usig.debug('Encolando direccion: '+place+' ...');
+			paraNormalizar[id] = { place: place, goTo: goTo, onClick: onClick } ;
+			procesarColaNormalizacion();			
+			return id;
+		}
+		return _addMarker.defer(0, this, [place, id, goTo, onClick]);
 	}
 	
 	/**
@@ -416,6 +501,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 };
 
 usig.MapaInteractivo.defaults = {
+	debug: false,
 	includePanZoomBar: true,
 	includeToolbar: true,
 	bounds: [54340,54090,172855,140146],
@@ -431,6 +517,8 @@ usig.MapaInteractivo.defaults = {
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',	
 	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/theme/default/style.css',
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
+	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
+	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
 	overviewOptions: {
 		layer:'referencia',
 		resolutions: [130,70,30,15,7.5,4],

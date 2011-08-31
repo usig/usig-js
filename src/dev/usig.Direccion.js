@@ -1,7 +1,8 @@
 // Definicion del namespace
 if (typeof (usig) == "undefined")
 	usig = {};
-	
+
+if (typeof(usig.Direccion) == "undefined") {	
 /**
  * @class Direccion
  * @namespace usig
@@ -155,4 +156,6 @@ usig.Direccion.fromObj = function(obj) {
 		dir.setCoordenadas(usig.Punto.fromWkt(obj.coordenadas));
 	}
 	return dir;
+}
+
 }
