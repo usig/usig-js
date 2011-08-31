@@ -139,6 +139,7 @@ debug:$(FILES)
 	cat $(SUGGESTER_CATASTRO_FILES) > $(SRC)/usig.SuggesterCatastro-debug.js
 	cat $(INDICE_CATASTRAL_FILES) > $(SRC)/usig.IndiceCatastral-debug.js
 	cat $(MAPA_INTERACTIVO_FILES) > $(SRC)/usig.MapaInteractivo-debug.js
+	sed -e '/usig\.debug(/ d' < $(SRC)/usig.MapaInteractivo-debug.js > $(SRC)/usig.MapaInteractivo-nodebug.js
 	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js
 	
 clean:
@@ -176,7 +177,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterLugares-debug.js -o $(REL)/usig.SuggesterLugares.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterCatastro-debug.js -o $(REL)/usig.SuggesterCatastro.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.IndiceCatastral-debug.js -o $(REL)/usig.IndiceCatastral.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaInteractivo-debug.js -o $(REL)/usig.MapaInteractivo.min.js
+	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaInteractivo-nodebug.js -o $(REL)/usig.MapaInteractivo.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterFull.min.js
