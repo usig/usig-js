@@ -198,3 +198,21 @@ div.usig_acv div.content div.message ul li
 	margin: 0 4px 4px;
 	font-size: 80%;
 }
+div.usig_acv a.button {
+	background: #0996d2;
+	color: #fff;
+	text-decoration: none;
+	padding: 1px 6px !important;	
+	position: relative;
+	text-align: center;
+	border: 1px solid #3aa4d2;	
+	-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px;
+	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px;	
+}
+div.usig_acv a.button:hover {
+	background: #007baf;	
+	border: 1px solid #0996d2;
+}
+div.usig_acv p.msg {
+	margin-bottom: 6px;
+}
