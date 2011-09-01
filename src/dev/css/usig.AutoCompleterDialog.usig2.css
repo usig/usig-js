@@ -199,8 +199,8 @@ div.usig_acv div.content div.message ul li
 	font-size: 80%;
 }
 div.usig_acv a.button {
-	background: #0996d2;
-	color: #fff;
+	background: #b1ddf3;
+	color: #006995;
 	text-decoration: none;
 	padding: 1px 6px !important;	
 	position: relative;
@@ -210,8 +210,9 @@ div.usig_acv a.button {
 	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px;	
 }
 div.usig_acv a.button:hover {
-	background: #007baf;	
+	background: #0996d2;	
 	border: 1px solid #0996d2;
+	color: #fff;
 }
 div.usig_acv p.msg {
 	margin-bottom: 6px;
