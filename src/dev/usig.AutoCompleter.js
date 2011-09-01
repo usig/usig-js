@@ -35,7 +35,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
  * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {String} rootUrl Url del servidor donde reside el control.
- * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'dark' y 'mapabsas'. Por defecto: 'usig'.
+ * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'usig2', 'usig3', 'usig4', 'dark' y 'mapabsas'. Por defecto: 'usig4'.
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica. Por defecto: true.
  * @cfg {Function} afterSuggest Callback que es llamada cada vez que se actualizan las sugerencias.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
@@ -481,7 +481,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	if (!view) {
-		view = new usig.AutoCompleterView(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter, onEnterWithoutSelection: opts.onEnterWithoutSelection });
+		view = new usig.AutoCompleterDialog(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter, onEnterWithoutSelection: opts.onEnterWithoutSelection });
 		cleanList.push(view);
 	}
 	view.onSelection(selectionHandler.createDelegate(this));
@@ -495,14 +495,14 @@ usig.AutoCompleter.defaults = {
 	minTextLength: 3,
 	maxRetries: 5,
 	showError: true,
-	// Opciones para el AutoCompleterView
+	// Opciones para el AutoCompleterDialog
 	maxOptions: 10,
 	offsetY: -5,
 	zIndex: 10000,
 	autoHideTimeout: 10000,
 	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',
-	skin: 'usig',
+	skin: 'usig4',
 	// Opciones generales
 	suggesters: [{ 	
 					suggester: 'Direcciones', 

@@ -3,18 +3,18 @@ if (typeof (usig) == "undefined")
 	usig = {};
 	
 /**
- * @class AutoCompleterView
+ * @class AutoCompleterDialog
  * Esta clase implementa un cuadro de dialogo flotante que permite seleccionar las opciones
  * provistas por el autocompleter de lugares y direcciones para inputs de texto.<br/>
  * Requiere: jQuery-1.3.2+, usig.core 1.0+<br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleterView.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/autoCompleterView.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/tests/autoCompleterDialog.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/tests/autoCompleterDialog.html</a>
  * @namespace usig
  * @cfg {Integer} maxOptions Maximo numero de sugerencias a mostrar por vez. Por defecto: 10.
  * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
  * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
  * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {String} rootUrl Url del servidor donde reside el control.
- * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'dark' y 'mapabsas'. Por defecto: 'usig'.
+ * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'usig2', 'usig3', 'usig4', 'dark' y 'mapabsas'. Por defecto: 'usig4'.
  * @cfg {Function} onSelection Callback que es llamada cada vez que se selecciona un elemento de la lista.
  * @cfg {Function} onEnterWithoutSelection Callback que es llamada cada vez que el usuario presiona ENTER habiendo sugerencias 
  *  disponibles pero sin haber seleccionado ninguna. La funcion declarada recibira como parametro el texto ingresado por el usuario.
@@ -23,10 +23,10 @@ if (typeof (usig) == "undefined")
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles
 */	
-usig.AutoCompleterView = function(idField, options) {
+usig.AutoCompleterDialog = function(idField, options) {
 	var field = document.getElementById(idField),
 		fieldValue = field.value,
-		opts = $.extend({}, usig.AutoCompleterView.defaults, options),
+		opts = $.extend({}, usig.AutoCompleterDialog.defaults, options),
 		id = 'usig_acv_'+idField,
 		hideTimeout = null,
 		highlighted = -1,
@@ -46,7 +46,7 @@ usig.AutoCompleterView = function(idField, options) {
 	};
 	
 	function resetTimeout() {
-		if (opts.debug) usig.debug('AutoCompleterView: resetting hideTimeout');
+		if (opts.debug) usig.debug('AutoCompleterDialog: resetting hideTimeout');
 		killTimeout();
 		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);
 	};
@@ -61,12 +61,12 @@ usig.AutoCompleterView = function(idField, options) {
 		killTimeout();
 		if ($div) { 
 			//$('#'+id).remove();
-			if (opts.debug) usig.debug('AutoCompleterView: updating current div...');
+			if (opts.debug) usig.debug('AutoCompleterDialog: updating current div...');
 			$('#'+id+' div.content').html(content);
 			$div.show();
 			highlighted = -1;			
 		} else {
-			if (opts.debug) usig.debug('AutoCompleterView: creating new div...');
+			if (opts.debug) usig.debug('AutoCompleterDialog: creating new div...');
 			// create holding div
 			$div = $('<div id="'+id+'" class="usig_acv">\
 						<div class="header">\
@@ -176,11 +176,11 @@ usig.AutoCompleterView = function(idField, options) {
 	}
 	
 	function reset() {
-		if (opts.debug) usig.debug('usig.AutoCompleterView: reset');
+		if (opts.debug) usig.debug('usig.AutoCompleterDialog: reset');
 		killTimeout();
 		/*
 		if ($div) {
-			if (opts.debug) usig.debug('AutoCompleterView: destroying current list...');
+			if (opts.debug) usig.debug('AutoCompleterDialog: destroying current list...');
 			$div.remove();
 		}
 		*/
@@ -254,21 +254,21 @@ usig.AutoCompleterView = function(idField, options) {
 				numOptions++;
 			}
 		});
-		if (opts.debug) usig.debug('AutoCompleterView: showing '+numOptions+' options: ['+options+']');
+		if (opts.debug) usig.debug('AutoCompleterDialog: showing '+numOptions+' options: ['+options+']');
 		if ((append === true || !isNaN(parseInt(append))) && $div && $('ul.options li a', $div).length > 0) {
-			if (opts.debug) usig.debug('AutoCompleterView: appending to the end of existing list...');
+			if (opts.debug) usig.debug('AutoCompleterDialog: appending to the end of existing list...');
 			if (numOptions > 1 && autoSelected) {
 				autoSelected = false;
 				clearHighlight();
 			}
 			$('ul.options', $div).append(htmlList);
 		} else {
-			if (opts.debug) usig.debug('AutoCompleterView: creating suggestions list...');
+			if (opts.debug) usig.debug('AutoCompleterDialog: creating suggestions list...');
 			createHoldingDiv('<ul class="options">'+htmlList+'</ul>');
 		}
 		$('ul.options li a', $div).mouseover((function(ev, highlight) { highlight(ev.target.name); }).createDelegate(this, [highlight], 1));
 		$('ul.options li a', $div).click((function(ev) { 
-			if (opts.debug) usig.debug('AutoCompleterView: click');
+			if (opts.debug) usig.debug('AutoCompleterDialog: click');
 			var target = ev.target?ev.target:ev.srcElement;
 			var name = $(target).parents('a.acv_op').attr('name');
 			selectionHandler(itemsRef[name]); 
@@ -303,7 +303,7 @@ usig.AutoCompleterView = function(idField, options) {
 			} else {
 				resetTimeout();
 				highlighted = keyCode == keyCodes.arrDn?(highlighted+1).constrain(0, numOptions-1):(highlighted-1).constrain(0, numOptions-1);
-				if (opts.debug) usig.debug('AutoCompleterView: highlighting '+highlighted+'...');
+				if (opts.debug) usig.debug('AutoCompleterDialog: highlighting '+highlighted+'...');
 				highlight(highlighted);
 			}
 		}
@@ -321,7 +321,7 @@ usig.AutoCompleterView = function(idField, options) {
 						selectionHandler(itemsRef[id+'0']);
 					}
 				} else if (numOptions > 0 && typeof(opts.onEnterWithoutSelection) == "function") {
-					if (opts.debug) usig.debug('AutoCompleterView: ENTER without selection...');
+					if (opts.debug) usig.debug('AutoCompleterDialog: ENTER without selection...');
 					opts.onEnterWithoutSelection(fieldValue);
 				}
 			}
@@ -371,29 +371,29 @@ usig.AutoCompleterView = function(idField, options) {
 	
 	/**
 	 * Cambia el skin actual del control
-	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'mapabsas' o 'dark')
+	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'usig2', 'usig3', 'usig4', 'mapabsas' o 'dark')
 	 */
 	this.changeSkin = function(newSkin) {
-		usig.removeCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
+		usig.removeCss(opts.rootUrl+'css/usig.AutoCompleterDialog.'+opts.skin+'.css');
 		opts.skin = newSkin;
-		usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
+		usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterDialog.'+opts.skin+'.css');
 	}
 	
 	/**
 	 * Oculta el control
 	 */
 	this.hide = function() {
-		if (opts.debug) usig.debug('AutoCompleterView: hide');
+		if (opts.debug) usig.debug('AutoCompleterDialog: hide');
 		killTimeout();
 		if ($div)
 			$div.hide();
 	}
 	
 	// Inicializacion
-	usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterView.'+opts.skin+'.css');
+	usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterDialog.'+opts.skin+'.css');
 }
 
-usig.AutoCompleterView.defaults = {
+usig.AutoCompleterDialog.defaults = {
 	maxOptions: 10,
 	debug: false,
 	offsetY: -5,
@@ -401,5 +401,5 @@ usig.AutoCompleterView.defaults = {
 	autoHideTimeout: 5000,
 	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',
-	skin: 'usig'
+	skin: 'usig4'
 }

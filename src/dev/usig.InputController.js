@@ -5,7 +5,7 @@ if (typeof (usig) == "undefined")
 /**
  * @class InputController
  * Esta clase implementa un controlador de inputs de texto que simplifica el manejo dinamico de los cambios sobre el control.<br/>
- * Tests de Unidad: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/inputController.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.0/tests/inputController.html</a>
+ * Tests de Unidad: <a href="http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.1/tests/inputController.html">http://usig.buenosaires.gov.ar/servicios/Usig-JS/2.1/tests/inputController.html</a>
  * @namespace usig
  * @cfg {Function} onKeyUp Funcion callback que se dispara al presionar cualquier tecla sobre el control. Recibe dos parametros: keyCode y newValue.
  * @cfg {Function} onChange Funcion callback que se dispara cuando el valor de texto del control se modifica. Recibe como parametro el nuevo valor.

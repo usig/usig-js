@@ -6,7 +6,7 @@ if (typeof (usig) == "undefined")
  * @class IndiceCatastral
  * Esta clase implementa una interfaz Javascript con el servicio del Indice Catastral de USIG<br/>
  * Requiere: jQuery-1.3.2+, jquery.class, json, jquery.jsonp-1.1.0.1+, usig.core, usig.AjaxComponent, usig.SeccionCatastral, usig.ManzanaCatastral, usig.ParcelaCatastral<br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/IndiceCatastral.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.0/tests/IndiceCatastral.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/tests/IndiceCatastral.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/tests/IndiceCatastral.html</a>
  * @namespace usig
  * @cfg {String} server Url del servicio del Indice Catastral de USIG. Por defecto: 'http://inventario.usig.buenosaires.gob.ar/catastro/'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.

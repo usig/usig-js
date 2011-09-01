@@ -31,7 +31,7 @@ AUTOCOMPLETER_FILES=\
       $(SRC)/json.js \
       $(SRC)/usig.InputController.js \
       $(SRC)/usig.AutoCompleter.js \
-      $(SRC)/usig.AutoCompleterView.js \
+      $(SRC)/usig.AutoCompleterDialog.js \
       $(SRC)/usig.Suggester.js
       
 AUTOCOMPLETER_STANDARD_FILES=\
@@ -169,7 +169,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Direccion.js -o $(REL)/usig.Direccion.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Suggester-debug.js -o $(REL)/usig.Suggester.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.AjaxComponent.js -o $(REL)/usig.AjaxComponent.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.AutoCompleterView.js -o $(REL)/usig.AutoCompleterView.min.js
+	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.AutoCompleterDialog.js -o $(REL)/usig.AutoCompleterDialog.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.InputController-debug.js -o $(REL)/usig.InputController.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.GeoCoder-debug.js -o $(REL)/usig.GeoCoder.min.js
 	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Inventario-debug.js -o $(REL)/usig.Inventario.min.js

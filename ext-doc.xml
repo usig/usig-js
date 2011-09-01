@@ -54,9 +54,9 @@
         <source src="ext" match="Ext*.js"/>-->
 	<source src="src/dev/usig.core.js"/>
 	<source src="src/dev/usig.util.js"/>
-	<!--<source src="src/dev/usig.InputController.js"/>-->
+	<source src="src/dev/usig.InputController.js"/>
 	<source src="src/dev/usig.AutoCompleter.js"/>
-	<!--<source src="src/dev/usig.AutoCompleterView.js"/>-->
+	<source src="src/dev/usig.AutoCompleterDialog.js"/>
 	<source src="src/dev/usig.Inventario.js"/>
 	<source src="src/dev/usig.Recorridos.js"/>
 	<source src="src/dev/usig.inventario.Objeto.js"/>

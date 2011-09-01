@@ -1,11 +1,11 @@
 YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "node-event-simulate", function (Y) {
 
-    Y.namespace("AutoCompleterView.test");
+    Y.namespace("AutoCompleterDialog.test");
     
-    Y.AutoCompleterView.test.AutoCompleterViewTestCase = new Y.Test.Case({
+    Y.AutoCompleterDialog.test.AutoCompleterDialogTestCase = new Y.Test.Case({
     
         //name of the test case - if not provided, one is auto-generated
-        name : "Tests del AutoCompleterView",
+        name : "Tests del AutoCompleterDialog",
         
         //---------------------------------------------------------------------
         // setUp and tearDown methods - optional
@@ -17,7 +17,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         setUp : function () {
         	document.getElementById('inputText').value = '';
         	$('#inputText').focus();
-        	this.acv = new usig.AutoCompleterView('inputText', {
+        	this.acv = new usig.AutoCompleterDialog('inputText', {
         		debug: true,
         		rootUrl: '../',
         		skin: 'usig'
@@ -314,8 +314,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 
     });
     
-    Y.AutoCompleterView.test.AutoCompleterViewSuite = new Y.Test.Suite("AutoCompleterView");
-    Y.AutoCompleterView.test.AutoCompleterViewSuite.add(Y.AutoCompleterView.test.AutoCompleterViewTestCase);
+    Y.AutoCompleterDialog.test.AutoCompleterDialogSuite = new Y.Test.Suite("AutoCompleterDialog");
+    Y.AutoCompleterDialog.test.AutoCompleterDialogSuite.add(Y.AutoCompleterDialog.test.AutoCompleterDialogTestCase);
     
     //create the console
     var r = new Y.Console({
@@ -327,6 +327,6 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
     
     r.render('#testLogger');
     
-    Y.Test.Runner.add(Y.AutoCompleterView.test.AutoCompleterViewSuite);
+    Y.Test.Runner.add(Y.AutoCompleterDialog.test.AutoCompleterDialogSuite);
     Y.Test.Runner.run();
 });
