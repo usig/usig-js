@@ -475,6 +475,69 @@ $.extendIf(Array.prototype, {
         return other;
     }
 
+    /**
+     * Syntax
+     * Array Array.intersect([ Array a0 ... an ]) 
+     * Computes the intersection between the calling array and any number of arrays passed as arguments. Duplicate values are removed from the result
+     *
+     * Parameters
+     * Array a0 ... an (Optional)
+     * The arrays to intersect with.
+     *
+     * Return value
+     * A new array holding the intersection of elements
+     * 
+     * Examples
+     * To find the intersection of the arrays (0,2,4,1,8,2), (1,3,5,2,9) and (100,2,9,1)
+    <pre><code>
+    // Define array 1
+    var a1 = [0,2,4,1,8];
+    // Define array 2
+    var a2 = [1,3,5,2,9];
+    // Define array 3
+    var a3 = [100,2,9,1];
+    // Output is Array(2,1)
+    a1.intersect(a2,a3);
+    </pre></code>
+     */
+    Array.prototype.intersect =
+    	  function() {
+    	    if (!arguments.length)
+    	      return [];
+    	    var a1 = this;
+    	    var a = a2 = null;
+    	    var n = 0;
+    	    while(n < arguments.length) {
+    	      a = [];
+    	      a2 = arguments[n];
+    	      var l = a1.length;
+    	      var l2 = a2.length;
+    	      for(var i=0; i<l; i++) {
+    	        for(var j=0; j<l2; j++) {
+    	          if (a1[i] === a2[j])
+    	            a.push(a1[i]);
+    	        }
+    	      }
+    	      a1 = a;
+    	      n++;
+    	    }
+    	    return a.unique();
+    	  };
+    	  
+    Array.prototype.unique =
+    	  function() {
+    	    var a = [];
+    	    var l = this.length;
+    	    for(var i=0; i<l; i++) {
+    	      for(var j=i+1; j<l; j++) {
+    	        // If this[i] is found later in the array
+    	        if (this[i] === this[j])
+    	          j = ++i;
+    	      }
+    	      a.push(this[i]);
+    	    }
+    	    return a;
+    	  };
 });
 /**
  * @class Date
@@ -503,41 +566,3 @@ usig.debug = function(object) {
 			window.console.log(object);
 };
 
-Array.prototype.intersect =
-	  function() {
-	    if (!arguments.length)
-	      return [];
-	    var a1 = this;
-	    var a = a2 = null;
-	    var n = 0;
-	    while(n < arguments.length) {
-	      a = [];
-	      a2 = arguments[n];
-	      var l = a1.length;
-	      var l2 = a2.length;
-	      for(var i=0; i<l; i++) {
-	        for(var j=0; j<l2; j++) {
-	          if (a1[i] === a2[j])
-	            a.push(a1[i]);
-	        }
-	      }
-	      a1 = a;
-	      n++;
-	    }
-	    return a.unique();
-	  };
-	  
-Array.prototype.unique =
-	  function() {
-	    var a = [];
-	    var l = this.length;
-	    for(var i=0; i<l; i++) {
-	      for(var j=i+1; j<l; j++) {
-	        // If this[i] is found later in the array
-	        if (this[i] === this[j])
-	          j = ++i;
-	      }
-	      a.push(this[i]);
-	    }
-	    return a;
-	  };
