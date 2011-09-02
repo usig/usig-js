@@ -437,8 +437,10 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 */
 	this.removeMarker = function(id)	{
 		marker = markersMap[''+id];
-		map.removePopup(marker.popup);
-		marker.popup.destroy();
+		if (marker.popup) {
+			map.removePopup(marker.popup);
+			marker.popup.destroy();
+		}
 		myMarkers.removeMarker(marker);
 		if (marker.shadow)
 			markersShadows.removeFeatures(marker.shadow);
