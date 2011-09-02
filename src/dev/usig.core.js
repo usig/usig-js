@@ -523,7 +523,25 @@ $.extendIf(Array.prototype, {
     	    }
     	    return a.unique();
     	  };
-    	  
+   /**
+    * Method Array.unique
+	* Remove any duplicates from an array
+	* 
+	* Syntax
+    * Array Array.unique() 
+    *
+    * This function will return a new array with duplicates of the original array removed
+    * Return value
+    * A new array with no duplicates
+    * Examples
+<pre><code>
+To remove the duplicates in the array (0,2,4,2,6,4,8,6,10);
+// Define array
+var a = new Array(0,2,4,2,6,4,8,6,10);
+// Output is (0,2,4,8,6,10)
+a.unique();
+<pre><code>
+    */
     Array.prototype.unique =
     	  function() {
     	    var a = [];
