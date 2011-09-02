@@ -473,7 +473,7 @@ $.extendIf(Array.prototype, {
             if (i in this)
                 other[i]= mapper.call(that, this[i], i, this);
         return other;
-    }
+    },
 
     /**
      * Syntax
@@ -500,8 +500,7 @@ $.extendIf(Array.prototype, {
     a1.intersect(a2,a3);
     </pre></code>
      */
-    Array.prototype.intersect =
-    	  function() {
+    intersect: function() {
     	    if (!arguments.length)
     	      return [];
     	    var a1 = this;
@@ -522,7 +521,8 @@ $.extendIf(Array.prototype, {
     	      n++;
     	    }
     	    return a.unique();
-    	  };
+    },
+    
    /**
     * Method Array.unique
 	* Remove any duplicates from an array
@@ -542,8 +542,7 @@ var a = new Array(0,2,4,2,6,4,8,6,10);
 a.unique();
 <pre><code>
     */
-    Array.prototype.unique =
-    	  function() {
+    unique: function() {
     	    var a = [];
     	    var l = this.length;
     	    for(var i=0; i<l; i++) {
@@ -555,7 +554,7 @@ a.unique();
     	      a.push(this[i]);
     	    }
     	    return a;
-    	  };
+   	}
 });
 /**
  * @class Date
