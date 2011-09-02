@@ -311,6 +311,18 @@ usig.MapaInteractivo = function(idDiv, options) {
 		}		
 	}
 	
+	function _goTo(point, zoomIn) {
+		if (zoomIn) {
+			if (map.getZoom() == opts.goToZoomLevel) {
+				map.panTo(new OpenLayers.LonLat(point.lon,point.lat));
+			} else {
+				map.moveTo(new OpenLayers.LonLat(point.lon,point.lat), opts.goToZoomLevel);
+			}
+		} else {
+			map.panTo(new OpenLayers.LonLat(point.lon,point.lat));				
+		}		
+	}
+	
 	function _addMarker(place, id, goTo, onClick) {
 		// fijarse si el marker ya existe...
 		statusBar.activate(opts.texts.processing, true);
@@ -359,7 +371,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		statusBar.deactivate();
 		
 		if(goTo) {
-			this.goTo(marker.lonlat, true);
+			_goTo(marker.lonlat, true);
 		}
 		return id;
 	}
@@ -457,15 +469,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 * @param {Boolean} zoomIn Indica si se desea hacer zoom sobre la coordenada elegida
 	 */
 	this.goTo = function(point, zoomIn) {
-		if (zoomIn) {
-			if (map.getZoom() == opts.goToZoomLevel) {
-				map.panTo(new OpenLayers.LonLat(point.lon,point.lat));
-			} else {
-				map.moveTo(new OpenLayers.LonLat(point.lon,point.lat), opts.goToZoomLevel);
-			}
-		} else {
-			map.panTo(new OpenLayers.LonLat(point.lon,point.lat));				
-		}
+		_goTo(point, zoomIn);
 	}
 
 	this.showStatus = function(text, showIndicator) {
