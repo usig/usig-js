@@ -416,7 +416,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 			procesarColaNormalizacion();			
 			return id;
 		}
-		return _addMarker.defer(0, this, [place, id, goTo, onClick]);
+		return _addMarker(place, id, goTo, onClick);
 	}
 	
 	/**
