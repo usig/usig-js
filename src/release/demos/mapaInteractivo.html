@@ -18,7 +18,7 @@
 				if (selectedOption instanceof usig.Direccion) {
 					selectedOption.setCoordenadas(pt);
 				}				
-				var dirId = mapa.addMarker(selectedOption, true);
+				var dirId = miMapa.addMarker(selectedOption, true);
 			}		
 		}
 		
@@ -41,7 +41,7 @@
 		
 		$('#mapa').css('width', 600).css('height', 450);
 		
-		mapa = new usig.MapaInteractivo('mapa');
+		miMapa = new usig.MapaInteractivo('mapa');
 		
 	});	
 	</script>

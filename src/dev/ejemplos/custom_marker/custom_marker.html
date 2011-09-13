@@ -25,7 +25,7 @@
  					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(pt.x,pt.y),new OpenLayers.Icon(iconUrl, iconSize));
  				customMarker.dir = selectedOption;
 							
-				var markerId = mapa.addMarker(customMarker, true, function(ev, marker) {
+				var markerId = miMapa.addMarker(customMarker, true, function(ev, marker) {
 	 					alert('Click en '+marker.dir.toString());
 	 				});
 				
@@ -51,14 +51,14 @@
 		
 		$('#mapa').css('width', 600).css('height', 450);
 		
-		mapa = new usig.MapaInteractivo('mapa', {
+		miMapa = new usig.MapaInteractivo('mapa', {
 			onReady: function() {
 				
  				var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
  					iconSize = new OpenLayers.Size(41, 41),
  					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
 							
-				var markerId = mapa.addMarker(customMarker, true, "<b>Texto de prueba</b>");
+				var markerId = miMapa.addMarker(customMarker, true, "<b>Texto de prueba</b>");
 				
 			}
 		});

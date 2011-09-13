@@ -246,12 +246,10 @@ usig.MapaInteractivo = function(idDiv, options) {
 		if (usig.NormalizadorDirecciones) {
 			if (opts.debug) usig.debug('Normalizador de direcciones cargado.');
 			cargandoNormalizador = false;
-			try {
-				if (usig.NormalizadorDirecciones.listo()) {
-					if (opts.debug) usig.debug('Normalizador listo.');
-					procesarColaNormalizacion();
-				}				
-			} catch(e){
+			if (usig.NormalizadorDirecciones.listo()) {
+				if (opts.debug) usig.debug('Normalizador listo.');
+				procesarColaNormalizacion();
+			} else {
 				if (opts.debug) usig.debug('Inicializando Normalizador...');
 				usig.NormalizadorDirecciones.init({onReady: cargarNormalizadorDirecciones.createDelegate(this), loadFullDatabase: true });				
 			}
@@ -264,16 +262,19 @@ usig.MapaInteractivo = function(idDiv, options) {
 	
 	function procesarColaNormalizacion() {
 		var numPendientes = 0;
-		if (usig.NormalizadorDirecciones) {
+		if (usig.NormalizadorDirecciones && usig.NormalizadorDirecciones.listo()) {
 			if (opts.debug) usig.debug('Procesando cola paraNormalizar...');
 			$.each(paraNormalizar, function(id, params) {
 				try {
-					var res = usig.NormalizadorDirecciones.normalizar(params.place);
+					var res = usig.NormalizadorDirecciones.normalizar(params.place, 10);
+					if (opts.debug) usig.debug(res);
 					if (res.length > 0) {
 						paraGeocodificar[id] = { place: res[0], goTo: params.goTo, onClick: params.onClick };
 						numPendientes++;
 					}
-				} catch(e) { }
+				} catch(e) {
+					if (opts.debug) usig.debug(e);
+				}
 				delete paraNormalizar[id];
 			});
 			if (numPendientes > 0)

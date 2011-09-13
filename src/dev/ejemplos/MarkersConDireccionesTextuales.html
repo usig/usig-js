@@ -13,7 +13,7 @@
 		
 		$('#mapa').css('width', 600).css('height', 450);
 		
-		mapa = new usig.MapaInteractivo('mapa', {
+		var mapa = new usig.MapaInteractivo('mapa', {
 			onReady: function() {
 				var markerId2 = mapa.addMarker('santa fe 2500');
 				var markerId3 = mapa.addMarker('cabildo y juramento');

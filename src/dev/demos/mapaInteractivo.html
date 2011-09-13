@@ -41,7 +41,7 @@
 					selectedOption.setCoordenadas(pt);
 				}				
 //              Ejemplo con el onClick		
-				var dirId = mapa.addMarker(selectedOption, true, function(ev, place, popup) {
+				var dirId = miMapa.addMarker(selectedOption, true, function(ev, place, popup) {
 					popup.show();
 				});
 // 				var dirId = mapa.addMarker(selectedOption, true, function(ev, place) {
@@ -71,7 +71,7 @@
 		
 		$('#mapa').css('width', 600).css('height', 450);
 		
-		mapa = new usig.MapaInteractivo('mapa', {
+		miMapa = new usig.MapaInteractivo('mapa', {
 			rootUrl: '../',
 			// OpenLayersCSS: 'http://ameba.usig.gcba.gov.ar/wk/OpenLayers/theme/default/style.css',
 			onReady: function() {
