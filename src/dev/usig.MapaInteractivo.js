@@ -234,6 +234,13 @@ usig.MapaInteractivo = function(idDiv, options) {
 			pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
 		}
 		
+		if (place.options) {
+			size = new OpenLayers.Size(place.options.iconWidth, place.options.iconHeight);
+			//offset = new OpenLayers.Pixel(-5, -size.h),
+			icon = new OpenLayers.Icon(place.options.iconUrl, size);
+			//pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
+		}
+		
 		if (place.x != undefined && place.y != undefined) {
 			pt = new OpenLayers.LonLat(place.x,place.y);
 		}
@@ -290,7 +297,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 							params.place = res[0];
 						}
 						
-						paraGeocodificar[id] = { place: params.place, goTo: params.goTo, onClick: params.onClick };
+						paraGeocodificar[id] = { place: params.place, goTo: params.goTo, onClick: params.onClick, options: params.options };
 						numPendientes++;
 					}
 				} catch(e) {
@@ -317,7 +324,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 				
 				geoCoder.geoCodificarDireccion(mStrDir, function(pt) { 
 					params.place.setCoordenadas(pt); 
-					_addMarker(params.place, id, params.goTo, params.onClick); 
+					_addMarker(params.place, id, params.goTo, params.onClick, params.options); 
 				});
 				delete paraGeocodificar[id];
 			});
@@ -351,14 +358,23 @@ usig.MapaInteractivo = function(idDiv, options) {
 		}		
 	}
 	
-	function _addMarker(place, id, goTo, onClick) {
+	function _addMarker(place, id, goTo, onClick, options) {
 		// fijarse si el marker ya existe...
 		statusBar.activate(opts.texts.processing, true);
+		
+		if (options) {
+			place.options = options;
+		} else {
+			if (typeof(onClick) == "object") {
+				place.options = onClick;
+			}
+		}
+		
 		var marker = getMarkerFromPlace(place);
 		// muestra el place por default
 		var contentHTML = place;
 		
-		if (onClick && typeof(onClick) != "function") {
+		if (onClick && typeof(onClick) != "function"  && typeof(onClick) != "object") {
 			contentHTML = onClick;
 		}	
 		
@@ -366,7 +382,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		markersMap[''+id] = marker;
 		myMarkers.addMarker(marker);
 		
-		if (!(place instanceof OpenLayers.Marker) && !(place instanceof usig.Marcador)) {
+		if (!(place instanceof OpenLayers.Marker) && !(place instanceof usig.Marcador) && (typeof(options) != "object") && typeof(onClick) != "object") {
 	    	var markerShadow = new OpenLayers.Feature.Vector(
 	            new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat)	            
 	        );
@@ -447,7 +463,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
 	 * @return {Integer} Id del marcador agregado
 	 */
-	this.addMarker = function(place, goTo, onClick) {
+	this.addMarker = function(place, goTo, onClick, options) {
 		var random = Math.floor(Math.random()*100001);
 		var id = new Date()*1 +random;
 		
@@ -458,13 +474,14 @@ usig.MapaInteractivo = function(idDiv, options) {
 			return id;
 		}
 		
+		
 		if (typeof(place) == "string") {
 			if (opts.debug) usig.debug('Encolando direccion: '+place+' ...');
-			paraNormalizar[id] = { place: place, goTo: goTo, onClick: onClick } ;
+			paraNormalizar[id] = { place: place, goTo: goTo, onClick: onClick, options: options } ;
 			procesarColaNormalizacion();			
 			return id;
 		}
-		return _addMarker(place, id, goTo, onClick);
+		return _addMarker(place, id, goTo, onClick, options);
 	}
 	
 	/**
