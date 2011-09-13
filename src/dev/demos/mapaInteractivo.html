@@ -13,6 +13,7 @@
 	<script src="../json.js" type="text/javascript"></script>
 	<script src="../jquery.class.js" type="text/javascript"></script>
 	<script src="../usig.AjaxComponent.js" type="text/javascript"></script>
+	<script src="../usig.Marcador.js" type="text/javascript"></script>
 	<script src="../usig.Punto.js" type="text/javascript"></script>
 	<script src="../usig.Calle.js" type="text/javascript"></script>
 	<script src="../usig.Direccion.js" type="text/javascript"></script>
@@ -75,15 +76,22 @@
 			rootUrl: '../',
 			// OpenLayersCSS: 'http://ameba.usig.gcba.gov.ar/wk/OpenLayers/theme/default/style.css',
 			onReady: function() {
-				/* Ejemplo de marcador personalizado
+				/* Ejemplo de marcador personalizado */
 				
-				var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png'
+				 
+				var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
 					iconSize = new OpenLayers.Size(41, 41),
-					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize)),
+					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
 					customMarker.desc = 'Mi marcador';
 				
-				var markerId = mapa.addMarker(customMarker, true, function(ev, place) { alert(place.desc); });
-				*/
+				var miMarcador = new usig.Marcador(
+						"peru 652", 
+						'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png', 
+						41, 
+						41
+				);
+				var markerId = miMapa.addMarker(miMarcador, true, "amor");
+				
 			}
 		});
 
