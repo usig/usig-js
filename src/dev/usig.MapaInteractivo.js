@@ -465,9 +465,30 @@ usig.MapaInteractivo = function(idDiv, options) {
 	});
 ...
 	</code></pre>
+	 *
+	 * Esta funci&oacute;n permite adem&aacute;s pasar una direcci&oacute;n v&aacute;lida en el primer par&aacute;metro y, al mismo tiempo, personalizar el &iacute;cono:
+	 * 
+	 * <pre><code>
+...
+	 var markerId = miMapa.addMarker(
+		'peru 652', 
+		true, 
+		'holi',
+		{
+		  iconUrl: 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+		  iconWidth: 41,
+		  iconHeight: 41,
+		  offsetX: 5,
+		  offsetY: 5
+		}
+	);
+...
+	</code></pre>
+	 *
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto/String} place Lugar que se desea marcar. Es posible indicar un string conteniendo una direccion valida
 	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
-	 * @param {Function} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
+	 * @param {Function/String} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
+	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, 
 	 * @return {Integer} Id del marcador agregado
 	 */
 	this.addMarker = function(place, goTo, onClick, options) {
