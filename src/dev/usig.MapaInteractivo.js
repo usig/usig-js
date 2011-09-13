@@ -359,14 +359,21 @@ usig.MapaInteractivo = function(idDiv, options) {
 	}
 	
 	function _addMarker(place, id, goTo, onClick, options) {
+		var defaults = {
+				iconUrl: opts.rootUrl+'images/pincho_inclinado.png',
+				iconWidth: 20,
+				iconHeight: 36,
+				offsetX: -5,
+				offsetY: -36
+		}
 		// fijarse si el marker ya existe...
 		statusBar.activate(opts.texts.processing, true);
 		
 		if (options) {
-			place.options = options;
+			place.options = $.extend({}, defaults, options);
 		} else {
 			if (typeof(onClick) == "object") {
-				place.options = onClick;
+				place.options = $.extend({}, defaults, onClick);
 			}
 		}
 		
@@ -482,8 +489,11 @@ usig.MapaInteractivo = function(idDiv, options) {
 			return id;
 		}
 		return _addMarker(place, id, goTo, onClick, options);
+
 	}
 	
+	
+
 	/**
 	 * Borra un marcador del mapa
 	 * @param {Integer} id Id del marcador que se desea eliminar obtenido mediante addMarker
