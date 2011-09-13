@@ -473,7 +473,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 var markerId = miMapa.addMarker(
 		'peru 652', 
 		true, 
-		'holi',
+		'Texto popup',
 		{
 		  iconUrl: 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
 		  iconWidth: 41,
