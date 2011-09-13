@@ -226,13 +226,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 			offset = new OpenLayers.Pixel(-5, -size.h),
 			icon = new OpenLayers.Icon(opts.rootUrl+'images/pincho_inclinado.png', size, offset),
 			pt = null;
-
-		if (usig.Marcador && place instanceof usig.Marcador) {
-			size = new OpenLayers.Size(place.iconWidth, place.iconHeight);
-			offset = new OpenLayers.Pixel(-5, -size.h),
-			icon = new OpenLayers.Icon(place.iconUrl, size, offset);
-			pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
-		}
 		
 		if (place.options) {
 			size = new OpenLayers.Size(place.options.iconWidth, place.options.iconHeight);
@@ -282,20 +275,12 @@ usig.MapaInteractivo = function(idDiv, options) {
 			$.each(paraNormalizar, function(id, params) {
 				try {
 					var mStrDir = params.place;
-
-					if (params.place instanceof usig.Marcador) {
-						mStrDir = params.place.strDir;
-					} 
 					
 					var res = usig.NormalizadorDirecciones.normalizar(mStrDir, 10);
 					
 					if (opts.debug) usig.debug(res);
 					if (res.length > 0) {
-						if (params.place instanceof usig.Marcador) {
-							params.place.strDir = res[0];
-						} else {
-							params.place = res[0];
-						}
+						params.place = res[0];
 						
 						paraGeocodificar[id] = { place: params.place, goTo: params.goTo, onClick: params.onClick, options: params.options };
 						numPendientes++;
@@ -317,10 +302,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 			if (opts.debug) usig.debug('Procesando cola paraGeocodificar...');
 			$.each(paraGeocodificar, function(id, params) {
 				var mStrDir = params.place;
-
-				if (params.place instanceof usig.Marcador) {
-					mStrDir = params.place.strDir;
-				} 
 				
 				geoCoder.geoCodificarDireccion(mStrDir, function(pt) { 
 					params.place.setCoordenadas(pt); 
@@ -389,7 +370,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		markersMap[''+id] = marker;
 		myMarkers.addMarker(marker);
 		
-		if (!(place instanceof OpenLayers.Marker) && !(place instanceof usig.Marcador) && (typeof(options) != "object") && typeof(onClick) != "object") {
+		if (!(place instanceof OpenLayers.Marker) && (typeof(options) != "object") && typeof(onClick) != "object") {
 	    	var markerShadow = new OpenLayers.Feature.Vector(
 	            new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat)	            
 	        );
@@ -494,14 +475,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 	this.addMarker = function(place, goTo, onClick, options) {
 		var random = Math.floor(Math.random()*100001);
 		var id = new Date()*1 +random;
-		
-		if (place instanceof usig.Marcador) {
-			if (opts.debug) usig.debug('Encolando direccion: '+place+' ...');
-			paraNormalizar[id] = { place: place, goTo: goTo, onClick: onClick } ;
-			procesarColaNormalizacion();			
-			return id;
-		}
-		
 		
 		if (typeof(place) == "string") {
 			if (opts.debug) usig.debug('Encolando direccion: '+place+' ...');
