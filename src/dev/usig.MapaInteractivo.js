@@ -278,10 +278,8 @@ usig.MapaInteractivo = function(idDiv, options) {
 					
 					var res = usig.NormalizadorDirecciones.normalizar(mStrDir, 10);
 					
-					if (opts.debug) usig.debug(res);
 					if (res.length > 0) {
-						params.place = res[0];
-						
+						params.place = res[0];						
 						paraGeocodificar[id] = { place: params.place, goTo: params.goTo, onClick: params.onClick, options: params.options };
 						numPendientes++;
 					}
@@ -411,10 +409,15 @@ usig.MapaInteractivo = function(idDiv, options) {
 	/**
 	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. 
 	 * 
-	 * Ejemplo:
+	 * Ejemplos:
 	 * <pre><code>
 ...
 	var markerId = mapa.addMarker(new usig.Punto(102224.9040681,103284.11371559), true, "Texto de prueba");
+	
+	o 
+	
+	var markerId = mapa.addMarker('peru 1234', true, "Texto de prueba");
+
 ...
 	</code></pre>
 	 * Tambi&eacute;n es posible personalizar el &iacute;cono del marcador.
@@ -469,7 +472,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto/String} place Lugar que se desea marcar. Es posible indicar un string conteniendo una direccion valida
 	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
 	 * @param {Function/String} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
-	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, 
+	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, offsetX, offsetY)
 	 * @return {Integer} Id del marcador agregado
 	 */
 	this.addMarker = function(place, goTo, onClick, options) {

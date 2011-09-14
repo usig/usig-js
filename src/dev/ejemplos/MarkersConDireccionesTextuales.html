@@ -18,6 +18,20 @@
 				var markerId2 = mapa.addMarker('santa fe 2500');
 				var markerId3 = mapa.addMarker('cabildo y juramento');
 				var markerId4 = mapa.addMarker('corrientes 1530', false, 'Teatro Gral. San Martín');
+				
+				// Marcador con icono personalizado 
+				var markerId5 = mapa.addMarker(
+						'perú 652', 
+						false, 
+						'Banco',
+						{
+							iconUrl: 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+							iconWidth: 41,
+							iconHeight: 41,
+							offsetX: 5,
+							offsetY: 5
+						}
+				);
 			}
 		});
 
