@@ -259,7 +259,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 				procesarColaNormalizacion();
 			} else {
 				if (opts.debug) usig.debug('Inicializando Normalizador...');
-				usig.NormalizadorDirecciones.init({onReady: cargarNormalizadorDirecciones.createDelegate(this), loadFullDatabase: true });				
+				usig.NormalizadorDirecciones.init({onReady: cargarNormalizadorDirecciones.createDelegate(this), loadFullDatabase: true });
 			}
 		} else if (!cargandoNormalizador) {
 			cargandoNormalizador = true;
