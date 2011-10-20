@@ -2,20 +2,18 @@
 if (typeof (usig) == "undefined")
 	usig = {};
 
-usig.loadingJs = [];
-usig.loadingJsListeners = {};
-
-usig.__callLoadJsListeners = function(filename) {
-	for (var i=0, l=usig.loadingJsListeners[filename].length;i<l;i++) {
-		usig.loadingJsListeners[filename][i]();		
-	}
-}
-
 /**
  * @class usig
  * This class defines common public methods for USIG applications
  */
 $.extendIf(usig, {
+	loadingJs: [],
+	loadingJsListeners: {},
+	__callLoadJsListeners: function(filename) {
+		for (var i=0, l=usig.loadingJsListeners[filename].length;i<l;i++) {
+			usig.loadingJsListeners[filename][i]();		
+		}
+	},
 	/**
 	 Loads the specified script dynamically on the current page
 	 @param {String} filename Url of the js script to load
