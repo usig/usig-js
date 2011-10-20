@@ -1,6 +1,16 @@
 // Definicion del namespace
 if (typeof (usig) == "undefined")
 	usig = {};
+
+usig.loadingJs = [];
+usig.loadingJsListeners = {};
+
+usig.__callLoadJsListeners = function(filename) {
+	for (var i=0, l=usig.loadingJsListeners[filename].length;i<l;i++) {
+		usig.loadingJsListeners[filename][i]();		
+	}
+}
+
 /**
  * @class usig
  * This class defines common public methods for USIG applications
@@ -12,20 +22,25 @@ $.extendIf(usig, {
 	 @param {Function} callback (optional) A callback function to be called when the script is loaded
 	 */
 	loadJs: function(filename, callback) {
-		var scriptElem = document.createElement("script"),
-			head = document.getElementsByTagName("head")[0],
-			scriptdone = false;
-	    scriptElem.onload = scriptElem.onreadystatechange = function () {
-	        if ((scriptElem.readyState && scriptElem.readyState !== "complete" && scriptElem.readyState !== "loaded") || scriptdone) {
-	            return false;
-	        }
-	        scriptElem.onload = scriptElem.onreadystatechange = null;
-	        scriptdone = true;
-	        if (typeof(callback)=="function")
-	        	callback();
-	    };
-	    scriptElem.src = filename;
-	    head.insertBefore(scriptElem, head.firstChild);
+		if (usig.loadingJs.indexOf(filename) < 0) {
+			usig.loadingJs.push(filename);
+			usig.loadingJsListeners[filename] = (typeof(callback) == "function")?[callback]:[];
+			var scriptElem = document.createElement("script"),
+				head = document.getElementsByTagName("head")[0],
+				scriptdone = false;
+		    scriptElem.onload = scriptElem.onreadystatechange = function () {
+		        if ((scriptElem.readyState && scriptElem.readyState !== "complete" && scriptElem.readyState !== "loaded") || scriptdone) {
+		            return false;
+		        }
+		        scriptElem.onload = scriptElem.onreadystatechange = null;
+		        scriptdone = true;
+		        usig.__callLoadJsListeners(filename);
+		    };
+		    scriptElem.src = filename;
+		    head.insertBefore(scriptElem, head.firstChild);
+		} else {
+			usig.loadingJsListeners[filename].push(callback);
+		}
 	},
 	
 	/**
