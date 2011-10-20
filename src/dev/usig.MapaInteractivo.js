@@ -46,6 +46,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 		cargandoGeoCoder = false,
 		myself = this,
 		$indicatorImage = null,
+		preloadedImages = [],
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-bottomleft: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-bottomright: 10px; -webkit-border-bottom-right-radius: 10px;"></div>'),
 		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = markersShadows = myMarkers = null;
 
@@ -171,6 +172,13 @@ usig.MapaInteractivo = function(idDiv, options) {
 			opts.onReady(this);
 		}
 	};
+	
+	function preloadImages() {
+		var urlPrefix = usig.MapaInteractivo.defaults.OpenLayersJS.replace('OpenLayers.js', '');
+		$.each(opts.preloadImages, function(i, url) {
+			preloadedImages.push($('<img src="'+urlPrefix+url+'"/>'));
+		});
+	}
 	
 	function getLayerURLs(layerName) {
 		var urls = new Array();
@@ -560,6 +568,10 @@ usig.MapaInteractivo = function(idDiv, options) {
 		
 		usig.loadCss(opts.OpenLayersCSS);
 		usig.loadJs(opts.OpenLayersJS, init.createDelegate(this));
+		(function() {
+			if (typeof(OpenLayers) == "undefined")
+				preloadImages();
+		}).defer(500, this);
 	} else {
 		init.defer(200,this);
 	}
@@ -585,6 +597,7 @@ usig.MapaInteractivo.defaults = {
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
+	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],
 	overviewOptions: {
 		layer:'referencia',
 		resolutions: [130,70,30,15,7.5,4],
