@@ -27,7 +27,40 @@ usig.Recorridos = usig.AjaxComponent.extend({
 		this._super('Recorridos', usig.Recorridos.defaults.server, opts);		
 	},
 	
-	/**
+	getUbicacion: function(place) {
+		var ubicacion = { coordenadas: "", codigo_calle: 0, altura: 0 };
+		if (place.x != undefined && place.y != undefined) {
+			ubicacion.coordenadas = place.x+","+place.y;
+		}
+		
+		if (usig.Direccion && place instanceof usig.Direccion) {
+			ubicacion.coordenadas = place.getCoordenadas().x+","+place.getCoordenadas().y;
+			ubicacion.codigo_calle = place.getCalle().codigo;
+			ubicacion.altura = place.getAltura();
+		}
+		
+		if (usig.inventario && usig.inventario.Objeto && place instanceof usig.inventario.Objeto) {
+			if (place.direccionAsociada) {
+				ubicacion.coordenadas = place.direccionAsociada.getCoordenadas().x+","+place.direccionAsociada.getCoordenadas().y;
+				ubicacion.codigo_calle = place.direccionAsociada.getCalle().codigo;
+				ubicacion.altura = place.direccionAsociada.getAltura();
+			} else {
+				ubicacion.coordenadas = place.ubicacion.getCentroide().x+","+place.ubicacion.getCentroide().y;
+			}
+		}	
+		
+		if (usig.DireccionMapabsas && place instanceof usig.DireccionMapabsas) {
+			ubicacion.codigo_calle = place.cod;
+			ubicacion.altura = place.alt;
+		}
+		return ubicacion;
+	},
+	
+	onBuscarRecorridosSuccess: function(data, callback) {
+		
+	},
+	
+	/*
 	 * Dado un determinado tripPlan busca el detalle del mismo
 	 * @param {Object} data: {trip_id: int} el id del trip_plan
 	 * @param {Function} success Funcion callback que es llamada con el listado de categorias obtenido del servidor
@@ -37,7 +70,7 @@ usig.Recorridos = usig.AjaxComponent.extend({
 		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'load_plan');
 	},
 		
-	/** 
+	/* 
 	 * Dadas dos ubicaciones origen/destino y ciertas opciones de busqueda consulta los recorridos posibles.
 	 * @param {Object} data Objeto que contiene datos del origen y destino, asi como las opciones de busqueda: <br/>
 	 * 		{String} action: (ej: "http://recorridos.usig.buenosaires.gob.ar/recorridos_transporte") <br/>
@@ -63,7 +96,7 @@ usig.Recorridos = usig.AjaxComponent.extend({
 		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'recorridos_' + tipo);
 	},
 	
-	/**
+	/*
 	 * Dada una ubicacion trae informacion del transporte que pasa por esa ubicacion
 	 * @param {Object} data Objeto que contiene las coordenadas xy de la ubicacion
 	 * @param {Function} success Funcion callback que es llamada con el listado de categorias obtenido del servidor
@@ -71,8 +104,28 @@ usig.Recorridos = usig.AjaxComponent.extend({
 	 */
 	InfoTransporte: function(data, success, error) {
 		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'info_transporte/');		
-	}
+	},
 	
+	/**
+	 * Dadas dos ubicaciones origen/destino y ciertas opciones de busqueda consulta los recorridos posibles.
+	 * @param {usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} origen Origen del recorrido
+	 * @param {usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} destino Destino del recorrido
+	 * @param {Function} success Funcion callback que es llamada con el resultado obtenido del servidor
+	 * @param {Function} error Funcion callback que es llamada en caso de error
+	 * 
+	 */
+	buscarRecorridos: function(origen, destino, success, error, options) {
+		var data = $.extend({}, usig.Recorridos.defaults, options);
+		ubicacionOrigen = this.getUbicacion(origen);
+		data.origen = ubicacionOrigen.coordenadas;
+		data.origen_calles = ubicacionOrigen.codigo_calle;
+		data.origen_calle_altura = ubicacionOrigen.altura;
+		ubicacionDestino = getUbicacion(destino);
+		data.destino = ubicacionDestino.coordenadas;
+		data.destino_calles = ubicacionDestino.codigo_calle;
+		data.destino_calle_altura = ubicacionDestino.altura;
+		this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success], 1), error, this.opts.server + 'recorridos_' + data.tipo_recorrido);		
+	}
 
 	
 });
@@ -80,6 +133,13 @@ usig.Recorridos = usig.AjaxComponent.extend({
 usig.Recorridos.defaults = {
 	debug: false,
 	server: 'http://recorridos.usig.buenosaires.gob.ar/',
-		serverTimeout: 5000,
-		maxRetries: 5
+	serverTimeout: 5000,
+	maxRetries: 5,	
+	tipo_recorrido: 'transporte',
+	opciones_caminata: 800,
+	opciones_medios_colectivo: true,
+	opciones_medios_subte: true,
+	opciones_medios_tren: true,
+	opciones_prioridad: 'avenidas', 
+	opciones_incluir_autopistas: true
 }
