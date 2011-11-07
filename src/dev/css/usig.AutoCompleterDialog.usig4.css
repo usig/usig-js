@@ -198,8 +198,10 @@ div.usig_acv div.content div.message ul li
 }
 div.usig_acv a.button {
 	background: #b1ddf3;
-	/* background: #0996d2;*/
+	/* background: #0996d2;
 	color: #fff;
+	*/
+	color: #006995;
 	text-decoration: none;
 	padding: 1px 6px !important;	
 	position: relative;
