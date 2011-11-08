@@ -414,6 +414,72 @@ usig.MapaInteractivo = function(idDiv, options) {
 		return id;
 	}
 	
+	function generarGMLTripPlan(recorrido) {
+		var trip_plan = recorrido.getPlan();
+		var gml = new usig.GMLPlan('trip_plan_' + recorrido.getId());
+ 		
+		for(i=0;i<trip_plan.plan.length;i++) {
+		
+			var item = trip_plan.plan[i];
+			
+			if(item.type != undefined){
+				
+				if(item.type == 'StartWalking' || item.type == 'FinishWalking'){
+					gml.addMarker(item.gml);					
+				} else if(item.type == 'Board') {
+				
+					if (item.service_type == '1'){
+						switch (item.service){
+							case 'Línea A': item.gml = item.gml.replace('subway','subwayA');break;
+							case 'Línea B': item.gml = item.gml.replace('subway','subwayB');break;
+							case 'Línea C': item.gml = item.gml.replace('subway','subwayC');break;
+							case 'Línea D': item.gml = item.gml.replace('subway','subwayD');break;
+							case 'Línea E': item.gml = item.gml.replace('subway','subwayE');break;
+							case 'Línea H': item.gml = item.gml.replace('subway','subwayH');break;
+						}
+					}
+					gml.addMarker(item.gml);
+					
+				} else if (item.type == 'Bus' || item.type == 'SubWay' || item.type == 'Street') {
+					gml.addEdges([item.gml]);
+				} else if(item.type == 'SubWayConnection') {
+					
+					switch (item.service_to){
+							case 'Línea A': item.gml[1] = item.gml[1].replace('connection','subwayA');break;
+							case 'Línea B': item.gml[1] = item.gml[1].replace('connection','subwayB');break;
+							case 'Línea C': item.gml[1] = item.gml[1].replace('connection','subwayC');break;
+							case 'Línea D': item.gml[1] = item.gml[1].replace('connection','subwayD');break;
+							case 'Línea E': item.gml[1] = item.gml[1].replace('connection','subwayE');break;
+							case 'Línea H': item.gml[1] = item.gml[1].replace('connection','subwayH');break;
+						}
+					gml.addMarker(item.gml[1]); // en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
+					gml.addEdges(item.gml);
+										
+				}
+				
+			}
+		}
+		
+		recorrido.gmlLayer = gml;
+		
+		return gml;		
+	}
+	
+	function _mostrarRecorrido(recorrido) {
+		var layers = map.getLayersByName(recorrido.gmlLayer.name);
+		
+		if(layers.length > 0) {
+			for(l = 0; l < layers.length; l++) {
+				layers[l].setVisibility(true);
+			}
+		} else {
+			var layer = recorrido.gmlLayer;
+			map.addLayer(layer);
+		}
+
+		map.zoomToExtent(recorrido.gmlLayer.getDataExtent());
+	}
+	
 	/**
 	 * Agrega un marcador en el mapa y agrega un tooltip con un contenido en html opcional. 
 	 * 
@@ -549,6 +615,22 @@ usig.MapaInteractivo = function(idDiv, options) {
 	this.hideStatus = function() {
 		statusBar.deactivate();
 	}
+	
+	/**
+	 * Muestra un recorrido en el mapa
+	 * @param {usig.Recorrido} recorrido Recorrido a motrar
+	 */
+	this.mostrarRecorrido = function(recorrido) {
+		if (!recorrido.gmlLayer) {
+			recorrido.getPlan(function() {
+				
+				generarGMLTripPlan(recorrido);
+				_mostrarRecorrido(recorrido);
+			});
+		} else {		
+			_mostrarRecorrido(recorrido);
+		}
+	}
 		
 		
 	if (typeof(OpenLayers) == "undefined") {
@@ -592,11 +674,12 @@ usig.MapaInteractivo.defaults = {
 	},
 	
 	baseLayer:'mapabsas_default',
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/',	
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
 	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/theme/default/style.css',
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
+	GMLPlanJS: 'usig.GMLPlan.js',
 	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],
 	overviewOptions: {
 		layer:'referencia',

@@ -59,6 +59,7 @@ usig.Recorrido = function(data, options) {
 		descripcion=desc.join(', ');
 	}
 	
+	// ATENCION: Esto solo funciona para transporte publico, habria que cambiarlo para el resto
 	function procesarPlan() {
  		var current_action = null;
  		var walking = false;
@@ -179,7 +180,7 @@ usig.Recorrido = function(data, options) {
 		plan = data.plan;
 		procesarPlan();
 		if (typeof(callback) == "function")
-			callback(detalle);		
+			callback(detalle, plan);		
 	}
 	
 	/**
@@ -218,16 +219,31 @@ usig.Recorrido = function(data, options) {
 	}
 
 	/**
-	 * Devuelve el trip_plan del recorrido tal como lo obtiene del servidor
-	 * @return {Object} Objeto trip_plan
+	 * Permite obtener el trip_plan del recorrido
+	 * @param {Function} success Una funcion que es llamada cuando se obtiene el detalle del recorrido. 
+	 * Recibe de parametro un Array(String) con una lista de strings con la descripcion de cada uno de 
+	 * los pasos del recorrido y un Object conteniendo el trip_plan obtenido del servidor
+	 * @param {Function} error Una funcion que es llamada en caso de error al intentar cargar el detalle 
+	 * del recorrido
+	 * @returns {Object} trip_plan obtenido del servidor o undefined en caso de que aun no se encuentre cargado
 	 */
-	this.getPlan = function() {
+	this.getPlan = function(success, error) {
+		if (!plan) {
+			usig.Recorridos.cargarPlanRecorrido(id, cargarPlan.createDelegate(this, [success], 1), error);
+		} else {
+			if (typeof(success) == "function")
+				success(plan);
+		}
 		return plan;
 	}
 	
 	/**
-	 * Devuelve la descripcion detallada de cada uno de los pasos que componen el recorrido
-	 * @return {Array(String)} Lista de strings con la descripcion de cada uno de los pasos del recorrido
+	 * Permite obtener la descripcion detallada de cada uno de los pasos que componen el recorrido
+	 * @param {Function} success Una funcion que es llamada cuando se obtiene el detalle del recorrido. 
+	 * Recibe de parametro un Array(String) con una lista de strings con la descripcion de cada uno de 
+	 * los pasos del recorrido y un Object conteniendo el trip_plan obtenido del servidor
+	 * @param {Function} error Una funcion que es llamada en caso de error al intentar cargar el detalle 
+	 * del recorrido
 	 */
 	this.getDetalle = function(success, error) {
 		if (!plan) {
