@@ -59,6 +59,7 @@
 	<source src="src/dev/usig.AutoCompleterDialog.js"/>
 	<source src="src/dev/usig.Inventario.js"/>
 	<source src="src/dev/usig.Recorridos.js"/>
+	<source src="src/dev/usig.Recorrido.js"/>
 	<source src="src/dev/usig.inventario.Objeto.js"/>
 	<source src="src/dev/usig.inventario.Clase.js"/>
 	<source src="src/dev/usig.inventario.Ubicacion.js"/>

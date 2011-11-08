@@ -23,6 +23,7 @@ usig.defaults.Recorridos = {
  * @class Recorridos
  * Esta clase implementa una interfaz Javascript con los servicios de recorridos de la USIG<br/>
  * Requiere: jQuery-1.3.2+, jQuery-jsonp-1.1.0.1+, usig.core, usig.AjaxComponent<br/>
+ * Demo: <a href="http://servicios.usig.buenosaires.gob.ar/usig-js/dev/demos/recorridos.html">http://servicios.usig.buenosaires.gob.ar/usig-js/dev/demo/recorridos.html</a><br/>
  * @namespace usig
  * @cfg {String} server Url del servidor de recorridos. Por defecto: 'http://recorridos.usig.buenosaires.gob.ar/'
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
@@ -34,7 +35,7 @@ usig.defaults.Recorridos = {
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {String} tipo_recorrido Indica el tipo de recorrido a buscar. Las opciones posibles son: 'transporte' (default), 
  * 'auto' o 'pie'
- * @cfg {Integer} opciones_caminata Indica la cantidad de metros que se está dispuesto a caminar para tomar un transporte
+ * @cfg {Integer} opciones_caminata Indica la cantidad de metros que se esta dispuesto a caminar para tomar un transporte
  * publico
  * @cfg {Boolean} opciones_medios_colectivo Indica si se debe considerar los colectivos al buscar recorridos en transporte
  * publico (por defecto es True)
@@ -47,6 +48,7 @@ usig.defaults.Recorridos = {
  * @cfg {Boolean} opciones_incluir_autopistas Indica si se debe considerar las autopistas al buscar recorridos en auto (por defecto es True)
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
+ * @singleton
 */	
 usig.Recorridos = new (usig.AjaxComponent.extend({
 	
@@ -145,7 +147,8 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	 * Dadas dos ubicaciones origen/destino y ciertas opciones de busqueda consulta los recorridos posibles.
 	 * @param {usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} origen Origen del recorrido
 	 * @param {usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} destino Destino del recorrido
-	 * @param {Function} success Funcion callback que es llamada con el resultado obtenido del servidor
+	 * @param {Function} success Funcion callback que es llamada cuando se obtiene una respuesta exitosa del servidor. 
+	 * Recibe como parametro un Array(usig.Recorrido) con las opciones encontradas.
 	 * @param {Function} error Funcion callback que es llamada en caso de error
 	 * 
 	 */
