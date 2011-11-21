@@ -616,6 +616,17 @@ usig.MapaInteractivo = function(idDiv, options) {
 		statusBar.deactivate();
 	}
 	
+	this.raiseMarkers =function(index){
+		map.raiseLayer(myMarkers, index);
+	}
+	
+	this.getMarkersIndex =function(){
+		return map.getLayerIndex(myMarkers);
+	}
+	this.getMarkersZIndex =function(){
+		return myMarkers.getZIndex();
+	}
+	
 	/**
 	 * Muestra un recorrido en el mapa
 	 * @param {usig.Recorrido} recorrido Recorrido a motrar
