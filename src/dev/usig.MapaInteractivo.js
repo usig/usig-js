@@ -549,7 +549,17 @@ usig.MapaInteractivo = function(idDiv, options) {
 	this.hideStatus = function() {
 		statusBar.deactivate();
 	}
-		
+	
+	this.raiseMarkers =function(index){
+		map.raiseLayer(myMarkers, index);
+	}
+	
+	this.getMarkersIndex =function(){
+		return map.getLayerIndex(myMarkers);
+	}
+	this.getMarkersZIndex =function(){
+		return myMarkers.getZIndex();
+	}		
 		
 	if (typeof(OpenLayers) == "undefined") {
 		$indicatorImage = $('<img src="'+opts.rootUrl+'images/animated_indicator_medium.gif" alt="'+opts.texts.loading+'"/>');
