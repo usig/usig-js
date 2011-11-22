@@ -262,6 +262,26 @@ usig.Recorrido = function(data, options) {
 		return id;
 	}
 	
+	this.getTemplate = function() {
+		return opts.template;
+	}
+	
+	/**
+	 * Devuelve el color asociado a este recorrido en formato HTML
+	 * @returns {String} Color en formato HTML hexadecimal
+	 */
+	this.getColor = function() {
+		return opts.template.color;
+	}
+	
+	/**
+	 * Permite setear un color a este recorrido
+	 * @param {String} color Color especificado en formato hexa HTML incluyendo el #, por ej.: '#4A5076'
+	 */
+	this.setColor = function(color) {
+		opts.template.color = color;
+	}
+	
 	if (data) loadData(data);
 };
 
@@ -272,6 +292,7 @@ usig.Recorrido.defaults = {
 		recorrido_tren: 'http://mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png', 	
 		recorrido_colectivo: 'http://mapa.buenosaires.gob.ar/images/recorrido_colectivo20x20.png' 	
 	},
+	template: new usig.TripTemplate(1,'#8F58C7'),
 	texts: {
 		hayRamales:'No todos los ramales conducen a destino'		
 	}

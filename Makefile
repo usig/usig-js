@@ -119,7 +119,8 @@ INDICE_CATASTRAL_FILES=\
 MAPA_INTERACTIVO_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/usig.MapaInteractivo.js
+      $(SRC)/usig.MapaInteractivo.js \
+      $(SRC)/usig.GMLPlan.js
 
 RECORRIDOS_FULL_FILES=\
       $(SRC)/usig.core.js \
@@ -128,12 +129,12 @@ RECORRIDOS_FULL_FILES=\
       $(SRC)/json.js \
       $(SRC)/jquery.class.js \
       $(SRC)/usig.AjaxComponent.js \
-      $(SRC)/usig.Recorrido.js \
-      $(SRC)/usig.Recorridos.js
+      $(SRC)/usig.Recorridos.js \
+      $(SRC)/usig.Recorrido.js
       
 RECORRIDOS_FILES=\
-      $(SRC)/usig.Recorrido.js \
-      $(SRC)/usig.Recorridos.js
+      $(SRC)/usig.Recorridos.js \
+      $(SRC)/usig.Recorrido.js
 
 all: prepare
 

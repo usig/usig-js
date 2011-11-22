@@ -4,6 +4,12 @@ if (typeof (usig) == "undefined")
 
 if (typeof (usig.defaults) == "undefined")
 	usig.defaults = {};
+
+usig.TripTemplate = function(index, color) {	
+	this.index = index;
+	this.color = color;
+	this.cls = 'trip_' + index;
+}	
 	
 usig.defaults.Recorridos = {
 	debug: false,
@@ -16,7 +22,19 @@ usig.defaults.Recorridos = {
 	opciones_medios_subte: true,
 	opciones_medios_tren: true,
 	opciones_prioridad: 'avenidas', 
-	opciones_incluir_autopistas: true
+	opciones_incluir_autopistas: true,
+	colorTemplates: [
+		new usig.TripTemplate(1,'#8F58C7'),
+		new usig.TripTemplate(2,'#E34900'),
+		new usig.TripTemplate(3,'#C3E401'),
+		new usig.TripTemplate(4,'#F9B528'),
+		new usig.TripTemplate(5,'#D71440'),
+		new usig.TripTemplate(6,'#007baf'),
+		new usig.TripTemplate(7,'#495a78'),
+		new usig.TripTemplate(8,'#b56c7d'),
+		new usig.TripTemplate(9,'#669966'),
+		new usig.TripTemplate(10,'#ff3300')
+	]
 };	
 	
 /**
@@ -89,9 +107,9 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	},
 	
 	onBuscarRecorridosSuccess: function(data, callback) {
-		var recorridos = [];
+		var recorridos = [], templates = this.opts.colorTemplates;
 		$.each(data.planning, function(i, plan) {			
-			recorridos.push(new usig.Recorrido(JSON.parse(plan)));
+			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: templates[i] }));
 		});
 		if (typeof(callback) == "function")
 			callback(recorridos);

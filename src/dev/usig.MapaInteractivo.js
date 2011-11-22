@@ -416,11 +416,11 @@ usig.MapaInteractivo = function(idDiv, options) {
 	
 	function generarGMLTripPlan(recorrido) {
 		var trip_plan = recorrido.getPlan();
-		var gml = new usig.GMLPlan('trip_plan_' + recorrido.getId());
+		var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl});
  		
-		for(i=0;i<trip_plan.plan.length;i++) {
+		for(i=0;i<trip_plan.length;i++) {
 		
-			var item = trip_plan.plan[i];
+			var item = trip_plan[i];
 			
 			if(item.type != undefined){
 				
@@ -642,6 +642,26 @@ usig.MapaInteractivo = function(idDiv, options) {
 			_mostrarRecorrido(recorrido);
 		}
 	}
+	
+	/**
+	 * Oculta un recorrido en el mapa
+	 * @param {usig.Recorrido} recorrido Recorrido a ocultar
+	 */
+	this.ocultarRecorrido = function(recorrido) {
+		if (recorrido.gmlLayer) {
+			recorrido.gmlLayer.setVisibility(false);
+		}
+	}
+	
+	/**
+	 * Borra un recorridio del mapa
+	 * @param {usig.Recorrido} recorrido Recorrido a borrar
+	 */
+	this.borrarRecorrido = function(recorrido) {
+		if (recorrido.gmlLayer) {
+			map.removeLayer(recorrido.gmlLayer);
+		}
+	}
 		
 		
 	if (typeof(OpenLayers) == "undefined") {
@@ -690,7 +710,6 @@ usig.MapaInteractivo.defaults = {
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
-	GMLPlanJS: 'usig.GMLPlan.js',
 	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],
 	overviewOptions: {
 		layer:'referencia',
