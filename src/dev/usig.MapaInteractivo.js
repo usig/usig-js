@@ -173,10 +173,17 @@ usig.MapaInteractivo = function(idDiv, options) {
 		}
 		
 		if (opts.trackVisits) {
+			var trackVisits = function(idSite) {
+				try {
+					var piwikTracker = Piwik.getTracker(opts.piwikBaseUrl + "piwik.php", idSite);
+					piwikTracker.trackPageView();
+					piwikTracker.enableLinkTracking();
+				} catch( err ) {}
+			};
 			if (typeof(Piwik) == "undefined") {	
-				usig.loadJs(opts.piwikBaseUrl+'piwik.js', this.trackVisits.createDelegate(this,[opts.piwikSiteId]));
+				usig.loadJs(opts.piwikBaseUrl+'piwik.js', trackVisits.createDelegate(this,[opts.piwikSiteId]));
 			} else {
-				this.trackVisits(opts.piwikSiteId);
+				trackVisits(opts.piwikSiteId);
 			}
 		}
 	};
@@ -230,14 +237,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 		}
 		if (navBar)
 			navBar.selectMap(layerName);
-	}
-	
-	this.trackVisits = function(idSite) {
-		try {
-			var piwikTracker = Piwik.getTracker(opts.piwikBaseUrl + "piwik.php", idSite);
-			piwikTracker.trackPageView();
-			piwikTracker.enableLinkTracking();
-		} catch( err ) {}
 	}
 	
 	function getMarkerFromPlace(place) {
