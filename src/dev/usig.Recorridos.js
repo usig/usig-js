@@ -13,6 +13,9 @@ usig.TripTemplate = function(index, color) {
 	
 usig.defaults.Recorridos = {
 	debug: false,
+	trackVisits: true,
+	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
+	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
 	serverTimeout: 5000,
 	maxRetries: 5,		
@@ -74,7 +77,21 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	
 	init: function(options) {
 		var opts = $.extend({}, usig.defaults.Recorridos, options);		
-		this._super('Recorridos', usig.defaults.Recorridos.server, opts);		
+		this._super('Recorridos', usig.defaults.Recorridos.server, opts);	
+		var trackVisits = function(idSite) {
+			try {
+				var piwikTracker = Piwik.getTracker(opts.piwikBaseUrl + "piwik.php", idSite);
+				piwikTracker.trackPageView();
+				piwikTracker.enableLinkTracking();
+			} catch( err ) {}
+		};
+		if (opts.trackVisits) {
+			if (typeof(Piwik) == "undefined") {	
+				usig.loadJs(opts.piwikBaseUrl+'piwik.js', trackVisits.createDelegate(this,[opts.piwikSiteId]));
+			} else {
+				trackVisits(opts.piwikSiteId);
+			}			
+		}
 	},
 	
 	getUbicacion: function(place) {

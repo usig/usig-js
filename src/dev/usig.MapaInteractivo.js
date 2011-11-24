@@ -171,6 +171,21 @@ usig.MapaInteractivo = function(idDiv, options) {
 		if (typeof(opts.onReady) == "function") {
 			opts.onReady(this);
 		}
+		
+		if (opts.trackVisits) {
+			var trackVisits = function(idSite) {
+				try {
+					var piwikTracker = Piwik.getTracker(opts.piwikBaseUrl + "piwik.php", idSite);
+					piwikTracker.trackPageView();
+					piwikTracker.enableLinkTracking();
+				} catch( err ) {}
+			};			
+			if (typeof(Piwik) == "undefined") {	
+				usig.loadJs(opts.piwikBaseUrl+'piwik.js', trackVisits.createDelegate(this,[opts.piwikSiteId]));
+			} else {
+				trackVisits(opts.piwikSiteId);
+			}
+		}
 	};
 	
 	function preloadImages() {
@@ -693,6 +708,7 @@ usig.MapaInteractivo = function(idDiv, options) {
 
 usig.MapaInteractivo.defaults = {
 	debug: false,
+	trackVisits: true,
 	includePanZoomBar: true,
 	includeToolbar: true,
 	bounds: [54340,54090,172855,140146],
@@ -710,6 +726,8 @@ usig.MapaInteractivo.defaults = {
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
+	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
+	piwikSiteId: 3, 
 	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],
 	overviewOptions: {
 		layer:'referencia',
