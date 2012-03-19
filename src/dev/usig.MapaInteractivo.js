@@ -678,7 +678,6 @@ usig.MapaInteractivo = function(idDiv, options) {
 		}
 	}
 		
-		
 	if (typeof(OpenLayers) == "undefined") {
 		$indicatorImage = $('<img src="'+opts.rootUrl+'images/animated_indicator_medium.gif" alt="'+opts.texts.loading+'"/>');
 		$indicatorImage.css('padding', '10px');
@@ -722,8 +721,8 @@ usig.MapaInteractivo.defaults = {
 	
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/theme/default/style.css',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-4/OpenLayers.js',
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-5/theme/default/style.css',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-5/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
