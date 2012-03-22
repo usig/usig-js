@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
 */
 usig.SeccionCatastral = function(seccion) {
 	this.codigoSeccion = seccion;
-	this.descripcion = 'Código Sección';
+	this.descripcion = 'CÃ³digo SecciÃ³n';
 
 	
 	/**

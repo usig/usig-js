@@ -67,7 +67,7 @@ usig.MapaEstatico = function(opts) {
 			params.push('smp='+opts.smp);
 		} else {
 			if (opts.debug)
-				usig.debug('SMP inv·lido: '+opts.smp);
+				usig.debug('SMP inv√°lido: '+opts.smp);
 		}
 	}
 	if (typeof(usig.DataManager) != "undefined") {

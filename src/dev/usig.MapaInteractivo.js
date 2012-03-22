@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * // El usig.MapaInteractivo.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.1/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.2/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.MapaInteractivo('id-div-mapa', {
  *              onReady: function() {
@@ -20,10 +20,10 @@ if (typeof (usig) == "undefined")
  *          });
  * 
  * </code></pre> 
- * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/demo/mapaInteractivo.html</a><br/>
- * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos/</a><br/>
- * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/ejemplos.rar</a><br/>
- * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.1/doc/</a><br/>
+ * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/demo/mapaInteractivo.html</a><br/>
+ * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos/</a><br/>
+ * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos.rar</a><br/>
+ * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/doc/</a><br/>
  * @namespace usig
  * @cfg {Boolean} includeToolbar Incluir el toolbar en el mapa (por default es True)  
  * @cfg {Boolean} includePanZoomBar Incluir el pan-zoom-bar en el mapa (por default es True)  
@@ -445,12 +445,12 @@ usig.MapaInteractivo = function(idDiv, options) {
 				
 					if (item.service_type == '1'){
 						switch (item.service){
-							case 'LÌnea A': item.gml = item.gml.replace('subway','subwayA');break;
-							case 'LÌnea B': item.gml = item.gml.replace('subway','subwayB');break;
-							case 'LÌnea C': item.gml = item.gml.replace('subway','subwayC');break;
-							case 'LÌnea D': item.gml = item.gml.replace('subway','subwayD');break;
-							case 'LÌnea E': item.gml = item.gml.replace('subway','subwayE');break;
-							case 'LÌnea H': item.gml = item.gml.replace('subway','subwayH');break;
+							case 'L√≠nea A': item.gml = item.gml.replace('subway','subwayA');break;
+							case 'L√≠nea B': item.gml = item.gml.replace('subway','subwayB');break;
+							case 'L√≠nea C': item.gml = item.gml.replace('subway','subwayC');break;
+							case 'L√≠nea D': item.gml = item.gml.replace('subway','subwayD');break;
+							case 'L√≠nea E': item.gml = item.gml.replace('subway','subwayE');break;
+							case 'L√≠nea H': item.gml = item.gml.replace('subway','subwayH');break;
 						}
 					}
 					gml.addMarker(item.gml);
@@ -460,12 +460,12 @@ usig.MapaInteractivo = function(idDiv, options) {
 				} else if(item.type == 'SubWayConnection') {
 					
 					switch (item.service_to){
-							case 'LÌnea A': item.gml[1] = item.gml[1].replace('connection','subwayA');break;
-							case 'LÌnea B': item.gml[1] = item.gml[1].replace('connection','subwayB');break;
-							case 'LÌnea C': item.gml[1] = item.gml[1].replace('connection','subwayC');break;
-							case 'LÌnea D': item.gml[1] = item.gml[1].replace('connection','subwayD');break;
-							case 'LÌnea E': item.gml[1] = item.gml[1].replace('connection','subwayE');break;
-							case 'LÌnea H': item.gml[1] = item.gml[1].replace('connection','subwayH');break;
+							case 'L√≠nea A': item.gml[1] = item.gml[1].replace('connection','subwayA');break;
+							case 'L√≠nea B': item.gml[1] = item.gml[1].replace('connection','subwayB');break;
+							case 'L√≠nea C': item.gml[1] = item.gml[1].replace('connection','subwayC');break;
+							case 'L√≠nea D': item.gml[1] = item.gml[1].replace('connection','subwayD');break;
+							case 'L√≠nea E': item.gml[1] = item.gml[1].replace('connection','subwayE');break;
+							case 'L√≠nea H': item.gml[1] = item.gml[1].replace('connection','subwayH');break;
 						}
 					gml.addMarker(item.gml[1]); // en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
 					gml.addEdges(item.gml);
@@ -721,10 +721,10 @@ usig.MapaInteractivo.defaults = {
 	
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-5/theme/default/style.css',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-5/OpenLayers.js',
-	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js',
-	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.1/usig.GeoCoder.min.js',
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/theme/default/style.css',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/OpenLayers.js',
+	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.2/normalizadorDirecciones.min.js',
+	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.2/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
 	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],
@@ -737,27 +737,27 @@ usig.MapaInteractivo.defaults = {
        	   {
 	       	name:'mapabsas_imagen_satelital_2009',
 	       	display:'Vista Satelital 2009',
-	       	desc: 'Mapa que incluye imagen satelital QuickBird, aÒo de toma 2009. El mapa presenta la imagen satelital de alta resoluciÛn de la Ciudad de Buenos Aires con calles y alturas.'
+	       	desc: 'Mapa que incluye imagen satelital QuickBird, a√±o de toma 2009. El mapa presenta la imagen satelital de alta resoluci√≥n de la Ciudad de Buenos Aires con calles y alturas.'
 	       },
 	       {
 	       	name:'mapabsas_imagen_satelital_2004',
 	       	display:'Vista Satelital 2004',
-	       	desc: 'Mapa que incluye imagen satelital QuickBird, aÒo de toma 2004. El mapa presenta la imagen satelital de alta resoluciÛn de la Ciudad de Buenos Aires con calles y alturas.'
+	       	desc: 'Mapa que incluye imagen satelital QuickBird, a√±o de toma 2004. El mapa presenta la imagen satelital de alta resoluci√≥n de la Ciudad de Buenos Aires con calles y alturas.'
 	       },
 	       {
 	       	name:'mapabsas_fotografias_aereas_1978',
-	       	display:'Vista AÈrea 1978',
-	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografÌas aÈreas tomadas en el aÒo 1978. El mapa presenta tambiÈn la informaciÛn de calles y alturas actuales como referencia.'
+	       	display:'Vista A√©rea 1978',
+	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotograf√≠as a√©reas tomadas en el a√±o 1978. El mapa presenta tambi√©n la informaci√≥n de calles y alturas actuales como referencia.'
 	       },
 	       {
 	       	name:'mapabsas_fotografias_aereas_1965',
-	       	display:'Vista AÈrea 1965',
-	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografÌas aÈreas tomadas en el aÒo 1965. El mapa presenta tambiÈn la informaciÛn de calles y alturas actuales como referencia.'
+	       	display:'Vista A√©rea 1965',
+	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotograf√≠as a√©reas tomadas en el a√±o 1965. El mapa presenta tambi√©n la informaci√≥n de calles y alturas actuales como referencia.'
 	       },
 	       {
 	       	name:'mapabsas_fotografias_aereas_1940',
-	       	display:'Vista AÈrea 1940',
-	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografÌas aÈreas tomadas en el aÒo 1940. El mapa presenta tambiÈn la informaciÛn de calles y alturas actuales como referencia.'
+	       	display:'Vista A√©rea 1940',
+	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotograf√≠as a√©reas tomadas en el a√±o 1940. El mapa presenta tambi√©n la informaci√≥n de calles y alturas actuales como referencia.'
 	       }
 		],
 	texts: {
@@ -781,7 +781,7 @@ usig.MapaInteractivo.defaults = {
 		    	buttonLabel: 'Medir',
 		    	measure: 'Medida',
 		    	measureDistance: 'Medir Distancia',
-		    	measureArea: 'Medir ¡rea'
+		    	measureArea: 'Medir √Årea'
 		    }
 		}
 	},

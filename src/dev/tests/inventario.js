@@ -107,7 +107,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         			Y.fail();
         		});
         	}, { 
-        		clase: ['Salud -> Hospitales de Niños', 'Salud -> Hospitales Especializados']
+        		clase: ['Salud -> Hospitales de NiÃ±os', 'Salud -> Hospitales Especializados']
         	});
         	this.wait();
         }

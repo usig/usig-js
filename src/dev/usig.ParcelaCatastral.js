@@ -15,9 +15,9 @@ usig.ParcelaCatastral = function(parcela) {
 	this.punto = usig.Punto.fromWkt(parcela.centroide);
 
 	if (this.pm != ''){
-        this.descripcion = 'Código Partida-Matriz';
+        this.descripcion = 'CÃ³digo Partida-Matriz';
 	}else{
-        this.descripcion = 'Código Sección-Manzana-Parcela';
+        this.descripcion = 'CÃ³digo SecciÃ³n-Manzana-Parcela';
 	}
 	
 	/**

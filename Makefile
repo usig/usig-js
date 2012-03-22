@@ -5,7 +5,7 @@ HOST_DIR=/d/usig/www/servicios/Usig-JS
 HOSTS=10.20.1.43 10.20.1.46 10.20.1.91 10.20.1.96
 APPDIR=/usr/local/usig/servicios/Usig-JS
 
-VERSION=dev
+VERSION=2.2
 USER=usig
 SRC=src/dev
 REL=src/release
@@ -157,7 +157,7 @@ debug:$(FILES)
 	cat $(RECORRIDOS_FILES) > $(SRC)/usig.Recorridos-debug.js
 	cat $(RECORRIDOS_FULL_FILES) > $(SRC)/usig.RecorridosFull-debug.js
 	sed -e '/usig\.debug(/ d' < $(SRC)/usig.MapaInteractivo-debug.js > $(SRC)/usig.MapaInteractivo-nodebug.js
-	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.1/normalizadorDirecciones.min.js
+	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.2/normalizadorDirecciones.min.js
 	
 clean:
 	rm -f $(SRC)/*-debug.js
@@ -165,38 +165,38 @@ clean:
 	rm -f $(SRC)/normalizadorDirecciones.min.js
 
 prepare: docs debug
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.core.js -o $(REL)/usig.core.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.util.js -o $(REL)/usig.util.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.ajax.js -o $(REL)/usig.ajax.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/jquery.class.js -o $(REL)/jquery.class.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.DataManager.js -o $(REL)/usig.DataManager.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaReferencia.js -o $(REL)/usig.MapaReferencia.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaEstatico.js -o $(REL)/usig.MapaEstatico.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.FotosParcela.js -o $(REL)/usig.FotosParcela.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.tabla.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.tabla.js -o $(REL)/usig.InputController.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Mock.js -o $(REL)/usig.Mock.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Calle.js -o $(REL)/usig.Calle.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Punto.js -o $(REL)/usig.Punto.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Direccion.js -o $(REL)/usig.Direccion.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Suggester-debug.js -o $(REL)/usig.Suggester.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.AjaxComponent.js -o $(REL)/usig.AjaxComponent.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.AutoCompleterDialog.js -o $(REL)/usig.AutoCompleterDialog.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.InputController-debug.js -o $(REL)/usig.InputController.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.GeoCoder-debug.js -o $(REL)/usig.GeoCoder.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Inventario-debug.js -o $(REL)/usig.Inventario.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterDirecciones-debug.js -o $(REL)/usig.SuggesterDirecciones.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterLugares-debug.js -o $(REL)/usig.SuggesterLugares.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.SuggesterCatastro-debug.js -o $(REL)/usig.SuggesterCatastro.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.IndiceCatastral-debug.js -o $(REL)/usig.IndiceCatastral.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.Recorridos-debug.js -o $(REL)/usig.Recorridos.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.RecorridosFull-debug.js -o $(REL)/usig.RecorridosFull.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 $(SRC)/usig.MapaInteractivo-nodebug.js -o $(REL)/usig.MapaInteractivo.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterFull.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDirecciones.min.js
-	java -jar bin/yuicompressor.jar --charset iso-8859-1 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDireccionesFull.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.core.js -o $(REL)/usig.core.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.util.js -o $(REL)/usig.util.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.ajax.js -o $(REL)/usig.ajax.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/jquery.class.js -o $(REL)/jquery.class.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.DataManager.js -o $(REL)/usig.DataManager.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaReferencia.js -o $(REL)/usig.MapaReferencia.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaEstatico.js -o $(REL)/usig.MapaEstatico.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.FotosParcela.js -o $(REL)/usig.FotosParcela.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.tabla.js -o $(REL)/usig.tabla.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.tabla.js -o $(REL)/usig.InputController.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Mock.js -o $(REL)/usig.Mock.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Calle.js -o $(REL)/usig.Calle.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Punto.js -o $(REL)/usig.Punto.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Direccion.js -o $(REL)/usig.Direccion.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Suggester-debug.js -o $(REL)/usig.Suggester.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AjaxComponent.js -o $(REL)/usig.AjaxComponent.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AutoCompleterDialog.js -o $(REL)/usig.AutoCompleterDialog.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.InputController-debug.js -o $(REL)/usig.InputController.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.GeoCoder-debug.js -o $(REL)/usig.GeoCoder.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Inventario-debug.js -o $(REL)/usig.Inventario.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.SuggesterDirecciones-debug.js -o $(REL)/usig.SuggesterDirecciones.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.SuggesterLugares-debug.js -o $(REL)/usig.SuggesterLugares.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.SuggesterCatastro-debug.js -o $(REL)/usig.SuggesterCatastro.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.IndiceCatastral-debug.js -o $(REL)/usig.IndiceCatastral.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Recorridos-debug.js -o $(REL)/usig.Recorridos.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.RecorridosFull-debug.js -o $(REL)/usig.RecorridosFull.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaInteractivo-nodebug.js -o $(REL)/usig.MapaInteractivo.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterFull.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDirecciones.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	rsync -avz --exclude '.svn' --delete $(SRC)/demos/css $(REL)/demos/

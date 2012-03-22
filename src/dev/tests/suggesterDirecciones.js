@@ -168,7 +168,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             Y.Test.Runner.run();
         },
         error: function() {
-            alert('Se produjo un error al intentar cargar la información de calles.');
+            alert('Se produjo un error al intentar cargar la informaciÃ³n de calles.');
         }
     });  
 });

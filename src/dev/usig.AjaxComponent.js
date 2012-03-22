@@ -91,12 +91,12 @@ usig.AjaxComponent = jQuery.Class.create({
 		};
 		
 		if (typeof(success) != "function") {
-			if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') success tiene que ser una funciÛn que acepte como par·metro el dato solicitado porque puede no estar inmediatamente disponible.');
+			if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') success tiene que ser una funci√≥n que acepte como par√°metro el dato solicitado porque puede no estar inmediatamente disponible.');
 			return;
 		}
 		
 		if (typeof(error) != "undefined" && typeof(error) != "function") {
-			if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') error tiene que ser una funciÛn.');
+			if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') error tiene que ser una funci√≥n.');
 			return;
 		}
 		

@@ -63,7 +63,7 @@ usig.GMLPlan = (function() {
 			        
 			        var gmlReader = this.format ? new this.format(options) : new OpenLayers.Format.GML(options);
 			        
-			    	gml = '<?xml version="1.0" encoding="ISO-8859-1"?><wfs:FeatureCollection xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml">';
+			    	gml = '<?xml version="1.0" encoding="utf-8"?><wfs:FeatureCollection xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml">';
 			    	gml += this.edges.join();
 			    	gml += this.markers.join();
 			    	gml += '</wfs:FeatureCollection>'; 

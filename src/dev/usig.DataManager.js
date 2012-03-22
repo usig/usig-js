@@ -64,7 +64,7 @@ usig.DataManager = new function() {
 				}
 			}
 		} else {
-			if (opts.debug)	usig.debug('La clase '+className+' no est· registrada.');
+			if (opts.debug)	usig.debug('La clase '+className+' no est√° registrada.');
 		}
 	};
 	
@@ -103,11 +103,11 @@ usig.DataManager = new function() {
 	
 	function mkAjaxRequest(className, id, params) {
 		if (typeof(params.success) != "function") {
-			if (opts.debug)	usig.debug('params.success tiene que ser una funciÛn que acepte como par·metro el dato solicitado porque puede no estar inmediatamente disponible.');
+			if (opts.debug)	usig.debug('params.success tiene que ser una funci√≥n que acepte como par√°metro el dato solicitado porque puede no estar inmediatamente disponible.');
 			return;
 		}
 		if (typeof(params.error) != "undefined" && typeof(params.error) != "function") {
-			if (opts.debug)	usig.debug('params.error tiene que ser una funciÛn.');
+			if (opts.debug)	usig.debug('params.error tiene que ser una funci√≥n.');
 			return;
 		}
        	var ajaxParams = $.extend(true, {}, usig.DataManagerDefaults.ajaxParams, registeredClasses[className].ajaxParams);

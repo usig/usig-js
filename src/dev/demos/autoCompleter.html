@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>USIG AutoCompleter</title>
     <link rel="stylesheet" type="text/css" href="css/demos.css" />
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
@@ -57,7 +57,7 @@
        			$('#b').val('').removeAttr('disabled').focus();	        			
        		},
        		afterSelection: function(option) {
-       			$('#mapa').html('Se seleccionó la opción: '+option);
+       			$('#mapa').html('Se seleccionÃ³ la opciÃ³n: '+option);
        			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
        				if ($('#mainForm fieldset input[name=geocode]').is(':checked'))
        					$('#mapa').html('Buscando coordenadas...');
@@ -79,7 +79,7 @@
 			var html = '<input type="checkbox" name="'+k+'" id="chk_'+k+'" class="suggester">'+k+'</input><br/>\
 			<table id="options_'+k+'" class="suggester_options"> \
      	    <tr>\
-     	    	<td class="label"><label for="'+k+'_minTextLength">Mínima longitud del texto para activarse:</label></td>\
+     	    	<td class="label"><label for="'+k+'_minTextLength">MÃ­nima longitud del texto para activarse:</label></td>\
      	    	<td><input type="text" size="3" maxlength=2 name="'+k+'_minTextLength" value="3"/></td>\
      	    </tr>\
      	    <tr>\
@@ -87,7 +87,7 @@
      	    	<td><input type="text" size="5" maxlength=5 name="'+k+'_inputPause" value="300"/></td>\
      	    </tr>\
      	    <tr>\
-     	    	<td class="label"><label for="'+k+'_maxSuggestions">Máx. número de sugerencias a mostrar:</label></td>\
+     	    	<td class="label"><label for="'+k+'_maxSuggestions">MÃ¡x. nÃºmero de sugerencias a mostrar:</label></td>\
      	    	<td><input type="text" size="3" maxlength=3 name="'+k+'_maxSuggestions" value="10"/></td>\
      	    </tr>\
      	    </table>';
@@ -162,10 +162,10 @@
         <div id="logo"><h1>USIG AutoCompleter 2.1 (Demo)</h1></div>
       </div>
       <div id="buscador">
-       <form id="mainForm" accept-charset="iso-8859-1">
+       <form id="mainForm" accept-charset="utf-8">
       	<label for="b">Lugar</label>
      	<input type="text" size="40" name="b" id="b" title="Lugar a buscar" class="text" disabled/>
-     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San MartÃ­n, etc.</span>
 	    <div id="mapa"></div>
      	<fieldset title="Opciones" class="options">
      		<legend>Opciones</legend>
@@ -173,10 +173,10 @@
      	    <!--  input type="checkbox" name="useInventario" id="chk_inventario" checked>Usar Inventario</input -->
      	    <input type="checkbox" name="autoSelect" id="chk_autoselect" checked>Auto Seleccionar</input>
      	    <input type="checkbox" name="geocode" id="chk_geocode" checked>Geocodificar y mostrar mapa</input><br/>
-     	    <!-- input type="checkbox" name="acceptSN" id="chk_acceptsn" checked>Aceptar S/N para calles sin numeración oficial</input -->
+     	    <!-- input type="checkbox" name="acceptSN" id="chk_acceptsn" checked>Aceptar S/N para calles sin numeraciÃ³n oficial</input -->
      	    <table>
      	    <!--  tr>
-     	    	<td class="label"><label for="minTextLength">Mínima longitud del texto para activarse:</label></td>
+     	    	<td class="label"><label for="minTextLength">MÃ­nima longitud del texto para activarse:</label></td>
      	    	<td><input type="text" size="3" maxlength=2 name="minTextLength" value="3"/></td>
      	    </tr -->
      	    <!--  tr>
@@ -192,7 +192,7 @@
      	    	<td><input type="text" size="5" maxlength=5 name="autoHideTimeout" value="5000"/></td>
      	    </tr>
      	    <tr>
-     	    	<td class="label"><label for="maxOptions">Máx. número de sugerencias a mostrar:</label></td>
+     	    	<td class="label"><label for="maxOptions">MÃ¡x. nÃºmero de sugerencias a mostrar:</label></td>
      	    	<td><input type="text" size="3" maxlength=3 name="maxOptions" value="10"/></td>
      	    </tr>
      	    <tr>
@@ -207,7 +207,7 @@
        </form>
       </div>
       <div id="footer">
-        <p>&copy; 2011-2012 USIG - Unidad de Sistemas de Información Geográfica</p>
+        <p>&copy; 2011-2012 USIG - Unidad de Sistemas de InformaciÃ³n GeogrÃ¡fica</p>
       </div>
     </div>
   </body>

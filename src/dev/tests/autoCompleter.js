@@ -661,7 +661,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-	        			Y.Assert.areEqual("No pudo hallarse ninguna calle existente que coincidiera con su búsqueda. Por favor, revise el nombre ingresado y vuelva a intentarlo.", $('div.message')[0].innerHTML);
+	        			Y.Assert.areEqual("No pudo hallarse ninguna calle existente que coincidiera con su bÃºsqueda. Por favor, revise el nombre ingresado y vuelva a intentarlo.", $('div.message')[0].innerHTML);
 	        		});
         		},
         		inputPause: 200,
@@ -802,7 +802,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		afterSuggest: function() {
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
-	        			Y.Assert.areEqual(4, $('ul.options').children().length);
+	        			Y.Assert.areEqual(7, $('ul.options').children().length);
 	        			usig.debug($('ul.options').children().children());
 	        		});        			
         		},
@@ -844,7 +844,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		afterSelection: function(obj) {
 	        		test.resume(function() {
 	        			Y.Assert.isInstanceOf(usig.inventario.Objeto, obj);
-	        			Y.Assert.areEqual('Museo de Arte Latinoamericano de Buenos Aires - Colección Costantini (MALBA)', $('#inputText').val());
+	        			Y.Assert.areEqual('Museo de Arte Latinoamericano de Buenos Aires - ColecciÃ³n Costantini (MALBA)', $('#inputText').val());
 	        			usig.debug($('#inputText').val());
 	        		});        			
         		},
@@ -862,7 +862,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
 	        			Y.Assert.isNotUndefined($('div.message')[0]);
-//	        			Y.Assert.areEqual("No se hallaron resultados coincidentes con su búsqueda.", $('div.message')[0].textContent);
+//	        			Y.Assert.areEqual("No se hallaron resultados coincidentes con su bÃºsqueda.", $('div.message')[0].textContent);
 	        			usig.debug($('div.message')[0].textContent);
 	        		});
         		},

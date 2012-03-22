@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
 */
 usig.ManzanaCatastral = function(manzana) {
 	this.codigoManzana = manzana;
-	this.descripcion = 'Código Sección-Manzana';
+	this.descripcion = 'CÃ³digo SecciÃ³n-Manzana';
 
 	/**
 	 * Devuelve el codigo de la manzana expresado en seccion-manzana 

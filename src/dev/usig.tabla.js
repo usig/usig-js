@@ -57,7 +57,7 @@
 			        		});
 			        		break;
 			        	case 'sort':
-			        		alert('Lo siento. El sort no est· implementado todavÌa :-(');
+			        		alert('Lo siento. El sort no est√° implementado todav√≠a :-(');
 			        		break;
 			        }
 	        	}
@@ -88,11 +88,11 @@
 				if (typeof(this.text) != 'undefined') {
 					if (typeof(this.rowspan) != "undefined") {
 						if (i!=0) {
-							alert('Los rowspan solo est·n soportados para la primera columna.');
+							alert('Los rowspan solo est√°n soportados para la primera columna.');
 						}
 						tdObj.attr('rowspan', this.rowspan);
 						if (rowSpan > 0) {
-							alert('No est·n soportados m˙ltiples rowspan simult·neos y cruzados.');
+							alert('No est√°n soportados m√∫ltiples rowspan simult√°neos y cruzados.');
 						}
 						rowSpan = this.rowspan - 1;
 						trObj.data('rowSpanTd', tdObj);
@@ -154,7 +154,7 @@
 	     * 				{Number} id El id de la fila
 	     * 				{jQueried Dom Object} tdObj (opcional) El objeto TD que recibio el click
 	     * 				{Object} props (opcional) El objeto con propiedades de la fila
-	     * 				{Object} evData (opcional) Datos que acompaÒan al evento
+	     * 				{Object} evData (opcional) Datos que acompa√±an al evento
 	     * 
 	     * @return {Boolean} True en caso de exito, False en caso de error en los parametros
 	     */		

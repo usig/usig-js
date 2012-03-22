@@ -96,7 +96,7 @@ usig.Recorrido = function(data, options) {
 						if(item.service_type == '3') 
 							current_action += ' hasta ' + item.stop_description;
 						else
-							current_action += ' hasta la estaciÛn ' + item.stop_name + ' en ' + item.stop_description; //FIXME falta poner donde est· la estacion
+							current_action += ' hasta la estaci√≥n ' + item.stop_name + ' en ' + item.stop_description; //FIXME falta poner donde est√° la estacion
 						//Ponemos un punto al final
 						if(!(current_action.charAt(current_action.length -1) == '.'))
 							current_action += '.';
@@ -109,7 +109,7 @@ usig.Recorrido = function(data, options) {
 					if(item.service_type == '1') { //subte
 						current_action = 'Tomar el <span class="transport">SUBTE ' + item.service.toUpperCase() + '</span> ';
 						if(changes > 0) 
-							current_action += ' en la estaciÛn ' + item.stop_name;
+							current_action += ' en la estaci√≥n ' + item.stop_name;
 					
 					} else if(item.service_type == '3') { //colectivo
 
@@ -128,7 +128,7 @@ usig.Recorrido = function(data, options) {
 						}
 						current_action = 'Tomar el <span class="transport">TREN ' + item.service.toUpperCase() +ramal+'</span> ';
 						if(changes > 0) 
-							current_action += ' en la estaciÛn ' + item.stop_name;
+							current_action += ' en la estaci√≥n ' + item.stop_name;
 					}
 					
 					if(!walking_state) {
@@ -138,7 +138,7 @@ usig.Recorrido = function(data, options) {
 					
 				} else if(item.type == 'Alight') {
 					if(item.service_type != undefined && (item.service_type == '2' || item.service_type == '1'))  
-						current_action += ' y bajar en la estaciÛn ' + item.stop_name;
+						current_action += ' y bajar en la estaci√≥n ' + item.stop_name;
 					else {
 						current_action += ' y bajar en ' + item.stop_description;
 					}
@@ -154,7 +154,7 @@ usig.Recorrido = function(data, options) {
 				} else if (item.type == 'SubWay') {
 				} else if(item.type == 'SubWayConnection') {					
 					detalle.push(current_action);
-					current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estaciÛn ' + item.stop;					
+					current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estaci√≥n ' + item.stop;					
 				} else if(item.type == 'Street') { 
 				}
 				
