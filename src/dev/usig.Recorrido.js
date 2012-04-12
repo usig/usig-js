@@ -177,8 +177,10 @@ usig.Recorrido = function(data, options) {
 	}
 	
 	function cargarPlan(data, callback) {
-		plan = data.plan;
-		procesarPlan();
+		if (!plan) {
+			plan = data.plan;
+			procesarPlan();
+		}
 		if (typeof(callback) == "function")
 			callback(detalle, plan);		
 	}
