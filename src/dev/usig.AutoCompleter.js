@@ -35,7 +35,8 @@ if (typeof (usig) == "undefined")
  * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
  * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
  * @cfg {String} rootUrl Url del servidor donde reside el control.
- * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'usig2', 'usig3', 'usig4', 'dark' y 'mapabsas'. Por defecto: 'usig4'.
+ * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'usig2', 'usig3', 'usig4', 'dark', 'mapabsas' o 'custom' en caso de no querer que se cargue ningun skin. Por defecto: 'usig4'.
+ * @cfg {String} idOptionsDiv Identificador de un div existente donde se desea que se muestren las opciones. Por defecto se creara uno nuevo flotante.
  * @cfg {Boolean} autoSelect Seleccionar automaticamente la sugerencia ofrecida en caso de que sea unica. Por defecto: true.
  * @cfg {Function} afterSuggest Callback que es llamada cada vez que se actualizan las sugerencias.
  * @cfg {Function} afterSelection Callback que es llamada cada vez que el usuario selecciona una opcion de la lista de 
@@ -48,6 +49,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {Function} onReady Callback que es llamada cuando el componente esta listo para usar 
+ * @cfg {Function} onInputChange Callback que es llamada cuando el cambia el valor del campo de input. Recibe como parametro el nuevo valor. 
  * @constructor 
   * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
@@ -361,9 +363,9 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.clase.getNombre()+')</span></li>';
 		} else */
 		if (item.descripcion!=undefined && item.descripcion!='') {
-			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.descripcion+')</span></li>';
+			return '<li class="acv_op"><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.descripcion+')</span></li>';
 		} else {
-			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';
+			return '<li class="acv_op"><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';
 		}
 	}
 	
@@ -376,6 +378,9 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			abort();
 			if (opts.debug) usig.debug('view.update: '+newValue);
 			view.update(newValue);
+			if (typeof(opts.onInputChange)=="function") {
+				opts.onInputChange(newValue);
+			}
 		} catch(error) {
 			throw(error);
 		}
@@ -402,7 +407,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	 */
 	function onInputBlur() {
 		focused = false;
-		view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click		
+		view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click
 	}
 	
 	/*
@@ -481,7 +486,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	}
 	
 	if (!view) {
-		view = new usig.AutoCompleterDialog(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter, onEnterWithoutSelection: opts.onEnterWithoutSelection });
+		view = new usig.AutoCompleterDialog(idField, { maxOptions: opts.maxOptions, rootUrl: opts.rootUrl, debug: opts.debug, skin: opts.skin, autoSelect: opts.autoSelect, autoHideTimeout: opts.autoHideTimeout, optionsFormatter: optionsFormatter, onEnterWithoutSelection: opts.onEnterWithoutSelection, idDiv: opts.idOptionsDiv });
 		cleanList.push(view);
 	}
 	view.onSelection(selectionHandler.createDelegate(this));
@@ -503,6 +508,7 @@ usig.AutoCompleter.defaults = {
 	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/',
 	skin: 'usig4',
+	idOptionsDiv: undefined,
 	// Opciones generales
 	suggesters: [{ 	
 					suggester: 'Direcciones', 

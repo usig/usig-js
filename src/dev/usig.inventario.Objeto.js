@@ -92,6 +92,18 @@ usig.inventario.Objeto = function(data, clase) {
 		return $.extend(true, obj, this);
 	}
 	
+	/**
+	 * Devuelve un objeto serializable a JSON
+	 * @returns {Object} Un objeto serializable a JSON 
+	 */
+	this.toJson = function() {
+		var obj = this.getRawData();
+		if (this.direccionAsociada) {
+			obj.direccionAsociada = this.direccionAsociada.toJson();
+		}
+		return obj;
+	}
+	
 	this.fill(data);
 	this.rawData = $.extend(this.rawData, data);
 }

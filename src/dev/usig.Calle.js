@@ -71,6 +71,24 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 			return cruces.indexOf(calle.codigo) >= 0;
 		}
 	}
+	
+	/**
+	 * Devuelve un objeto serializable a JSON
+	 * @returns {Object} Un objeto serializable a JSON 
+	 */
+	this.toJson = function() {
+		return {codigo: this.codigo, nombre: this.nombre};
+	}
+	
+}
+
+/**
+ * Devuelve una nueva calle creada a partir de un diccionario
+ * @param {Object} obj Diccionario conteniendo los datos de la calle
+ * @return {usig.Calle} Calle creada
+ */
+usig.Calle.fromObj = function(obj) {
+	return new usig.Calle(obj.codigo, obj.nombre);
 }
 
 }

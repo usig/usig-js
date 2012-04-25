@@ -27,7 +27,7 @@ usig.AutoCompleterDialog = function(idField, options) {
 	var field = document.getElementById(idField),
 		fieldValue = field.value,
 		opts = $.extend({}, usig.AutoCompleterDialog.defaults, options),
-		id = 'usig_acv_'+idField,
+		id = opts.idDiv || 'usig_acv_'+idField,
 		hideTimeout = null,
 		highlighted = -1,
 		autoSelected = false,
@@ -243,13 +243,13 @@ usig.AutoCompleterDialog = function(idField, options) {
 			if (numOptions >= opts.maxOptions) 
 				return false;
 			if (typeof(item) == "string") {
-				htmlList+='<li class="message">'+item+'</li>';
+				htmlList+='<li class="acv_op message">'+item+'</li>';
 			} else if (typeof(opts.optionsFormatter) == "function") { 
 				htmlList+=opts.optionsFormatter(item, id+numOptions, ptrMarkWords);
 				itemsRef[id+numOptions] = item;
 				numOptions++;
 			} else if (typeof(item.toString) == "function") {
-				htmlList+='<li><a href="#" class="acv_op" name="'+id+numOptions+'"><span class="tl"/><span class="tr"/><span>'+ptrMarkWords(item.toString())+'</span></a></li>';
+				htmlList+='<li class="acv_op"><a href="#" class="acv_op" name="'+id+numOptions+'"><span class="tl"/><span class="tr"/><span>'+ptrMarkWords(item.toString())+'</span></a></li>';
 				itemsRef[id+numOptions] = item;
 				numOptions++;
 			}
@@ -263,16 +263,22 @@ usig.AutoCompleterDialog = function(idField, options) {
 			}
 			$('ul.options', $div).append(htmlList);
 		} else {
-			if (opts.debug) usig.debug('AutoCompleterDialog: creating suggestions list...');
-			createHoldingDiv('<ul class="options">'+htmlList+'</ul>');
+			if (opts.idDiv) {
+				if (opts.debug) usig.debug('AutoCompleterDialog: recreating suggestions list...');
+				$div.html('<div class="content"><ul class="options">'+htmlList+'</ul></div>')
+				$div.show();
+			} else {
+				if (opts.debug) usig.debug('AutoCompleterDialog: creating suggestions list...');
+				createHoldingDiv('<ul class="options">'+htmlList+'</ul>');				
+			}
 		}
-		$('ul.options li a', $div).mouseover((function(ev, highlight) { highlight(ev.target.name); }).createDelegate(this, [highlight], 1));
-		$('ul.options li a', $div).click((function(ev) { 
+		$('ul.options li.acv_op', $div).mouseover((function(ev, highlight) { highlight(ev.target.name); }).createDelegate(this, [highlight], 1));
+		$('ul.options li.acv_op', $div).click((function(ev) { 
 			if (opts.debug) usig.debug('AutoCompleterDialog: click');
-			var target = ev.target?ev.target:ev.srcElement;
-			var name = $(target).parents('a.acv_op').attr('name');
-			selectionHandler(itemsRef[name]); 
 			ev.preventDefault();
+			var target = ev.target?ev.target:ev.srcElement;
+			var name = $(target).parents('a.acv_op').attr('name') || $('a.acv_op', $(target)).attr('name');
+			selectionHandler(itemsRef[name]); 
 		}).createDelegate(this));
 		if (opts.autoSelect && numOptions == 1) {
 			highlighted = 0;
@@ -286,7 +292,12 @@ usig.AutoCompleterDialog = function(idField, options) {
      * @param {String} message Un string de texto plano para mostrar  
     */	
 	this.showMessage = function(message) {
-		createHoldingDiv('<div class="message">'+message+'</div>');
+		if (opts.idDiv) {
+			$div.html('<div class="content"><div class="message">'+message+'</div></div>')			
+			$div.show();
+		} else {
+			createHoldingDiv('<div class="message">'+message+'</div>');			
+		}
 	}
 
 	/**
@@ -390,7 +401,13 @@ usig.AutoCompleterDialog = function(idField, options) {
 	}
 	
 	// Inicializacion
-	usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterDialog.'+opts.skin+'.css');
+	if (opts.skin!='custom') {
+		usig.loadCss(opts.rootUrl+'css/usig.AutoCompleterDialog.'+opts.skin+'.css');
+	}
+	if (opts.idDiv) {
+		$div = $('#'+opts.idDiv);
+		$div.addClass('usig_acv');
+	}
 }
 
 usig.AutoCompleterDialog.defaults = {

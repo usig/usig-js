@@ -129,6 +129,21 @@ usig.Direccion = function(calle1, calle2OAltura) {
 		var dir = new usig.Direccion(calle, calle2OAltura);
 		return $.extend(true, dir, this);
 	}
+	
+	/**
+	 * Devuelve un objeto serializable a JSON
+	 * @returns {Object} Un objeto serializable a JSON 
+	 */
+	this.toJson = function() {
+		return {
+				tipo: tipo, 
+				calle: calle.toJson(), 
+				altura: altura, 
+				calle_cruce: calleCruce?calleCruce.toJson():null, 
+				smp: smp, 
+				coordenadas: coordenadas
+			};
+	}
 }
 
 usig.Direccion.CALLE_ALTURA 	= 0;
@@ -140,14 +155,19 @@ usig.Direccion.CALLE_Y_CALLE 	= 1;
  * @return {usig.Direccion} Direccion creada
  */
 usig.Direccion.fromObj = function(obj) {
-	var calle = new usig.Calle(obj.cod_calle, obj.calle);
 	var dir = null;
-	if (obj.cod_calle2 != null) {
-		// Direccion Calle y Calle
-		dir = new usig.Direccion(calle, new usig.Calle(obj.cod_calle2, obj.calle2));
+	if (obj.tipo) {
+		dir = new usig.Direccion(usig.Calle.fromObj(obj.calle), 
+				(obj.tipo==usig.Direccion.CALLE_ALTURA)?obj.altura:usig.Calle.fromObj(obj.calle_cruce));
 	} else {
-		// Direccion Calle Altura
-		dir = new usig.Direccion(calle, obj.altura);
+		var calle = new usig.Calle(obj.cod_calle, obj.calle);
+		if (obj.cod_calle2 != null) {
+			// Direccion Calle y Calle
+			dir = new usig.Direccion(calle, new usig.Calle(obj.cod_calle2, obj.calle2));
+		} else {
+			// Direccion Calle Altura
+			dir = new usig.Direccion(calle, obj.altura);
+		}		
 	}
 	if (obj.smp != undefined && obj.smp != null) {
 		dir.setSmp(obj.smp);
