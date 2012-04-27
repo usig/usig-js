@@ -48,7 +48,9 @@ usig.AutoCompleterDialog = function(idField, options) {
 	function resetTimeout() {
 		if (opts.debug) usig.debug('AutoCompleterDialog: resetting hideTimeout');
 		killTimeout();
-		hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);
+		if (opts.autoHideTimeout > 0) {
+			hideTimeout = hideSuggestions.defer(opts.autoHideTimeout, this);
+		}
 	};
 	
 	function hideSuggestions() {

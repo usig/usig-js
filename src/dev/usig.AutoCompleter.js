@@ -33,7 +33,8 @@ if (typeof (usig) == "undefined")
  * @cfg {Integer} maxOptions Maximo numero de opciones a mostrar como sugerencia. Por defecto: 10.
  * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
  * @cfg {Integer} zIndex Valor del atributo css z-index a utilizar para las sugerencias. Por defecto: 10000.
- * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000.
+ * @cfg {Integer} autoHideTimeout Tiempo de espera (en ms) antes de ocultar las sugerencias si el usuario no realizar ninguna accion sobre el control. Por defecto: 5000, 0: deshabilitado.
+ * @cfg {Boolean} hideOnBlur Ocultar las sugerencias cuando el input pierde foco. Por defecto: True.
  * @cfg {String} rootUrl Url del servidor donde reside el control.
  * @cfg {String} skin Nombre del skin a utilizar para el control. Opciones disponibles: 'usig', 'usig2', 'usig3', 'usig4', 'dark', 'mapabsas' o 'custom' en caso de no querer que se cargue ningun skin. Por defecto: 'usig4'.
  * @cfg {String} idOptionsDiv Identificador de un div existente donde se desea que se muestren las opciones. Por defecto se creara uno nuevo flotante.
@@ -135,6 +136,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 					sgObj = usig.createSuggester(name, { 
 						onReady: opts.onReady, 
 						debug: opts.debug, 
+						maxRetries: opts.maxRetries,
 						afterServerRequest: onServerRequest.createDelegate(this, [name], 1), 
 						afterServerResponse: onServerResponse.createDelegate(this, [name], 1),
 						afterAbort: onAbort.createDelegate(this, [name], 1)
@@ -146,6 +148,7 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 			} else {
 				sgObj.setOptions({
 					debug: opts.debug, 
+					maxRetries: opts.maxRetries,
 					afterServerRequest: onServerRequest.createDelegate(this, [name], 1), 
 					afterServerResponse: onServerResponse.createDelegate(this, [name], 1), 
 					afterAbort: onAbort.createDelegate(this, [name], 1)
@@ -407,7 +410,8 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 	 */
 	function onInputBlur() {
 		focused = false;
-		view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click
+		if (opts.hideOnBlur)
+			view.hide.defer(300); // Esto es increible pero hay que diferirlo porque parece que el blur se dispara primero que el click
 	}
 	
 	/*
@@ -496,7 +500,7 @@ usig.AutoCompleter.defaults = {
     // Opciones para los suggesters
 	inputPause: 200,
 	maxSuggestions: 10,
-	serverTimeout: 5000,
+	serverTimeout: 10000,
 	minTextLength: 3,
 	maxRetries: 5,
 	showError: true,
@@ -505,6 +509,7 @@ usig.AutoCompleter.defaults = {
 	offsetY: -5,
 	zIndex: 10000,
 	autoHideTimeout: 10000,
+	hideOnBlur: true,
 	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/',
 	skin: 'usig4',

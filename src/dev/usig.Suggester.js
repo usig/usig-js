@@ -94,7 +94,7 @@ usig.Suggester = jQuery.Class.create({
 
 usig.Suggester.defaults = {
 	debug: false,
-	serverTimeout: 5000,
+	serverTimeout: 15000,
 	maxRetries: 5,
 	maxSuggestions: 10
 };
