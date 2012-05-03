@@ -99,8 +99,8 @@ usig.SuggesterLugares = usig.Suggester.extend({
 });
 
 usig.SuggesterLugares.defaults = {
-	serverTimeout: 5000,
-	maxRetries: 5,
+	serverTimeout: 15000,
+	maxRetries: 2,
 	maxSuggestions: 10,
 	searchOptions: {
 		start: 0,
