@@ -17,9 +17,13 @@ usig.defaults.Recorridos = {
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
-	serverTimeout: 5000,
+	//server: 'http://buho-dev.usig.gcba.gov.ar:8085/',
+	//serverTimeout: 5000,
+	serverTimeout: 8000,
 	maxRetries: 5,		
-	tipo_recorrido: 'transporte',
+	tipo: 'transporte',
+	gml: true,
+	precargar:3,
 	opciones_caminata: 800,
 	opciones_medios_colectivo: true,
 	opciones_medios_subte: true,
@@ -95,12 +99,15 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	},
 	
 	getUbicacion: function(place) {
-		var ubicacion = { coordenadas: {x: 0, y: 0}, codigo_calle: 0, altura: 0 };
+		var ubicacion = { coordenadas: {x: 0, y: 0}, codigo_calle: 0, altura: 0 , codigo_calle2: 0};
 		if (place.x != undefined && place.y != undefined) {
 			ubicacion.coordenadas = place;
 		}
 		
 		if (usig.Direccion && place instanceof usig.Direccion) {
+			if(place.getTipo() == usig.Direccion.CALLE_Y_CALLE){
+				ubicacion.codigo_calle2 = place.getCalleCruce().codigo;
+			}
 			ubicacion.coordenadas = place.getCoordenadas();
 			ubicacion.codigo_calle = place.getCalle().codigo;
 			ubicacion.altura = place.getAltura();
@@ -117,6 +124,9 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 		}	
 		
 		if (usig.DireccionMapabsas && place instanceof usig.DireccionMapabsas) {
+			if(place.tipo == usig.Direccion.CALLE_Y_CALLE){
+				ubicacion.codigo_calle2 = place.cod_calle_cruce;
+			}
 			ubicacion.codigo_calle = place.cod;
 			ubicacion.altura = place.alt;
 		}
@@ -127,7 +137,10 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 		var recorridos = [], templates = this.opts.colorTemplates;
 		$.each(data.planning, function(i, plan) {			
 			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: templates[i] }));
+			//recorrido.loadPlan
 		});
+		//usig.debug("recorridos en onBuscarRecorridosSuccess");
+		//usig.debug(recorridos);
 		if (typeof(callback) == "function")
 			callback(recorridos);
 	},
@@ -190,18 +203,34 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	buscarRecorridos: function(origen, destino, success, error, options) {
 		var data = $.extend({}, this.opts, options);
 		var ubicacionOrigen = this.getUbicacion(origen);
-		data.origen = ubicacionOrigen.coordenadas.x+','+ubicacionOrigen.coordenadas.y;
+		if (ubicacionOrigen.coordenadas){
+			
+			data.origen = ubicacionOrigen.coordenadas.x+','+ubicacionOrigen.coordenadas.y;	
+		}
+		data.origen_calles2 = ubicacionOrigen.codigo_calle2;
 		data.origen_calles = ubicacionOrigen.codigo_calle;
 		data.origen_calle_altura = ubicacionOrigen.altura;
 		var ubicacionDestino = this.getUbicacion(destino);
-		data.destino = ubicacionDestino.coordenadas.x+','+ubicacionDestino.coordenadas.y;
+		if (ubicacionDestino.coordenadas){
+			
+			data.destino = ubicacionDestino.coordenadas.x+','+ubicacionDestino.coordenadas.y;	
+		}
+
+		data.destino_calles2 = ubicacionDestino.codigo_calle2;
 		data.destino_calles = ubicacionDestino.codigo_calle;
 		data.destino_calle_altura = ubicacionDestino.altura;
-		this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success], 1), error, this.opts.server + 'recorridos_' + data.tipo_recorrido);		
+		//this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success], 1), error, this.opts.server + 'recorridos_' + data.tipo_recorrido);		
+		this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success], 1), error, this.opts.server + 'consultar_recorridos');
+
 	},
 	
-	cargarPlanRecorrido: function(id, success, error) {
-		this.lastRequest = this.mkRequest({trip_id: id}, success, error, this.opts.server + 'load_plan');
+	cargarPlanRecorrido: function(id, success, error, options) {
+		//this.lastRequest = this.mkRequest({trip_id: id}, success, error, this.opts.server + 'load_plan');
+		var data = $.extend({}, this.opts, options);
+		data.trip_id = id;
+		data.tipo = 'loadplan';
+
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'consultar_recorridos');
 	},
 	
 	/**
