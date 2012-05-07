@@ -491,7 +491,7 @@ usig.AutoCompleter.defaults = {
     // Opciones para los suggesters
 	inputPause: 200,
 	maxSuggestions: 10,
-	serverTimeout: 15000,
+	serverTimeout: 30000,
 	minTextLength: 3,
 	maxRetries: 1,
 	showError: true,

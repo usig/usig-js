@@ -141,6 +141,6 @@ usig.AjaxComponent = jQuery.Class.create({
 
 usig.AjaxComponent.defaults = {
 	debug: false,
-	serverTimeout: 15000,
-	maxRetries: 2
+	serverTimeout: 30000,
+	maxRetries: 1
 }
