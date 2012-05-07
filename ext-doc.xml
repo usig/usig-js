@@ -75,6 +75,8 @@
 	<source src="src/dev/usig.SuggesterCatastro.js"/>
 	<source src="src/dev/usig.AjaxComponent.js"/>
 	<source src="src/dev/usig.MapaInteractivo.js"/>
+	<source src="src/dev/usig.StoredCollection.js"/>
+	<source src="src/dev/usig.Publisher.js"/>
     </sources>
     <tags>
         <tag name="author" title="Author"/>

@@ -78,6 +78,12 @@ SUGGESTER_FILES=\
       $(SRC)/jquery.class.js \
       $(SRC)/usig.Suggester.js
 
+STOREDCOLLECTION_FILES=\
+      $(SRC)/json.js \
+      $(SRC)/jquery.class.js \
+      $(SRC)/usig.Publisher.js \
+      $(SRC)/usig.StoredCollection.js
+
 INPUTCONTROLLER_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.InputController.js
@@ -156,6 +162,7 @@ debug:$(FILES)
 	cat $(MAPA_INTERACTIVO_FILES) > $(SRC)/usig.MapaInteractivo-debug.js
 	cat $(RECORRIDOS_FILES) > $(SRC)/usig.Recorridos-debug.js
 	cat $(RECORRIDOS_FULL_FILES) > $(SRC)/usig.RecorridosFull-debug.js
+	cat $(STOREDCOLLECTION_FILES) > $(SRC)/usig.StoredCollection-debug.js
 	sed -e '/usig\.debug(/ d' < $(SRC)/usig.MapaInteractivo-debug.js > $(SRC)/usig.MapaInteractivo-nodebug.js
 	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.2/normalizadorDirecciones.min.js
 	
@@ -191,6 +198,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.IndiceCatastral-debug.js -o $(REL)/usig.IndiceCatastral.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Recorridos-debug.js -o $(REL)/usig.Recorridos.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.RecorridosFull-debug.js -o $(REL)/usig.RecorridosFull.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.StoredCollection-debug.js -o $(REL)/usig.StoredCollection.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaInteractivo-nodebug.js -o $(REL)/usig.MapaInteractivo.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
