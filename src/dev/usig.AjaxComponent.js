@@ -117,7 +117,13 @@ usig.AjaxComponent = jQuery.Class.create({
        	if (this.opts.serverTimeout > 0)
        		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams, 0]), this.opts.serverTimeout);
        	
-       	return ajaxReq;
+       	return {
+       		req: ajaxReq,
+       		abort: function() {
+       			clearTimeout(requestTimeout);
+       			ajaxReq.abort();
+       		}
+       	};
 	},
 		
 	/**
