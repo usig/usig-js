@@ -20,16 +20,18 @@ usig.defaults.Recorridos = {
 	//server: 'http://buho-dev.usig.gcba.gov.ar:8085/',
 	//serverTimeout: 5000,
 	serverTimeout: 8000,
-	maxRetries: 5,		
-	tipo: 'transporte',
-	gml: true,
-	precargar:3,
-	opciones_caminata: 800,
-	opciones_medios_colectivo: true,
-	opciones_medios_subte: true,
-	opciones_medios_tren: true,
-	opciones_prioridad: 'avenidas', 
-	opciones_incluir_autopistas: true,
+	maxRetries: 5,
+	serverOptions: {
+		tipo: 'transporte',
+		gml: true,
+		precargar:3,
+		opciones_caminata: 800,
+		opciones_medios_colectivo: true,
+		opciones_medios_subte: true,
+		opciones_medios_tren: true,
+		opciones_prioridad: 'avenidas', 
+		opciones_incluir_autopistas: true
+	},
 	colorTemplates: [
 		new usig.TripTemplate(1,'#8F58C7'),
 		new usig.TripTemplate(2,'#E34900'),
@@ -201,7 +203,7 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	 * 
 	 */
 	buscarRecorridos: function(origen, destino, success, error, options) {
-		var data = $.extend({}, this.opts, options);
+		var data = $.extend({}, this.opts.serverOptions, options);
 		var ubicacionOrigen = this.getUbicacion(origen);
 		if (ubicacionOrigen.coordenadas){
 			
@@ -226,7 +228,7 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	
 	cargarPlanRecorrido: function(id, success, error, options) {
 		//this.lastRequest = this.mkRequest({trip_id: id}, success, error, this.opts.server + 'load_plan');
-		var data = $.extend({}, this.opts, options);
+		var data = $.extend({}, this.opts.serverOptions, options);
 		data.trip_id = id;
 		data.tipo = 'loadplan';
 

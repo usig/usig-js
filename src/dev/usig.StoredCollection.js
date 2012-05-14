@@ -126,6 +126,25 @@ usig.StoredCollection = usig.Publisher.extend({
 	 */
 	count: function() {
 		return this.collection.length;
+	},
+	
+	/**
+	 * Permite buscar un elemento dentro de la coleccion
+	 * @param {Object} needle Objeto a buscar
+	 * @param {Function} comparator Funcion de comparacion que recibe de parametro los elementos a comparar
+	 * @return {Boolean} Verdadero si el elemento esta en la coleccion
+	 */
+	exists: function(needle, comparator) {
+		var found = false,
+			l = this.collection.length;
+		
+		for (var i=0; i<l; i++) {
+			if (comparator(needle, this.collection[i])) {
+				found = true;
+				break;
+			}
+		}
+		return found;
 	}
 	
 });

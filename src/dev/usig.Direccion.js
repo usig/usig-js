@@ -42,7 +42,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
     */		
 	this.getCalle = function() {
 		return calle;
-	}
+	};
 	
 	/**
 	 * Devuelve la instancia de usig.Calle correspondiente a la interseccion 
@@ -54,7 +54,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 		} else {
 			return null;
 		}
-	}
+	};
 	
 	/**
 	 * Devuelve la altura correspondiente 
@@ -62,7 +62,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
     */		
 	this.getAltura = function() {
 		return altura;
-	}
+	};
     
     /**
      * Devuelve el tipo de direccion correspondiente 
@@ -70,7 +70,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
     */      
     this.getTipo = function() {
         return tipo;
-    }
+    };
 	
 	/**
 	 * Devuelve un string con la direccion escrita correctamente para mostrar 
@@ -84,7 +84,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 			var separador = nombreCruce.match(/^(I|Hi|HI).*/)?' e ':' y ';
 			return calle.toString()+separador+nombreCruce;				
 		}
-	}
+	};
 	
 	/**
 	 * Setea las coordenadas de la geocodificacion de esta direccion
@@ -92,7 +92,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	 */
 	this.setCoordenadas = function(pt) {
 		coordenadas = usig.Punto.fromPunto(pt);
-	}
+	};
 	
 	/**
 	 * Setea el codigo de seccion-manzana-parcela correspondiente a esta direccion
@@ -101,7 +101,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	 */
 	this.setSmp = function(SMP) {
 		smp = SMP;
-	}
+	};
 	
 	/**
 	 * Devuelve las coordenadas asociadas a esta direccion en caso de estar disponibles
@@ -110,7 +110,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	 */
 	this.getCoordenadas = function() {
 		return coordenadas;
-	}
+	};
 	
 	/**
 	 * Devuelve el codigo de seccion-manzana-parcela asociado a esta direccion en caso de estar
@@ -119,7 +119,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	 */
 	this.getSmp = function() {
 		return smp;
-	}
+	};
 	
 	/**
 	 * Devuelve un clon de si mismo
@@ -128,7 +128,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	this.clone = function() {
 		var dir = new usig.Direccion(calle, calle2OAltura);
 		return $.extend(true, dir, this);
-	}
+	};
 	
 	/**
 	 * Devuelve un objeto serializable a JSON
@@ -143,7 +143,29 @@ usig.Direccion = function(calle1, calle2OAltura) {
 				smp: smp, 
 				coordenadas: coordenadas
 			};
-	}
+	};
+	
+	/**
+	 * Compara esta direccion con otra y determina si se refieren a la misma
+	 * posicion geografica, i.e.: 'callao y corrientes' es lo mismo que 
+	 * 'corrientes y callao'
+	 * @param {usig.Direccion} Direccion a comparar
+	 * @return {Boolean} Verdadero si hacen referencia al mismo lugar
+	 */
+	this.isEqual = function(dir) {
+		var equal = ((tipo == dir.getTipo()) && 
+				((tipo==usig.Direccion.CALLE_ALTURA && 
+						calle.isEqual(dir.getCalle()) &&
+						altura == dir.getAltura()) || 
+						(tipo==usig.Direccion.CALLE_Y_CALLE && 
+							((calle.isEqual(dir.getCalle()) && calleCruce.isEqual(dir.getCalleCruce())) ||
+							(calle.isEqual(dir.getCalleCruce()) && calleCruce.isEqual(dir.getCalle())))
+							)
+					)
+				);
+		return equal;
+	};
+	
 }
 
 usig.Direccion.CALLE_ALTURA 	= 0;
@@ -156,7 +178,7 @@ usig.Direccion.CALLE_Y_CALLE 	= 1;
  */
 usig.Direccion.fromObj = function(obj) {
 	var dir = null;
-	if (obj.tipo) {
+	if (obj.tipo != undefined) {
 		dir = new usig.Direccion(usig.Calle.fromObj(obj.calle), 
 				(obj.tipo==usig.Direccion.CALLE_ALTURA)?obj.altura:usig.Calle.fromObj(obj.calle_cruce));
 	} else {

@@ -42,7 +42,7 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 			}
 			return valid;
 		}
-	}
+	};
 	
 	/**
 	 * Devuelve la lista de tramos de alturas validas para esta calle
@@ -50,7 +50,7 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 	 */
 	this.getTramos = function() {
 		return alturas;
-	}
+	};
 	
 	/**
 	 * Devuelve un string con el nombre de la calle 
@@ -58,7 +58,7 @@ usig.Calle = function(cod, nom, alturas, cruces) {
     */	
 	this.toString = function() {
 		return this.nombre;
-	}
+	};
 	
 	/**
 	 * Verifica si la calle (instancia de la clase usig.Calle) recibida como parametro
@@ -70,7 +70,7 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 		if (cruces) {
 			return cruces.indexOf(calle.codigo) >= 0;
 		}
-	}
+	};
 	
 	/**
 	 * Devuelve un objeto serializable a JSON
@@ -78,7 +78,16 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 	 */
 	this.toJson = function() {
 		return {codigo: this.codigo, nombre: this.nombre};
-	}
+	};
+	
+	/**
+	 * Dice si otra calle es la misma
+	 * @param {usig.Calle} Calle a comparar
+	 * @return {Boolean} Verdadero si tienen el mismo codigo
+	 */
+	this.isEqual = function(calle) {
+		return this.codigo == calle.codigo;
+	};
 	
 }
 
