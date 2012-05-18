@@ -153,7 +153,7 @@ usig.Direccion = function(calle1, calle2OAltura) {
 	 * @return {Boolean} Verdadero si hacen referencia al mismo lugar
 	 */
 	this.isEqual = function(dir) {
-		var equal = ((tipo == dir.getTipo()) && 
+		var equal = (dir instanceof usig.Direccion && (tipo == dir.getTipo()) && 
 				((tipo==usig.Direccion.CALLE_ALTURA && 
 						calle.isEqual(dir.getCalle()) &&
 						altura == dir.getAltura()) || 
@@ -195,7 +195,11 @@ usig.Direccion.fromObj = function(obj) {
 		dir.setSmp(obj.smp);
 	}
 	if (obj.coordenadas != undefined && obj.coordenadas != null) {
-		dir.setCoordenadas(usig.Punto.fromWkt(obj.coordenadas));
+		if (typeof(obj.coordenadas) == 'string') {
+			dir.setCoordenadas(usig.Punto.fromWkt(obj.coordenadas));
+		} else {
+			dir.setCoordenadas(usig.Punto.fromObj(obj.coordenadas));			
+		}
 	}
 	return dir;
 }

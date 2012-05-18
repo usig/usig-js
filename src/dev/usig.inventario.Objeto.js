@@ -41,18 +41,22 @@ usig.inventario.Objeto = function(data, clase) {
 		
 		if (data.ubicacion) {
 			this.ubicacion = new usig.inventario.Ubicacion(data.ubicacion);
+			this.rawData.ubicacion = data.ubicacion;
 		}
 		
 		if (data.fechaAlta) {
 			this.fechaAlta = new Date(data.fechaAlta);
+			this.rawData.fechaAlta = data.fechaAlta;
 		}
 		
 		if (data.fechaUltimaModificacion) {
 			this.fechaUltimaModificacion = new Date(data.fechaUltimaModificacion);
+			this.rawData.fechaUltimaModificacion = data.fechaUltimaModificacion;
 		}
 		
 		if (data.direccionAsociada) {
 			this.direccionAsociada = usig.Direccion.fromObj(data.direccionAsociada);
+			this.rawData.direccionAsociada = data.direccionAsociada;
 		}
 		
 		if (data.contenido) {
@@ -98,14 +102,20 @@ usig.inventario.Objeto = function(data, clase) {
 	 */
 	this.toJson = function() {
 		var obj = this.getRawData();
-		if (this.direccionAsociada) {
-			obj.direccionAsociada = this.direccionAsociada.toJson();
-		}
+		obj.clase = this.clase.toJson();
 		return obj;
+	}
+	
+	this.isEqual = function(obj) {
+		return obj instanceof usig.inventario.Objeto && obj.id == this.id;
 	}
 	
 	this.fill(data);
 	this.rawData = $.extend(this.rawData, data);
+}
+
+usig.inventario.Objeto.fromObj = function(obj) {
+	return new usig.inventario.Objeto(obj, usig.inventario.Clase.fromObj(obj.clase));
 }
 
 usig.inventario.Objeto.defaults = {

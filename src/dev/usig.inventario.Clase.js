@@ -46,4 +46,23 @@ usig.inventario.Clase = function(id, nombre, nombreId, nombreNormalizado) {
 	this.getNombreNormalizado = function() {
 		return nombreNormalizado;
 	}
+	
+	this.toJson = function() {
+		return {
+			id: id,
+			nombre: nombre,
+			nombreId: nombreId,
+			nombreNormalizado: nombreNormalizado
+		};
+	}
+}
+
+/**
+ * Crea una instancia de usig.inventario.Clase a partir de un objeto
+ * conteniendo los atributos requeridos.
+ * @param {Object} obj Objeto conteniendo los atributos de la clase
+ * @return {usig.inventario.Clase} Instancia de usig.inventario.Clase
+ */
+usig.inventario.Clase.fromObj = function(obj) {
+	return new usig.inventario.Clase(obj.id, obj.nombre, obj.nombreId, obj.nombreNormalizado);
 }

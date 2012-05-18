@@ -19,13 +19,14 @@ usig.Recorrido = function(data, options) {
 		tipo,
 		resumen,
 		plan,
+		datosJson,
 		precargado,
 		descripcion="Sin datos",
 		descripcionHtml="Sin datos",
 		detalle=[],
 		traveled_distance=0,
 		opts = $.extend({}, usig.Recorrido.defaults, options);
-
+	
 	getServiceIcon = function(type) {
 		var src = '';
 		if ( type == 0 ) src = 'recorrido_pie';
@@ -62,13 +63,14 @@ usig.Recorrido = function(data, options) {
 			descripcion=desc.join(', ');
 			
 		}else if (tipo=="walk"){
-
+			descripcion = opts.texts.descWalk;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartWalking') {
 					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20">';
 				}
 			});
 		}else if (tipo=="car"){
+			descripcion = opts.texts.descCar;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartDriving') {
 						descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20">';
@@ -266,7 +268,10 @@ usig.Recorrido = function(data, options) {
 			tipo=datos.type;
 			resumen=datos.summary;
 			traveled_distance=datos.traveled_distance;
+			datosJson=$.extend({}, datos);
+			datosJson.options = opts;
 			procesarResumen();
+			cargarPlan(datos);
 		} catch(e) {
 			usig.debug('usig.Recorrido: Error cargando datos.');
 		}
@@ -275,6 +280,9 @@ usig.Recorrido = function(data, options) {
 	function cargarPlan(data, callback) {
 		if (!plan) {
 			plan = data.plan;
+			console.log(data);
+			datosJson = $.extend({}, datosJson, data);
+			console.log(datosJson);
 			procesarPlan();
 		}
 
@@ -347,12 +355,9 @@ usig.Recorrido = function(data, options) {
 	 * @returns {Object} trip_plan obtenido del servidor o undefined en caso de que aun no se encuentre cargado
 	 */
 	this.getPlan = function(success, error, opciones) {
-		usig.debug("en getPlan");
 		if (!plan) {
-			usig.debug("No hay plan. cargar plan");
 			usig.Recorridos.cargarPlanRecorrido(id, cargarPlan.createDelegate(this, [success], 1), error, opciones);
 		} else {
-			usig.debug("Hay plan. ");
 			if (typeof(success) == "function")
 				success(plan);
 		}
@@ -368,17 +373,13 @@ usig.Recorrido = function(data, options) {
 	 * del recorrido
 	 */
 	this.getDetalle = function(success, error, opciones) {
-		usig.debug("en getDetalle");
 		if (!plan) {
 			if (data.plan) {
-				usig.debug("precargado. ");
 				cargarPlan(data, success);
 			}else{
-				usig.debug("No hay plan. cargar plan");
 				usig.Recorridos.cargarPlanRecorrido(id, cargarPlan.createDelegate(this, [success], 1), error, opciones);
 			}
 		} else {
-			usig.debug("Hay plan cargado. ");
 			if (typeof(success) == "function")
 				success(detalle);
 		}
@@ -414,9 +415,43 @@ usig.Recorrido = function(data, options) {
 	 */
 	this.setColor = function(color) {
 		opts.template.color = color;
+	};
+	
+	/**
+	 * Devuelve el origen del recorrido
+	 * @return {String} Origen del recorrido
+	 */
+	this.getOrigen = function() {
+		return origen;
+	};
+	
+	/**
+	 * Devuelve el destino del recorrido
+	 * @return {String} Destino del recorrido
+	 */
+	this.getDestino = function() {
+		return destino;
+	}
+	
+	/**
+	 * Devuelve una version JSON-serializable del objeto
+	 * @return {Object} Objeto conteniendo los datos necesarios para representar el recorrido
+	 */
+	this.toJson = function() {
+		return datosJson;
 	}
 	
 	if (data) loadData(data);
+};
+
+/**
+ * Permite obtener una instancia de usig.Recorrido a partir de un objeto con datos
+ * @param {Object} data Objeto conteniendo los datos necesarios para un recorrido. Por ej. obtenido
+ * mediante toJson()
+ * @return {usig.Recorrido} Instancia de usig.Recorrido construida a partir de los datos.
+ */
+usig.Recorrido.fromObj = function(data) {
+	return new usig.Recorrido(data, data.options);
 };
 
 usig.Recorrido.defaults = {
@@ -429,9 +464,11 @@ usig.Recorrido.defaults = {
 	},
 	template: new usig.TripTemplate(1,'#8F58C7'),
 	texts: {
+		descWalk: 'Recorrido a pie',
+		descCar: 'Recorrido en auto',
 		hayRamales:'No todos los ramales conducen a destino'		
 	}
-}
+};
 
 }
 

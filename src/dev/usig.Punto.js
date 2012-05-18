@@ -73,3 +73,12 @@ usig.Punto.fromWkt = function(wkt) {
 usig.Punto.fromPunto = function(pt) {
 	return new usig.Punto(pt.getX(), pt.getY());
 };
+
+/**
+ * Devuelve un nuevo punto creado a partir de otro
+ * @param {Object} pt Objeto conteniendo coordenadas x e y
+ * @return {usig.Punto} Punto creado
+ */
+usig.Punto.fromObj = function(pt) {
+	return new usig.Punto(pt.x, pt.y);
+}

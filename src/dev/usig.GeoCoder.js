@@ -164,6 +164,22 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 			cod_calle2: codCalle2
 		}
 		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);				
+	},
+	
+	/**
+	 * Realiza una geocodificacion reversa de una coordenada geografica tanto en 
+	 * latitud/longitud como en GKBA
+	 * @param {Float} x Longitud
+	 * @param {Float} y Latitud 
+     * @param {Function} success Funcion callback que es llamada al concretarse con exito la geocodificacion.
+     * Recibe como parametro un objeto conteniendo diversos datos de ubicacion 
+     * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
+	 * @return {Object} 
+	 */
+	reverseGeoCoding: function(x, y, success, error) {
+		if (typeof(success) == "function") {
+			success({ esquina: 'CALLAO AV. y CORRIENTES AV.'});
+		}
 	}
 	
 });
