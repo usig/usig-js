@@ -8,10 +8,10 @@ if (typeof(usig.Recorrido) == "undefined") {
  * @class Recorrido
  * @namespace usig 
  * @constructor 
- * @param {Object} data Objeto conteniendo los datos del recorrido obtenidos del servicio de Recorridos
+ * @param {Object} datos Objeto conteniendo los datos del recorrido obtenidos del servicio de Recorridos
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */
-usig.Recorrido = function(data, options) {
+usig.Recorrido = function(datos, options) {
 	var id=0,
 		tiempo=0,
 		origen,
@@ -19,7 +19,7 @@ usig.Recorrido = function(data, options) {
 		tipo,
 		resumen,
 		plan,
-		datosJson,
+		data,
 		precargado,
 		descripcion="Sin datos",
 		descripcionHtml="Sin datos",
@@ -66,14 +66,14 @@ usig.Recorrido = function(data, options) {
 			descripcion = opts.texts.descWalk;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartWalking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20">';
+					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
 				}
 			});
 		}else if (tipo=="car"){
 			descripcion = opts.texts.descCar;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartDriving') {
-						descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20">';
+						descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
 				}
 			});
 		}
@@ -228,21 +228,21 @@ usig.Recorrido = function(data, options) {
 				var item = plan[i];
 				if(item.type != undefined){
 
-					var iconito;
+					var turn_indication;
 					if(item.type == 'Street' ) { 
 						index++;
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
 							text = 'Ir desde ';
-							iconito = 'seguir';
+							turn_indication = 'seguir';
 						}else if (item.indicacion_giro=='0'){
 							text = 'Seguir por ';
-							iconito = 'seguir';
+							turn_indication = 'seguir';
 						}else if(item.indicacion_giro=='1'){
 							text = 'Doblar a la izquierda en ';
-							iconito = 'izquierda';
+							turn_indication = 'izquierda';
 						}else if(item.indicacion_giro=='2'){
 							text = 'Doblar a la derecha en ';
-							iconito = 'derecha';
+							turn_indication = 'derecha';
 						}
 							
 						text += item.name  + ' ' ;
@@ -250,7 +250,7 @@ usig.Recorrido = function(data, options) {
 							text += item.from;
 						if(item.to)
 							text += ' hasta el ' + item.to;
-							actions.push({text:text, iconito:iconito, index:index, distance:item.distance,type:'car', id:item.id});
+							actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'car', id:item.id});
 					}
 				}
 			}
@@ -268,21 +268,19 @@ usig.Recorrido = function(data, options) {
 			tipo=datos.type;
 			resumen=datos.summary;
 			traveled_distance=datos.traveled_distance;
-			datosJson=$.extend({}, datos);
-			datosJson.options = opts;
+			data=$.extend({}, datos);
+			data.options = opts;
 			procesarResumen();
 			cargarPlan(datos);
 		} catch(e) {
-			usig.debug('usig.Recorrido: Error cargando datos.');
+			usig.debug(e);
 		}
 	}
 	
-	function cargarPlan(data, callback) {
-		if (!plan) {
-			plan = data.plan;
-			console.log(data);
-			datosJson = $.extend({}, datosJson, data);
-			console.log(datosJson);
+	function cargarPlan(datos, callback) {
+		if (!plan && datos.plan) {
+			plan = datos.plan;
+			data = $.extend({}, data, datos);
 			procesarPlan();
 		}
 
@@ -418,18 +416,18 @@ usig.Recorrido = function(data, options) {
 	};
 	
 	/**
-	 * Devuelve el origen del recorrido
+	 * Devuelve la coordenada origen del recorrido
 	 * @return {String} Origen del recorrido
 	 */
-	this.getOrigen = function() {
+	this.getCoordenadaOrigen = function() {
 		return origen;
 	};
 	
 	/**
-	 * Devuelve el destino del recorrido
+	 * Devuelve la coordenada destino del recorrido
 	 * @return {String} Destino del recorrido
 	 */
-	this.getDestino = function() {
+	this.getCoordenadaDestino = function() {
 		return destino;
 	}
 	
@@ -438,10 +436,20 @@ usig.Recorrido = function(data, options) {
 	 * @return {Object} Objeto conteniendo los datos necesarios para representar el recorrido
 	 */
 	this.toJson = function() {
-		return datosJson;
+		return data;
 	}
 	
-	if (data) loadData(data);
+	/**
+	 * Permite comparar este recorrido con otro para determinar si son el mismo
+	 * @param {usig.Recorrido} r Recorrido a comparar
+	 * @return {Boolean} Verdadero si el recorrido especificado es igual a este
+	 */
+	this.isEqual = function(r) {
+		return tipo == r.getTipo() && descripcion == r.toString() &&
+				origen == r.getCoordenadaOrigen() && destino == r.getCoordenadaDestino();
+	}
+	
+	if (datos) loadData(datos);
 };
 
 /**

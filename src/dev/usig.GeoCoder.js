@@ -94,7 +94,7 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 		if (metodo != undefined) {
 			data.metodo = metodo;
 		}
-		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error, this.opts.server+'geocoding/');
 	},
 	
 	/**
@@ -123,7 +123,7 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 		if (metodo != undefined) {
 			data.metodo = metodo;
 		}
-		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);		
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error, this.opts.server+'geocoding/');		
 	},
 	
 	/**
@@ -139,7 +139,7 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 			cod_calle1: calle1,
 			cod_calle2: calle2
 		}
-		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);		
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error, this.opts.server+'geocoding/');		
 	},
 	
 	/**
@@ -163,7 +163,7 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 			cod_calle1: codCalle1,
 			cod_calle2: codCalle2
 		}
-		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error);				
+		this.mkRequest(data, this.onSuccess.createDelegate(this, [success], 1), error, this.opts.server+'geocoding/');				
 	},
 	
 	/**
@@ -177,16 +177,18 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 	 * @return {Object} 
 	 */
 	reverseGeoCoding: function(x, y, success, error) {
-		if (typeof(success) == "function") {
-			success({ esquina: 'CALLAO AV. y CORRIENTES AV.'});
-		}
+		var data = {
+				x: x,
+				y: y
+		};
+		this.mkRequest(data, success, error, this.opts.server+'reversegeocoding/')
 	}
 	
 });
 
 usig.GeoCoder.defaults = {
 	debug: false,
-	//server: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder',
-	server: 'http://ws.usig.buenosaires.gob.ar/geocoder/2.2/geocoding/',
+	// server: 'http://10.75.0.59/wk/GeoCoderServer/src/www/server.php/',
+	server: 'http://ws.usig.buenosaires.gob.ar/geocoder/2.2/',
 	metodo: undefined
 }
