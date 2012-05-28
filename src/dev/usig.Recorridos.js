@@ -17,7 +17,7 @@ usig.defaults.Recorridos = {
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
-	//server: 'http://buho-dev.usig.gcba.gov.ar:8085/',
+	// server: 'http://pulpo-dev:8085/',
 	//serverTimeout: 5000,
 	serverTimeout: 8000,
 	maxRetries: 5,
@@ -137,6 +137,7 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	
 	onBuscarRecorridosSuccess: function(data, callback) {
 		var recorridos = [], templates = this.opts.colorTemplates;
+		if (this.opts.debug) usig.debug('usig.Recorridos onBuscarRecorridosSuccess');
 		$.each(data.planning, function(i, plan) {			
 			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: templates[i] }));
 			//recorrido.loadPlan

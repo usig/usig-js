@@ -109,6 +109,8 @@ usig.AjaxComponent = jQuery.Class.create({
        	
        	var ajaxReq = (ajaxParams.dataType == 'jsonp')?$.jsonp(ajaxParams):$.ajax(ajaxParams);
        	
+       	if (this.opts.debug) usig.debug(ajaxParams.dataType+' request...');
+       	
        	if (typeof(this.opts.afterServerRequest) == "function") {
 	       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterServerRequest');
        		this.opts.afterServerRequest();

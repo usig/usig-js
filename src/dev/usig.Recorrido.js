@@ -280,7 +280,8 @@ usig.Recorrido = function(datos, options) {
 	function cargarPlan(datos, callback) {
 		if (!plan && datos.plan) {
 			plan = datos.plan;
-			data = $.extend({}, data, datos);
+			data.plan = datos.plan;
+			// data = $.extend({}, data, datos);
 			procesarPlan();
 		}
 
