@@ -13,7 +13,8 @@
 	// con los datos reales que se vayan a querer mostrar
 	datos_sensores = {1308: {decibeles: 22 } };
 	
-	$(document).ready(function() {
+	$.noConflict();
+	jQuery(document).ready(function($) {
 		
 		$('#mapa').css('width', 600).css('height', 450);
           

@@ -15,7 +15,7 @@ if (typeof (usig) == "undefined")
  * Inherits from:
  *  - <OpenLayers.Layer.Vector>
  */
-usig.GMLPlan = (function() {
+usig.GMLPlan = (function($) {
 	var gmlPlanClass;
 	return {
 	  create: function(name, options) {
@@ -206,4 +206,4 @@ usig.GMLPlan = (function() {
 		return new gmlPlanClass(name, options);
 	}
   };
-})();
+})(jQuery);

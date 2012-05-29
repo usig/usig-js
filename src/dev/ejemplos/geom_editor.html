@@ -11,7 +11,8 @@
 
     
 	<script type="text/javascript">
-	$(document).ready(function() {
+	$.noConflict();
+	jQuery(document).ready(function($) {
 		
 		var ac = new usig.AutoCompleter('b', {
        		onReady: function() {
@@ -55,7 +56,7 @@
 					document.getElementById('output').value = '';
 				});
 			},
-			OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-5/full/OpenLayers.js'
+			OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/full/OpenLayers.js'
 		});
 
 		

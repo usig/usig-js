@@ -164,7 +164,7 @@ debug:$(FILES)
 	cat $(RECORRIDOS_FULL_FILES) > $(SRC)/usig.RecorridosFull-debug.js
 	cat $(STOREDCOLLECTION_FILES) > $(SRC)/usig.StoredCollection-debug.js
 	sed -e '/usig\.debug(/ d' < $(SRC)/usig.MapaInteractivo-debug.js > $(SRC)/usig.MapaInteractivo-nodebug.js
-	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.2/normalizadorDirecciones.min.js
+	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js
 	
 clean:
 	rm -f $(SRC)/*-debug.js
