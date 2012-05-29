@@ -18,7 +18,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.SuggesterLugares = usig.Suggester.extend({
+usig.SuggesterLugares = (function($) { // Soporte jQuery noConflict
+return usig.Suggester.extend({
 	
 	init: function(options){
 		if(options!=undefined){
@@ -97,6 +98,8 @@ usig.SuggesterLugares = usig.Suggester.extend({
 		this.opts.inventario.setOptions(options);
 	}
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.SuggesterLugares.defaults = {
 	serverTimeout: 15000,

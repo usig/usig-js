@@ -6,7 +6,7 @@ if (typeof (usig) == "undefined")
  * @class IndiceCatastral
  * Esta clase implementa una interfaz Javascript con el servicio del Indice Catastral de USIG<br/>
  * Requiere: jQuery-1.3.2+, jquery.class, json, jquery.jsonp-1.1.0.1+, usig.core, usig.AjaxComponent, usig.SeccionCatastral, usig.ManzanaCatastral, usig.ParcelaCatastral<br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/IndiceCatastral.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/IndiceCatastral.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/IndiceCatastral.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/IndiceCatastral.html</a>
  * @namespace usig
  * @cfg {String} server Url del servicio del Indice Catastral de USIG. Por defecto: 'http://inventario.usig.buenosaires.gob.ar/catastro/'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
@@ -23,7 +23,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.IndiceCatastral = usig.AjaxComponent.extend({
+usig.IndiceCatastral = (function($) { // Soporte jQuery noConflict
+return usig.AjaxComponent.extend({
 	
 	init: function(options) {
 		var opts = $.extend({}, usig.IndiceCatastral.defaults, options);		
@@ -121,6 +122,8 @@ usig.IndiceCatastral = usig.AjaxComponent.extend({
 		}
 	}
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.IndiceCatastral.WrongParameters = function() {
 	this.msg = 'Los parametros ingresados son incorrectos.';

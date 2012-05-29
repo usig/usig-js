@@ -6,7 +6,7 @@ if (typeof (usig) == "undefined")
  * @class usig
  * This class defines common public methods for USIG applications
  */
-$.extendIf(usig, {
+jQuery.extendIf(usig, {
 	loadingJs: [],
 	loadingJsListeners: {},
 	__callLoadJsListeners: function(filename) {

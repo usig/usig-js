@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * // El usig.AutoCompleterFull.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.2/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.AutoCompleter('inputField', {
  *              afterSelection: function(option) {
@@ -20,9 +20,9 @@ if (typeof (usig) == "undefined")
  *          });
  * 
  * </code></pre> 
- * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/demos/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/demo/autoCompleter.html</a><br/>
- * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/doc/</a><br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/autoCompleter.html</a>
+ * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/demos/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/demo/autoCompleter.html</a><br/>
+ * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/doc/</a><br/>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/autoCompleter.html</a>
  * @namespace usig
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a buscar. Por defecto: 10
@@ -56,7 +56,8 @@ if (typeof (usig) == "undefined")
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
  * @param {Object} viewCtrl (optional) Controlador de la vista para mostrar las sugerencias del autocompleter
 */	
-usig.AutoCompleter = function(idField, options, viewCtrl) {
+usig.AutoCompleter = (function($) { // Soporte jQuery noConflict
+return function(idField, options, viewCtrl) {
 	var field = document.getElementById(idField), 
 		view = viewCtrl,
 		suggesters = [],
@@ -494,7 +495,9 @@ usig.AutoCompleter = function(idField, options, viewCtrl) {
 		cleanList.push(view);
 	}
 	view.onSelection(selectionHandler.createDelegate(this));
-}
+};
+// Fin jQuery noConflict support
+})(jQuery);
 
 usig.AutoCompleter.defaults = {
     // Opciones para los suggesters
@@ -511,7 +514,7 @@ usig.AutoCompleter.defaults = {
 	autoHideTimeout: 10000,
 	hideOnBlur: true,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/',
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/',
 	skin: 'usig4',
 	idOptionsDiv: undefined,
 	// Opciones generales

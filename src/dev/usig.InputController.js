@@ -5,7 +5,7 @@ if (typeof (usig) == "undefined")
 /**
  * @class InputController
  * Esta clase implementa un controlador de inputs de texto que simplifica el manejo dinamico de los cambios sobre el control.<br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/inputController.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/inputController.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/inputController.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/inputController.html</a>
  * @namespace usig
  * @cfg {Function} onKeyUp Funcion callback que se dispara al presionar cualquier tecla sobre el control. Recibe dos parametros: keyCode y newValue.
  * @cfg {Function} onChange Funcion callback que se dispara cuando el valor de texto del control se modifica. Recibe como parametro el nuevo valor.
@@ -15,7 +15,8 @@ if (typeof (usig) == "undefined")
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.InputController = function(idField, options) {
+usig.InputController = (function($) { // Soporte jQuery noConflict
+return function(idField, options) {
 	var field = document.getElementById(idField);
 	var previousValue = '';
 
@@ -92,7 +93,9 @@ usig.InputController = function(idField, options) {
 	} else {
 		this.bind();
 	}
-}
+};
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.InputController.defaults = {
 	events: 'blur keyup input focus'

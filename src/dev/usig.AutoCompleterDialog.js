@@ -7,7 +7,7 @@ if (typeof (usig) == "undefined")
  * Esta clase implementa un cuadro de dialogo flotante que permite seleccionar las opciones
  * provistas por el autocompleter de lugares y direcciones para inputs de texto.<br/>
  * Requiere: jQuery-1.3.2+, usig.core 1.0+<br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/autoCompleterDialog.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/autoCompleterDialog.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/autoCompleterDialog.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/autoCompleterDialog.html</a>
  * @namespace usig
  * @cfg {Integer} maxOptions Maximo numero de sugerencias a mostrar por vez. Por defecto: 10.
  * @cfg {Integer} offsetY Desplazamiento vertical (en pixels) del control respecto del campo de entrada de texto. Por defecto: -5.
@@ -23,7 +23,8 @@ if (typeof (usig) == "undefined")
  * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles
 */	
-usig.AutoCompleterDialog = function(idField, options) {
+usig.AutoCompleterDialog = (function($) { // Soporte jQuery noConflict
+return function(idField, options) {
 	var field = document.getElementById(idField),
 		fieldValue = field.value,
 		opts = $.extend({}, usig.AutoCompleterDialog.defaults, options),
@@ -410,7 +411,9 @@ usig.AutoCompleterDialog = function(idField, options) {
 		$div = $('#'+opts.idDiv);
 		$div.addClass('usig_acv');
 	}
-}
+};
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.AutoCompleterDialog.defaults = {
 	maxOptions: 10,
@@ -419,6 +422,6 @@ usig.AutoCompleterDialog.defaults = {
 	zIndex: 10000,
 	autoHideTimeout: 5000,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/',
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/',
 	skin: 'usig4'
 }

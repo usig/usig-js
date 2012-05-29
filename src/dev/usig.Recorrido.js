@@ -11,7 +11,8 @@ if (typeof(usig.Recorrido) == "undefined") {
  * @param {Object} datos Objeto conteniendo los datos del recorrido obtenidos del servicio de Recorridos
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */
-usig.Recorrido = function(datos, options) {
+usig.Recorrido = (function($) { // Soporte jQuery noConflict
+return function(datos, options) {
 	var id=0,
 		tiempo=0,
 		origen,
@@ -452,6 +453,8 @@ usig.Recorrido = function(datos, options) {
 	
 	if (datos) loadData(datos);
 };
+//Fin jQuery noConflict support
+})(jQuery);
 
 /**
  * Permite obtener una instancia de usig.Recorrido a partir de un objeto con datos

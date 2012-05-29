@@ -17,8 +17,8 @@ if (typeof (usig.debug) == "undefined") {
  * <pre><code>
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.2/usig.core.min.js" type="text/javascript"&gt;&lt;/script&gt;
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.2/usig.FotosParcela.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.core.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.FotosParcela.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var fotosParcela = new usig.FotosParcela(parcela.smp, {maxHeight : 195, maxWidth : 243, onLoad: function() { ... } });
  * fotosParcela.cargarFoto($('div.foto'));
@@ -33,7 +33,8 @@ if (typeof (usig.debug) == "undefined") {
  * @param {String} smp Codigo de seccion-manzana-parcela de la parcela cuyas fotos se desean consultar
  * @param {Object} opts (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.FotosParcela = function(smp, opts) {
+usig.FotosParcela = (function($) { // Soporte jQuery noConflict
+return function(smp, opts) {
 	var regExpSMP = /[0-9][0-9]-[0-9]{3,3}[A-Z]?-[A-Z0-9]{3,4}/;
 	if (typeof(smp) == "undefined" || !regExpSMP.test(smp)) {
 		usig.debug('usig.FotosParcela. SMP incorrecto: '+smp);
@@ -342,7 +343,9 @@ usig.FotosParcela = function(smp, opts) {
 		}
 		return idFoto;
 	}
-}
+};
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.FotosParcela.defaults = {
 	server: 'http://fotos.usig.buenosaires.gob.ar/',

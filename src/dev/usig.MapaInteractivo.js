@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * // El usig.MapaInteractivo.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.2/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.MapaInteractivo('id-div-mapa', {
  *              onReady: function() {
@@ -20,10 +20,10 @@ if (typeof (usig) == "undefined")
  *          });
  * 
  * </code></pre> 
- * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/demo/mapaInteractivo.html</a><br/>
- * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos/</a><br/>
- * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/ejemplos.rar</a><br/>
- * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/doc/</a><br/>
+ * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/demo/mapaInteractivo.html</a><br/>
+ * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/ejemplos/</a><br/>
+ * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/ejemplos.rar</a><br/>
+ * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/doc/</a><br/>
  * @namespace usig
  * @cfg {Boolean} includeToolbar Incluir el toolbar en el mapa (por default es True)  
  * @cfg {Boolean} includePanZoomBar Incluir el pan-zoom-bar en el mapa (por default es True)  
@@ -33,7 +33,8 @@ if (typeof (usig) == "undefined")
   * @param {String} idDiv Identificador del div en el que construir el mapa
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.MapaInteractivo = function(idDiv, options) {
+usig.MapaInteractivo = (function($) { // Soporte jQuery noConflict
+return function(idDiv, options) {
 	var opts = $.extend({}, usig.MapaInteractivo.defaults, options),
 		$div = $('#'+idDiv),
 		mapWidth = parseInt($div.css('width')),
@@ -704,6 +705,8 @@ usig.MapaInteractivo = function(idDiv, options) {
 	}
 	
 };
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.MapaInteractivo.defaults = {
 	debug: false,
@@ -720,11 +723,11 @@ usig.MapaInteractivo.defaults = {
 	},
 	
 	baseLayer:'mapabsas_default',
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/',	
 	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/theme/default/style.css',
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/OpenLayers.js',
-	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.2/normalizadorDirecciones.min.js',
-	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.2/usig.GeoCoder.min.js',
+	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
+	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
 	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],

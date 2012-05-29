@@ -13,7 +13,7 @@
  * @param {Object} config The source of the properties
  * @return {Object} returns obj
  */
-$.extendIf = function(o, c){
+jQuery.extendIf = function(o, c){
     if(o && c){
         for(var p in c){
             if(typeof o[p] == "undefined"){ o[p] = c[p]; }
@@ -26,7 +26,7 @@ if (typeof(Ext) == "undefined") {
 /**
  * @class Function 
 */
-$.extend(Function.prototype, {
+jQuery.extend(Function.prototype, {
      /**
      * Creates a callback that passes arguments[0], arguments[1], arguments[2], ...
      * Call directly on any function. Example: <code>myFunction.createCallback(arg1, arg2)</code>
@@ -220,7 +220,7 @@ sayHiToFriend('Brian'); // alerts "Hi, Brian"
  * @class String
  * These functions are available as static methods on the JavaScript String object.
  */
-$.extendIf(String, {
+jQuery.extendIf(String, {
 
     /**
      * Escapes the passed string for ' and \
@@ -378,7 +378,7 @@ String.prototype.removeWords = function(words)
 /**
  * @class Number
  */
-$.extendIf(Number.prototype, {
+jQuery.extendIf(Number.prototype, {
     /**
      * Checks whether or not the current number is within a desired range.  If the number is already within the
      * range it is returned, otherwise the min or max value is returned depending on which side of the range is
@@ -410,7 +410,7 @@ $.extendIf(Number.prototype, {
 /**
  * @class Array
  */
-$.extendIf(Array.prototype, {
+jQuery.extendIf(Array.prototype, {
     /**
      * Checks whether or not the specified object exists in the array.
      * @param {Object} o The object to check for

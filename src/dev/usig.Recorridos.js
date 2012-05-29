@@ -77,7 +77,8 @@ usig.defaults.Recorridos = {
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
  * @singleton
 */	
-usig.Recorridos = new (usig.AjaxComponent.extend({
+usig.Recorridos = (function($) { // Soporte jQuery noConflict
+return new (usig.AjaxComponent.extend({
 	
 	lastRequest: null,
 	
@@ -250,3 +251,5 @@ usig.Recorridos = new (usig.AjaxComponent.extend({
 	}
 	
 }));
+//Fin jQuery noConflict support
+})(jQuery);

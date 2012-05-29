@@ -7,7 +7,7 @@ if (typeof (usig) == "undefined")
  * Esta clase implementa una interfaz Javascript con el servicio de GeoCoding de USIG<br/>
  * Requiere: jQuery-1.3.2+, jquery.class, json, jquery.jsonp-1.1.0.1+, usig.core, usig.Punto, 
  * usig.Calle, usig.Direccion, usig.AjaxComponent<br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/geoCoder.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.2/tests/geoCoder.html</a>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/geoCoder.html">http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/tests/geoCoder.html</a>
  * @namespace usig
  * @cfg {String} server Url del servicio de GeoCoding de USIG. Por defecto: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
@@ -24,7 +24,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.GeoCoder = usig.AjaxComponent.extend({
+usig.GeoCoder = (function($) { // Soporte jQuery noConflict
+return usig.AjaxComponent.extend({
 	
 	metodos: ['interpolacion', 'puertas', 'centroide'],
 	
@@ -185,6 +186,8 @@ usig.GeoCoder = usig.AjaxComponent.extend({
 	}
 	
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.GeoCoder.defaults = {
 	debug: false,

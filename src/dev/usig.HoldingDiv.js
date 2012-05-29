@@ -12,7 +12,8 @@ if (typeof (usig) == "undefined")
  * @param {String} content Contenido html
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles
 */	
-usig.HoldingDiv = function(idField, content, options) {
+usig.HoldingDiv = (function($) { // Soporte jQuery noConflict
+return function(idField, content, options) {
 	var field = document.getElementById(idField);
 	var opts = $.extend({}, usig.HoldingDiv.defaults, options),
 		
@@ -90,7 +91,10 @@ usig.HoldingDiv = function(idField, content, options) {
 		}
 	};
 
-}
+};
+//Fin jQuery noConflict support
+})(jQuery);
+
 usig.HoldingDiv.defaults = {
 	zIndex: 10000,
 	offsetY: -5,

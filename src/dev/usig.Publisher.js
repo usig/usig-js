@@ -16,7 +16,8 @@ if (typeof(usig.Event) == "undefined") {
  * Requiere: jQuery-1.3.2+, jquery.class<br/>
  * @namespace usig
 */	
-usig.Publisher = jQuery.Class.create({
+usig.Publisher = (function($) { // Soporte jQuery noConflict
+return jQuery.Class.create({
 	
 	init: function(){
 		this.eventListeners = new Array();
@@ -50,4 +51,6 @@ usig.Publisher = jQuery.Class.create({
 		list.push(listener);
 	}
 });
+//Fin jQuery noConflict support
+})(jQuery);
 

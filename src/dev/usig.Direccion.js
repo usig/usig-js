@@ -10,7 +10,8 @@ if (typeof(usig.Direccion) == "undefined") {
  * @param {usig.Calle} calle1 Instancia de la clase usig.Calle
  * @param {usig.Calle-Integer} calle2OAltura Instancia de usig.Calle que se cruza con calle1 o altura correspondiente de calle1
 */
-usig.Direccion = function(calle1, calle2OAltura) {
+usig.Direccion = (function($) { // Soporte jQuery noConflict
+return function(calle1, calle2OAltura) {
 	var calle = null;
 	var calleCruce = null;
 	var altura = 0;
@@ -166,7 +167,9 @@ usig.Direccion = function(calle1, calle2OAltura) {
 		return equal;
 	};
 	
-}
+};
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.Direccion.CALLE_ALTURA 	= 0;
 usig.Direccion.CALLE_Y_CALLE 	= 1;

@@ -10,7 +10,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {String} storeId Nombre con el que se identificara la coleccion de objetos almacenada 
 */	
-usig.StoredCollection = usig.Publisher.extend({
+usig.StoredCollection = (function($) { // Soporte jQuery noConflict
+return usig.Publisher.extend({
 	
 	init: function(storeId){
 		this.storeId = storeId;
@@ -148,3 +149,5 @@ usig.StoredCollection = usig.Publisher.extend({
 	}
 	
 });
+//Fin jQuery noConflict support
+})(jQuery);

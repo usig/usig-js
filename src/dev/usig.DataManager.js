@@ -20,7 +20,8 @@ usig.DataManagerDefaults = {
 	}
 };
 
-usig.DataManager = new function() {
+usig.DataManager = (function($) { // Soporte jQuery noConflict
+return new function() {
 	var store = {};
 	var registeredClasses = {};
 	var opts = usig.DataManagerDefaults;
@@ -124,3 +125,5 @@ usig.DataManager = new function() {
 	};
 };
 
+//Fin jQuery noConflict support
+})(jQuery);

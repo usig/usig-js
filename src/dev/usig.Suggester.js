@@ -21,7 +21,8 @@ if (typeof (usig) == "undefined")
  * @param {String} name Un nombre que indique el tipo de sugerencias que hace este suggester 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.Suggester = jQuery.Class.create({
+usig.Suggester = (function($) { // Soporte jQuery noConflict
+return jQuery.Class.create({
 	
 	init: function(name, options){
     	this.name = name;
@@ -91,6 +92,8 @@ usig.Suggester = jQuery.Class.create({
 	}
 	
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.Suggester.defaults = {
 	debug: false,

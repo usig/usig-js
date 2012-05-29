@@ -18,7 +18,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.SuggesterCatastro = usig.Suggester.extend({
+usig.SuggesterCatastro = (function($) { // Soporte jQuery noConflict
+return usig.Suggester.extend({
 	
 	init: function(options){
 		var opts = $.extend({}, usig.SuggesterCatastro.defaults, options);
@@ -87,6 +88,8 @@ usig.SuggesterCatastro = usig.Suggester.extend({
 		this.opts.indiceCatastral.setOptions(options);
 	}
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.SuggesterCatastro.defaults = {
 	debug: false,

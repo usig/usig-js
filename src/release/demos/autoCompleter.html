@@ -17,7 +17,8 @@
 	<script src="../usig.SuggesterCatastro.min.js" type="text/javascript"></script>
 	<script src="../usig.MapaEstatico.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	$(document).ready(function() {
+	$.noConflict();
+	jQuery(document).ready(function($) {
 		
 		function afterGeoCoding(pt) {
 			if (pt instanceof usig.Punto){

@@ -21,7 +21,8 @@ if (typeof (usig) == "undefined")
  * el request. 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.AjaxComponent = jQuery.Class.create({
+usig.AjaxComponent = (function($) {
+return jQuery.Class.create({
 	
 	init: function(name, serverUrl, options){
     	this.name = name;
@@ -140,6 +141,8 @@ usig.AjaxComponent = jQuery.Class.create({
 	}
 	
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.AjaxComponent.defaults = {
 	debug: false,

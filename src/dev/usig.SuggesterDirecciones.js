@@ -19,7 +19,8 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.SuggesterDirecciones = usig.Suggester.extend({
+usig.SuggesterDirecciones = (function($) { // Soporte jQuery noConflict
+return usig.Suggester.extend({
 	
 	init: function(options){
 		this._super('Direcciones', options);
@@ -86,6 +87,8 @@ usig.SuggesterDirecciones = usig.Suggester.extend({
 		this.opts.geoCoder.setOptions(opts);
 	}
 });
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.SuggesterDirecciones.defaults = {
 	debug: false,

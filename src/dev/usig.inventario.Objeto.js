@@ -14,7 +14,8 @@ if (typeof (usig.inventario) == "undefined")
  * @param {Object} data Un objeto conteniendo los datos del objeto 
  * @param {usig.inventario.Clase} clase La clase a la que pertenece el objeto 
 */	
-usig.inventario.Objeto = function(data, clase) {
+usig.inventario.Objeto = (function($) { // Soporte jQuery noConflict
+return function(data, clase) {
 	this.id = 0;
 	this.nombre = usig.inventario.Objeto.defaults.texts.noName;
 	this.ubicacion = null;
@@ -112,7 +113,9 @@ usig.inventario.Objeto = function(data, clase) {
 	
 	this.fill(data);
 	this.rawData = $.extend(this.rawData, data);
-}
+};
+//Fin jQuery noConflict support
+})(jQuery);
 
 usig.inventario.Objeto.fromObj = function(obj) {
 	return new usig.inventario.Objeto(obj, usig.inventario.Clase.fromObj(obj.clase));
