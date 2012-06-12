@@ -17,10 +17,9 @@ usig.defaults.Recorridos = {
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
-	// server: 'http://pulpo-dev:8085/',
-	//serverTimeout: 5000,
-	serverTimeout: 8000,
-	maxRetries: 5,
+	// server: 'http://10.75.0.60:8085/',
+	serverTimeout: 30000,
+	maxRetries: 2,
 	serverOptions: {
 		tipo: 'transporte',
 		gml: true,

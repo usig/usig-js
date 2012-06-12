@@ -102,8 +102,8 @@ return usig.Suggester.extend({
 })(jQuery);
 
 usig.SuggesterLugares.defaults = {
-	serverTimeout: 15000,
-	maxRetries: 5,
+	serverTimeout: 30000,
+	maxRetries: 1,
 	maxSuggestions: 10,
 	searchOptions: {
 		start: 0,

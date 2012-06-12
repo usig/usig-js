@@ -328,11 +328,19 @@ return function(datos, options) {
 		return tiempo;
 	};
 	
+	/**
+	 * Devuelve la distancia total del recorrido.
+	 * @return {Float} Distancia total del recorrido en metros.
+	 */
 	this.getTraveledDistance = function() {
 		return traveled_distance;
 	};
 	
-	this.time_string = function() {
+	/**
+	 * Devuelve el tiempo total del recorrido formateado como cadena
+	 * @return {String} Tiempo total del recorrido formateado
+	 */
+	this.getTimeString = function() {
 		time = '';
 		//Mas de 60 mins
 		if(tiempo > 60) {
