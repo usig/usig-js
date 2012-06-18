@@ -18,9 +18,10 @@ usig.defaults.Recorridos = {
 	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
 	// server: 'http://10.75.0.60:8085/',
+	// server: 'http://10.20.1.41/2.0/',
 	serverTimeout: 30000,
 	maxRetries: 2,
-	serverOptions: {
+	consultaRecorridos: {
 		tipo: 'transporte',
 		gml: true,
 		precargar:3,
@@ -59,7 +60,7 @@ usig.defaults.Recorridos = {
  * @cfg {Function} afterRetry Callback que es llamada cada vez que se reintenta un pedido al servidor.
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
- * @cfg {String} tipo_recorrido Indica el tipo de recorrido a buscar. Las opciones posibles son: 'transporte' (default), 
+ * @cfg {String} tipo Indica el tipo de recorrido a buscar. Las opciones posibles son: 'transporte' (default), 
  * 'auto' o 'pie'
  * @cfg {Integer} opciones_caminata Indica la cantidad de metros que se esta dispuesto a caminar para tomar un transporte
  * publico
@@ -72,6 +73,10 @@ usig.defaults.Recorridos = {
  * @cfg {Boolean} opciones_prioridad Indica la prioridad al buscar recorridos en auto. Las opciones posibles son: 'avenidas' (default)
  * y 'corto' (prioriza la distancia mas corta)
  * @cfg {Boolean} opciones_incluir_autopistas Indica si se debe considerar las autopistas al buscar recorridos en auto (por defecto es True)
+ * @cfg {Boolean} gml Indica si se desea obtener el GML asociado al consultar el detalle de un recorrido (por defecto es True). 
+ * Debe tenerse presente que de no cargar el GML el recorrido no podra visualizarse en un mapa.
+ * @cfg {Integer} precargar Indica cuantos planes se desea precargar al consultar recorridos para evitar tener que realizar otra
+ * consulta al servidor para obtener el detalle de un recorrido (por defecto 3)
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
  * @singleton
@@ -81,8 +86,14 @@ return new (usig.AjaxComponent.extend({
 	
 	lastRequest: null,
 	
+	/**
+	 * Permite inicializar la clase pasandole overrides para las opciones por defecto
+	 * @param {Object} options (optional) Objeto conteniendo overrides para las opciones por defecto
+	 * @return {Object} Devuelve una referencia a la clase
+	 */
 	init: function(options) {
-		var opts = $.extend({}, usig.defaults.Recorridos, options);		
+		var opts = $.extend({}, usig.defaults.Recorridos, options);
+		opts.consultaRecorridos = $.extend({}, usig.defaults.Recorridos.consultaRecorridos, options);
 		this._super('Recorridos', usig.defaults.Recorridos.server, opts);	
 		var trackVisits = function(idSite) {
 			try {
@@ -98,6 +109,7 @@ return new (usig.AjaxComponent.extend({
 				trackVisits(opts.piwikSiteId);
 			}			
 		}
+		return this;
 	},
 	
 	getUbicacion: function(place) {
@@ -201,10 +213,10 @@ return new (usig.AjaxComponent.extend({
 	 * @param {Function} success Funcion callback que es llamada cuando se obtiene una respuesta exitosa del servidor. 
 	 * Recibe como parametro un Array(usig.Recorrido) con las opciones encontradas.
 	 * @param {Function} error Funcion callback que es llamada en caso de error
-	 * 
+	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 	 */
 	buscarRecorridos: function(origen, destino, success, error, options) {
-		var data = $.extend({}, this.opts.serverOptions, options);
+		var data = $.extend({}, this.opts.consultaRecorridos, options);
 		var ubicacionOrigen = this.getUbicacion(origen);
 		if (ubicacionOrigen.coordenadas){
 			
@@ -229,7 +241,7 @@ return new (usig.AjaxComponent.extend({
 	
 	cargarPlanRecorrido: function(id, success, error, options) {
 		//this.lastRequest = this.mkRequest({trip_id: id}, success, error, this.opts.server + 'load_plan');
-		var data = $.extend({}, this.opts.serverOptions, options);
+		var data = $.extend({}, this.opts.consultaRecorridos, options);
 		data.trip_id = id;
 		data.tipo = 'loadplan';
 
@@ -247,6 +259,25 @@ return new (usig.AjaxComponent.extend({
 		var ubicacion = this.getUbicacion(lugar);
 		var data = { x: ubicacion.coordenadas.x, y: ubicacion.coordenadas.y };
 		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'info_transporte/');		
+	},
+	
+	/**
+	 * Permite consultar las ciclovias cercanas a una ubicacion dada.
+	 * @param {usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto} lugar Lugar a consultar
+	 * @param {Function} success Funcion callback que es llamada con el resultado obtenido del servidor
+	 * @param {Function} error Funcion callback que es llamada en caso de error
+	 * @param {Object} options (optional) Un objeto conteniendo opciones. Las opciones disponibles son:
+	 * <b>radio</b> en metros (por defecto sin limite) y <b>cantidad</b> de resultados a obtener
+	 * (por defecto 5) 
+	 */
+	cicloviasCercanas: function(lugar, success, error, options) {
+		var ubicacion = this.getUbicacion(lugar);
+		var data = { lon: ubicacion.coordenadas.x, lat: ubicacion.coordenadas.y };
+		if (options) {
+			if (options.radio) data.radio = options.radio;
+			if (options.cantidad) data.cantidad = options.cantidad;
+		}
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'ciclovias_cercanas/');		
 	}
 	
 }));
