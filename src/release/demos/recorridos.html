@@ -42,6 +42,8 @@
 	$.noConflict();
 	jQuery(document).ready(function($) {
 		var origen, destino, recorridos;
+		
+		usig.Recorridos.init();
 
 		var ac = new usig.AutoCompleter('o', {
        		onReady: function() {
@@ -120,6 +122,25 @@
 			}
 		});
 		
+		$('#ciclovias_cercanas_origen').click(function(ev) {
+			ev.preventDefault();
+			if (origen) {
+				usig.Recorridos.cicloviasCercanas(origen, function(data) {
+					var html = '<table><thead><tr><th>Distancia&nbsp;(m)</th><th>Nombre</th><th>Tipo</th><th>Dirección</th></thead><tbody>'
+					for (var i=0,l=data.ciclovias.length;i<l;i++) {
+						html+='<tr><td align="center">'+data.ciclovias[i].distancia.toFixed(2)+'</td><td>'+data.ciclovias[i].nombre+'</td><td>'+data.ciclovias[i].tipo+'</td><td>'+data.ciclovias[i].direccion.calle+' '+(data.ciclovias[i].direccion.altura?data.ciclovias[i].direccion.altura:'S/N')+'</td></tr>';
+					}
+					html += '</tbody></table>';
+					$('#recorridos').html(html);
+				}, function() {
+					$('#recorridos').html('Se produjo un error el buscar ciclovias cercanas.');
+				});
+				$('#recorridos').html('Buscando ciclovías cercanas...');
+			} else {
+				$('#recorridos').html('Debe ingresar una direccion/lugar en el campo de origen.');
+			}
+		});
+				
 	});	
 	</script>
   </head>
@@ -130,7 +151,7 @@
       </div>
       <div id="buscador">
        <form id="mainForm" accept-charset="utf-8">
-      	<label for="o">Origen</label>
+      	<label for="o">Origen (<a id="ciclovias_cercanas_origen" href="#">Ciclovías cercanas</a>)</label>
      	<input type="text" size="30" name="o" id="o" title="Origen del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
       	<label for="d">Destino</label>
