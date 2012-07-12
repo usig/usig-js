@@ -367,7 +367,7 @@ return function(idField, options, viewCtrl) {
 			return '<li><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.clase.getNombre()+')</span></li>';
 		} else */
 		if (item.descripcion!=undefined && item.descripcion!='') {
-			return '<li class="acv_op"><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a><span class="clase">('+item.descripcion+')</span></li>';
+			return '<li class="acv_op"><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span><span class="clase">('+item.descripcion+')</span></a></li>';
 		} else {
 			return '<li class="acv_op"><a href="#" class="acv_op" name="'+linkName+'"><span class="tl"/><span class="tr"/><span>'+wordMarker(item.toString())+'</span></a></li>';
 		}
