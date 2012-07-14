@@ -77,9 +77,15 @@ return function(datos, options) {
 						descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
 				}
 			});
+		}else if (tipo=="bike"){
+			descripcion = opts.texts.descBike;
+			$.each(resumen,function(i,action) { 
+				if(action.type != undefined && action.type == 'StartBiking') {
+						descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
+				}
+			});
 		}
 	}	
-	
 	function procesarPlan() {
 		if (tipo =="transporte_publico"){
 			var current_action = null;
@@ -252,6 +258,43 @@ return function(datos, options) {
 						if(item.to)
 							text += ' hasta el ' + item.to;
 							actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'car', id:item.id});
+					}
+				}
+			}
+			//return {gml:gml, detail:actions};
+			detalle = actions;
+		}else if(tipo=="bike"){
+	 		actions = new Array();
+	 		index = 0;
+	 		var text;
+			for(i=0;i<plan.length;i++) {
+			
+				var item = plan[i];
+				if(item.type != undefined){
+
+					var turn_indication;
+					if(item.type == 'Street' ) { 
+						index++;
+						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
+							text = 'Pedalear desde ';
+							turn_indication = 'seguir';
+						}else if (item.indicacion_giro=='0'){
+							text = 'Seguir por ';
+							turn_indication = 'seguir';
+						}else if(item.indicacion_giro=='1'){
+							text = 'Doblar a la izquierda en ';
+							turn_indication = 'izquierda';
+						}else if(item.indicacion_giro=='2'){
+							text = 'Doblar a la derecha en ';
+							turn_indication = 'derecha';
+						}
+							
+						text += item.name  + ' ' ;
+						if(item.from)
+							text += item.from;
+						if(item.to)
+							text += ' hasta el ' + item.to;
+							actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'bike', id:item.id});
 					}
 				}
 			}
@@ -480,12 +523,14 @@ usig.Recorrido.defaults = {
 		recorrido_subte: 'http://mapa.buenosaires.gob.ar/images/recorrido_subte20x20.png', 	
 		recorrido_tren: 'http://mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png', 	
 		recorrido_colectivo: 'http://mapa.buenosaires.gob.ar/images/recorrido_colectivo20x20.png', 	
-		recorrido_auto: 'http://mapa.buenosaires.gob.ar/images/recorrido_auto20x20.png'
+		recorrido_auto: 'http://mapa.buenosaires.gob.ar/images/recorrido_auto20x20.png',
+		recorrido_bici: 'http://mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png' 	
 	},
 	template: new usig.TripTemplate(1,'#8F58C7'),
 	texts: {
 		descWalk: 'Recorrido a pie',
 		descCar: 'Recorrido en auto',
+		descBike: 'Recorrido en bici',
 		hayRamales:'No todos los ramales conducen a destino'		
 	}
 };

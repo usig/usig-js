@@ -167,6 +167,7 @@ usig.GMLPlan = (function($) {
 								"Line": lineOptionsWalk },
 						    "bus": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_colectivo.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
 						    "car": {"Point": {externalGraphic:baseUrl+"images/recorrido_auto.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
+						    "bike": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
 						    "subway": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
 								externalGraphic:baseUrl+"images/recorrido_subte.png",graphicZIndex:5}, "Line": lineOptions  },
 						    "subwayA": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
