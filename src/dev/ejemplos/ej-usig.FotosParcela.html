@@ -24,10 +24,9 @@
        		rootUrl: '../',
        		skin: 'usig4',
        		onReady: function() {
-       			$('#smp').val('').removeAttr('disabled').focus();	        			
+       			$('#smp').val('').focus();
        		},
        		afterSelection: function(option) {
-           		usig.debug("estoy en after seleccion");
 				fotosParcela = new usig.FotosParcela(option, {
 						maxHeight : 195, 
 						maxWidth : 243, 
@@ -41,8 +40,6 @@
 		
 		$('.foto-recorrido .btn_ant').click(function() {
 			var idFoto = fotosParcela.fotoAnterior();
-			usig.debug("Anterior - idFoto");
-			usig.debug(idFoto);
 			$('#foto').html('');
 			fotosParcela.cargarFoto($('#foto'));
 			fotosParcela.setFechaFoto($('.fecha-foto'));
@@ -50,20 +47,16 @@
 
 		$('.foto-recorrido .btn_sig').click(function() {
 			var idFoto = fotosParcela.fotoSiguiente();
-			usig.debug("Siguiente - idFoto");
-			usig.debug(idFoto);
 			$('#foto').html('');
 			fotosParcela.cargarFoto($('#foto'));
 			fotosParcela.setFechaFoto($('.fecha-foto'));
 		});
 
 		function onLoadFotos() {	
-			usig.debug("estoy en onLoadFotos");		
 			fotosParcela.setFechaFoto($('.fecha-foto'));
 			if (fotosParcela.numFotos() > 1) {
 				$('div.foto-recorrido').show();
 			} else {
-				usig.debug("lo escondo");
 				$('div.foto-recorrido').hide();
 			}			
 		}
