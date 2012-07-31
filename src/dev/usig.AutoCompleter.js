@@ -50,9 +50,11 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
  * @cfg {Function} afterServerResponse Callback que es llamada cada vez que se recibe una respuesta del servidor.
  * @cfg {Function} onReady Callback que es llamada cuando el componente esta listo para usar 
- * @cfg {Function} onInputChange Callback que es llamada cuando el cambia el valor del campo de input. Recibe como parametro el nuevo valor. 
+ * @cfg {Function} onInputChange Callback que es llamada cuando cambia el valor del campo de input. Recibe como parametro el nuevo valor. 
+ * @cfg {Array} suggesters Listado de suggesters con los que se inicializa el componente. Los elementos del array tienen la
+ * forma {suggester: usig.Suggester/String, options: object}.
  * @constructor 
-  * @param {String} idField Identificador del input control en la pagina
+ * @param {String} idField Identificador del input control en la pagina
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
  * @param {Object} viewCtrl (optional) Controlador de la vista para mostrar las sugerencias del autocompleter
 */	
