@@ -12,7 +12,10 @@
 	<!-- <script src="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.FotosParcela.min.js" type="text/javascript"></script> -->  
 	<script src="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.AutoCompleterFull.min.js" type="text/javascript"></script>
 	<script src="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/usig.SuggesterCatastro.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../usig.FotosParcela.js"></script>  
+    <script type="text/javascript" src="../usig.FotosParcela.js"></script>
+    <script type="text/javascript" src="../usig.GeoCoder.js"></script>
+           
+    
     
 	<script type="text/javascript">
 	$.noConflict();
@@ -27,16 +30,33 @@
        			$('#smp').val('').focus();
        		},
        		afterSelection: function(option) {
-				fotosParcela = new usig.FotosParcela(option, {
-						maxHeight : 195, 
-						maxWidth : 243, 
-						onLoad: onLoadFotos
-						});
-				fotosParcela.cargarFoto($('#foto'));
+           		if (option instanceof usig.ParcelaCatastral) {
+           			cargarFotoParcela(option);
+           		}else if(option instanceof usig.Direccion){
+               		geoCoder.getSMP(option.getCalle().codigo, option.getAltura(), cargarFotoParcela, onErrorSMP);
+           		}
        		}
        	});
 
 		ac.addSuggester('Catastro', { inputPause: 200, minTextLength: 1, showError: false });
+		geoCoder = new usig.GeoCoder();
+
+		function cargarFotoParcela(data) {
+			if (data instanceof usig.ParcelaCatastral) {
+				fotosParcela = new usig.FotosParcela(data.smp, {
+					maxHeight : 195, 
+					maxWidth : 243, 
+					onLoad: onLoadFotos
+					});
+				fotosParcela.cargarFoto($('#foto'));
+			}else{ // Error - Puerta inexistente
+				$('#foto').html('Error - Puerta inexistente');
+				$('div.foto-recorrido').hide();
+			}
+		};
+		
+		function onErrorSMP(e) {
+		};
 		
 		$('.foto-recorrido .btn_ant').click(function() {
 			var idFoto = fotosParcela.fotoAnterior();
@@ -71,15 +91,15 @@
   <body>
   <div id="page">
     <div id="header">
-      <div id="logo"><h1>Ejemplo: Foto de Parcela a partir de la Seccion Manzana Parcela</h1>
-      <p>Este ejemplo muestra como cargar la foto de fachada de una parcela a partir del numero de Seccion Manzana Parcela.</p>
+      <div id="logo"><h1>Ejemplo: Foto de Parcela a partir de la Seccion Manzana Parcela o Direccion</h1>
+      <p>Este ejemplo muestra como cargar la foto de fachada de una parcela a partir del numero de Seccion Manzana Parcela, o de su direccion.</p>
       </div>
     </div>
     <div id="buscador">
 	       <form id="mainForm" accept-charset="utf-8">
-		      	<label for="smp">Seccion-Manzana-Parcela:</label>
+		      	<label for="smp">Seccion-Manzana-Parcela, o Direccion:</label>
 		     	<input type="text" size="30" name="smp" id="smp" title="Seccion manzana parcela" class="text"/>
-		     	<span id="ejemplo">ej.: 63-108B-004</span>
+		     	<span id="ejemplo">ej.: 63-108B-004,  Monroe 3677</span>
 	       </form>
 	</div>  
 	<div id="foto">
