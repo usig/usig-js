@@ -34,6 +34,7 @@ return function(datos, options) {
 	    if ( type == 1 ) src = 'recorrido_subte';
 	    if ( type == 2 ) src = 'recorrido_tren';
 	    if ( type == 3 ) src = 'recorrido_colectivo';
+	    if ( type == 4 ) src = 'recorrido_bici';
 	    //FIXME armar una array
 	    
 	    return '<img src="' + opts.icons[src] + '" width="20" height="20">';
@@ -524,7 +525,7 @@ usig.Recorrido.defaults = {
 		recorrido_tren: 'http://mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png', 	
 		recorrido_colectivo: 'http://mapa.buenosaires.gob.ar/images/recorrido_colectivo20x20.png', 	
 		recorrido_auto: 'http://mapa.buenosaires.gob.ar/images/recorrido_auto20x20.png',
-		recorrido_bici: 'http://mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png' 	
+		recorrido_bici: '../images/recorrido_bici.png' 	
 	},
 	template: new usig.TripTemplate(1,'#8F58C7'),
 	texts: {

@@ -52,6 +52,20 @@ return usig.AjaxComponent.extend({
 			success(res);
 		}
 	},
+
+	onSuccessSMP: function(res, success) {
+		usig.debug(res);
+		if (res.smp){
+			var parcela = {	
+				smp: res.smp,
+				pm: res.pdamatriz,
+				centroide: '('+res.centroide.x+','+ res.centroide.y+')'
+			}
+			success(new usig.ParcelaCatastral(parcela));
+		}else{
+			success(res);
+		}
+	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de una instancia de usig.Direccion (NormalizadorDireccionesJS)
@@ -173,7 +187,9 @@ return usig.AjaxComponent.extend({
 	 * @param {Float} x Longitud
 	 * @param {Float} y Latitud 
      * @param {Function} success Funcion callback que es llamada al concretarse con exito la geocodificacion.
-     * Recibe como parametro un objeto conteniendo diversos datos de ubicacion 
+     * Recibe como parametro un objeto conteniendo los siguientes datos: 
+     * {parcela: String, puerta: String, puerta_x: Float, puerta_y:Float, calle_alturas: String, 
+     * esquina: String, metros_a_esquina: String, altura_par: String, altura_impar: String}
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
 	 * @return {Object} 
 	 */
@@ -183,6 +199,23 @@ return usig.AjaxComponent.extend({
 				y: y
 		};
 		this.mkRequest(data, success, error, this.opts.server+'reversegeocoding/')
+	},
+	
+	/**
+	 * Para obtener la Seccion Manzana Parcela dado un código de calle y una altura válida
+	 * @param {Integer} cod_calle Código de la calle
+	 * @param {Integer} altura Altura válida correspondiente a dicha calle
+     * @param {Function} success Funcion callback que es llamada al concretarse con exito la consulta.
+     * Recibe como parametro una instancia de usig.ParcelaCatastral. 
+     * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio. 
+	 * @return {Object} 
+	 */
+	getSMP: function(cod_calle, altura, success, error) {
+		var data = {
+				cod_calle: cod_calle,
+				altura: altura
+		};
+		this.mkRequest(data, this.onSuccessSMP.createDelegate(this, [success], 1), error, this.opts.server+'smp/')
 	}
 	
 });

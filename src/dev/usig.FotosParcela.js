@@ -148,12 +148,12 @@ return function(smp, opts) {
 						$(fotos[idFoto]).load((function(foto) {
 							$container.html('');
 							$container.append(foto);			
-							if (opts.onLoad && typeof(opts.onLoad) == "function")
+							if (opts && opts.onLoad && typeof(opts.onLoad) == "function")
 								opts.onLoad(foto);
 						}).createDelegate(this, [fotos[idFoto]]));
 					} else {
 						$container.append(fotos[idFoto]);
-						if (opts.onLoad && typeof(opts.onLoad) == "function")
+						if (opts && opts.onLoad && typeof(opts.onLoad) == "function")
 							opts.onLoad(fotos[idFoto]);
 					}
 				}

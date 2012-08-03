@@ -367,7 +367,8 @@ return function(idDiv, options) {
 				iconWidth: 20,
 				iconHeight: 36,
 				offsetX: -5,
-				offsetY: -36
+				offsetY: -36,
+				instantPopup: false
 		}
 		// fijarse si el marker ya existe...
 		statusBar.activate(opts.texts.processing, true);
@@ -400,6 +401,32 @@ return function(idDiv, options) {
 			markersShadows.addFeatures(markerShadow);
 		}
 		
+		if(goTo) {
+			_goTo(marker.lonlat, true);
+		}
+			
+		// Si esta seteada la opcion de instantPopup
+		if (place.options && place.options.instantPopup){
+			var framedCloud = new OpenLayers.Popup.FramedCloud(
+						id,
+						marker.lonlat,
+		                new OpenLayers.Size(10, 10),
+		                contentHTML,
+		                marker.icon,
+						true,
+						null);
+				
+				marker.popup = framedCloud;
+				framedCloud.hide();
+				map.addPopup(framedCloud, true);
+				
+				if (typeof(onClick) == "function") {
+					onClick(null, place, framedCloud);
+				}else {
+					framedCloud.show();
+				}
+		}
+		
 		marker.events.registerPriority('click', marker, function(ev) {
 			OpenLayers.Event.stop(ev, false);
 			var framedCloud = new OpenLayers.Popup.FramedCloud(
@@ -424,9 +451,6 @@ return function(idDiv, options) {
 		
 		statusBar.deactivate();
 		
-		if(goTo) {
-			_goTo(marker.lonlat, true);
-		}
 		return id;
 	}
 	
@@ -471,6 +495,10 @@ return function(idDiv, options) {
 					gml.addMarker(item.gml[1]); // en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
 					gml.addEdges(item.gml);
 										
+				} else if(item.type == 'StartDriving' || item.type == 'FinishDriving') { 
+					gml.addMarker(item.gml);
+				} else if(item.type == 'StartBiking' || item.type == 'FinishBiking') { 
+					gml.addMarker(item.gml);
 				}
 				
 			}
@@ -562,13 +590,13 @@ return function(idDiv, options) {
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto/String} place Lugar que se desea marcar. Es posible indicar un string conteniendo una direccion valida
 	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
 	 * @param {Function/String} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
-	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, offsetX, offsetY)
+	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, offsetX, offsetY, instantPopup)
 	 * @return {Integer} Id del marcador agregado
 	 */
 	this.addMarker = function(place, goTo, onClick, options) {
 		var random = Math.floor(Math.random()*100001);
 		var id = new Date()*1 +random;
-		
+
 		if (typeof(place) == "string") {
 			if (opts.debug) usig.debug('Encolando direccion: '+place+' ...');
 			paraNormalizar[id] = { place: place, goTo: goTo, onClick: onClick, options: options } ;
