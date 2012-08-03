@@ -193,7 +193,7 @@
 			if (origen && destino) {
 				usig.Recorridos.buscarRecorridos(origen, destino, mostrarOpciones, function() {
 					$('#recorridos').html('Se produjo un error el buscar el recorrido.');
-				}, {tipo: 'bici', opciones_prioridad: 'corto', opciones_incluir_autopistas: false});
+				}, {tipo: 'bici', opciones_prioridad: 'avenidas', opciones_incluir_autopistas: false});
 				if (recorridos) {
 					for(var i=0;i<recorridos.length;i++) {
 						miMapa.borrarRecorrido(recorridos[i]);
