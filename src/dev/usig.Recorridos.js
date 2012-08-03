@@ -17,7 +17,7 @@ usig.defaults.Recorridos = {
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
-	// server: 'http://10.75.0.60:8085/',
+	//server: 'http://10.75.0.53:8085/',
 	// server: 'http://10.20.1.41/2.0/',
 	serverTimeout: 30000,
 	maxRetries: 2,
