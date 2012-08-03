@@ -495,6 +495,10 @@ return function(idDiv, options) {
 					gml.addMarker(item.gml[1]); // en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
 					gml.addEdges(item.gml);
 										
+				} else if(item.type == 'StartDriving' || item.type == 'FinishDriving') { 
+					gml.addMarker(item.gml);
+				} else if(item.type == 'StartBiking' || item.type == 'FinishBiking') { 
+					gml.addMarker(item.gml);
 				}
 				
 			}
