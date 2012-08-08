@@ -200,11 +200,11 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.RecorridosFull-debug.js -o $(REL)/usig.RecorridosFull.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.StoredCollection-debug.js -o $(REL)/usig.StoredCollection.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaInteractivo-nodebug.js -o $(REL)/usig.MapaInteractivo.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterFull.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDirecciones.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 -v $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDireccionesFull.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AutoCompleter-nodebug.js -o $(REL)/usig.AutoCompleter.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterStandard.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AutoCompleterStandard-nodebug.js -o $(REL)/usig.AutoCompleterFull.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDirecciones.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.AutoCompleterDirecciones-nodebug.js -o $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterFull.min.js
 	cat $(SRC)/normalizadorDirecciones.min.js >> $(REL)/usig.AutoCompleterDireccionesFull.min.js
 	rsync -avz --exclude '.svn' --delete $(SRC)/demos/css $(REL)/demos/
@@ -213,9 +213,24 @@ prepare: docs debug
 	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
 	rm -f $(REL)/ejemplos.tar.gz
-	# cd $(SRC); tar -cz --exclude='.svn' -f ejemplos.tar.gz ejemplos; cd -
-	cd $(SRC); rar a -xejemplos/.svn -x*/*/.svn ejemplos.rar ejemplos; cd -
-	mv $(SRC)/ejemplos.rar $(REL)
+	for f in $(SRC)/demos/*.html; do \
+		sed -e '/<!-- DEV -->/	 d' < $$f | sed -e 's/<!-- RELEASE \(.*\)-->/\1/g' - | sed -e "s/VERSION/$(VERSION)/g" - > $(REL)/demos/`basename $$f`; \
+	done
+	for f in $(SRC)/ejemplos/*.html; do \
+		sed -e '/<!-- DEV -->/	 d' < $$f | sed -e 's/<!-- RELEASE \(.*\)-->/\1/g' - | sed -e "s/VERSION/$(VERSION)/g" - > $(REL)/ejemplos/`basename $$f`; \
+	done
+	for f in $(SRC)/ejemplos/*/*.html; do \
+		sed -e '/<!-- DEV -->/	 d' < $$f | sed -e 's/<!-- RELEASE \(.*\)-->/\1/g' - | sed -e "s/VERSION/$(VERSION)/g" - > $(REL)/ejemplos/`basename \`dirname $$f\``/`basename $$f`; \
+	done
+	cp -r $(REL)/ejemplos $(REL)/ejemplos-usig-js
+	for f in $(REL)/ejemplos/*.html; do \
+		sed -e 's/script src="\.\.\//script src="http:\/\/servicios\.usig\.buenosaires\.gob\.ar\/usig-js\/$(VERSION)\//g' < $$f > $(REL)/ejemplos-usig-js/`basename $$f`; \
+	done
+	for f in $(REL)/ejemplos/*/*.html; do \
+		sed -e 's/script src="\.\.\/\.\.\//script src="http:\/\/servicios\.usig\.buenosaires\.gob\.ar\/usig-js\/$(VERSION)\//g' < $$f > $(REL)/ejemplos-usig-js/`basename \`dirname $$f\``/`basename $$f`; \
+	done	
+	cd $(REL); rm ejemplos.rar; rar a -xejemplos-usig-js/.svn -x*/*/.svn ejemplos.rar ejemplos-usig-js; cd -
+	rm -rf $(REL)/ejemplos-usig-js
 	$(MAKE) clean
 	
 docs:
