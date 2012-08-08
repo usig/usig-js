@@ -143,10 +143,14 @@
 		
 		$('#buscar').click(function(ev) {
 			ev.preventDefault();
+			var options = {
+					opciones_prioridad: $('.prioridad input:checked').val(), 
+					opciones_incluir_autopistas: $("#op-autopistas").is(':checked')
+				};
 			if (origen && destino) {
 				usig.Recorridos.buscarRecorridos(origen, destino, mostrarOpciones, function() {
 					$('#recorridos').html('Se produjo un error el buscar el recorrido.');
-				});
+				}, options);
 				$('#recorridos').html('Buscando recorrido...');
 			} else {
 				$('#recorridos').html('Ingrese origen y destino del recorrido.');
@@ -171,6 +175,21 @@
       	<label for="d">Destino</label>
      	<input type="text" size="30" name="d" id="d" title="Destino del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+     	
+	   <fieldset class="prioridad" >
+	    	<legend>Priorizar:</legend>
+	       	<input type="radio" name="op-priorizar" id="op-tiempo" value="avenidas" checked="checked" />
+	       	<label style="display: inline;" for="op-tiempo">Tiempo</label>
+	       	<input type="radio" name="op-priorizar" id="op-distancia" value="corto" />
+	       	<label style="display: inline;" for="op-distancia">Distancia</label>
+	   </fieldset>
+		    
+	   <fieldset class="autopistas" > 
+			<legend>Autopistas:</legend> 
+			<input type="checkbox"  name="op-autopistas" id="op-autopistas"/> 
+			<label style="display: inline;" for="op-autopistas" >Incluir autopistas</label> 
+	   </fieldset>  
+		<br/>
      	<a class="button" id="buscar" href="#">Buscar Recorrido</a>
 	    <div id="recorridos">No hay recorridos para mostrar</div>
        </form>
