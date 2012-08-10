@@ -29,6 +29,9 @@
 			color: #007baf;
 			font-weight: bold;
     	}
+    	.opciones {
+			width: 300px; 
+    	}
     	#recorridos {
     		width: 45%;
     		margin-top: 10px;
@@ -192,10 +195,17 @@
 		
 		$('#buscar').click(function(ev) {
 			ev.preventDefault();
+			var options = {
+					opciones_medios_colectivo: $('#op-colectivo').is(':checked'),
+					opciones_medios_subte: $('#op-subte').is(':checked'),
+					opciones_medios_tren: $('#op-tren').is(':checked'),
+					opciones_caminata: $('#input-caminata').val() 
+			};
+			
 			if (origen && destino) {
 				usig.Recorridos.buscarRecorridos(origen, destino, mostrarOpciones, function() {
 					$('#recorridos').html('Se produjo un error el buscar el recorrido.');
-				});
+				}, options);
 				if (recorridos) {
 					for(var i=0;i<recorridos.length;i++) {
 						miMapa.borrarRecorrido(recorridos[i]);
@@ -228,6 +238,24 @@
       	<label for="d">Destino</label>
      	<input type="text" size="30" name="d" id="d" title="Destino del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+     	<fieldset class="opciones" > 
+			<legend>Tipo de transporte:</legend> 
+			<input type="checkbox"  name="op-colectivo" id="op-colectivo" checked="checked"/> 
+			<label style="display: inline;" for="op-colectivo" >Colectivo</label> 
+
+			<input type="checkbox" name="op-subte" id="op-subte" checked="checked"/> 
+			<label style="display: inline;" for="op-subte">Subte</label> 
+			
+			<input type="checkbox" name="op-tren" id="op-tren" checked="checked"/> 
+			<label style="display: inline;" for="op-tren">Tren</label> 		
+	   	</fieldset>  
+	   	<br/>
+	   	<div>
+	    	<label style="display: inline;" for="input-caminata" style="font-weight:normal;">Caminata máxima:</label>	
+			<input  type="text" name="input-caminata"  id="input-caminata" style="width:40px;" value="800"/>
+		</div>
+	   	<br/>
+     	
      	<a class="button" id="buscar" href="#">Buscar Recorrido</a><br/>
 	    <div id="recorridos">No hay recorridos para mostrar</div>&nbsp;
 	    <div id="mapa"></div>
