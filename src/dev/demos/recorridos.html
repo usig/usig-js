@@ -29,6 +29,9 @@
 			color: #007baf;
 			font-weight: bold;
     	}
+    	.opciones {
+			width: 300px; 
+    	}
     	#recorridos {
     		margin-top: 10px;
     	}
@@ -65,8 +68,11 @@
 	$.noConflict();
 	jQuery(document).ready(function($) {
 		var origen, destino, recorridos;
-		
-		usig.Recorridos.init();
+		var optsRecorridos = {
+				tipo: 'transporte',
+				gml: false
+			};
+		usig.Recorridos.init(optsRecorridos);
 
 		var ac = new usig.AutoCompleter('o', {
        		debug: false,
@@ -139,36 +145,21 @@
 		
 		$('#buscar').click(function(ev) {
 			ev.preventDefault();
+			var options = {
+					opciones_medios_colectivo: $('#op-colectivo').is(':checked'),
+					opciones_medios_subte: $('#op-subte').is(':checked'),
+					opciones_medios_tren: $('#op-tren').is(':checked'),
+					opciones_caminata: $('#input-caminata').val() 
+			};
 			if (origen && destino) {
 				usig.Recorridos.buscarRecorridos(origen, destino, mostrarOpciones, function() {
 					$('#recorridos').html('Se produjo un error el buscar el recorrido.');
-				});
+				}, options);
 				$('#recorridos').html('Buscando recorrido...');
 			} else {
 				$('#recorridos').html('Ingrese origen y destino del recorrido.');
 			}
 		});
-		
-		$('#ciclovias_cercanas_origen').click(function(ev) {
-			ev.preventDefault();
-			if (origen) {
-				usig.Recorridos.cicloviasCercanas(origen, function(data) {
-					var html = '<table><thead><tr><th>Distancia&nbsp;(m)</th><th>Nombre</th><th>Tipo</th><th>Dirección</th></thead><tbody>'
-					for (var i=0,l=data.ciclovias.length;i<l;i++) {
-						html+='<tr><td align="center">'+data.ciclovias[i].distancia.toFixed(2)+'</td><td>'+data.ciclovias[i].nombre+'</td><td>'+data.ciclovias[i].tipo+'</td><td>'+data.ciclovias[i].direccion.calle+' '+(data.ciclovias[i].direccion.altura?data.ciclovias[i].direccion.altura:'S/N')+'</td></tr>';
-					}
-					html += '</tbody></table>';
-					$('#recorridos').html(html);
-				}, function() {
-					$('#recorridos').html('Se produjo un error el buscar ciclovias cercanas.');
-				});
-				$('#recorridos').html('Buscando ciclovías cercanas...');
-			} else {
-				$('#recorridos').html('Debe ingresar una direccion/lugar en el campo de origen.');
-			}
-		});
-		
-		
 	});	
 	</script>
   </head>
@@ -179,14 +170,31 @@
       </div>
       <div id="buscador">
        <form id="mainForm" accept-charset="utf-8">
-      	<label for="o">Origen (<a id="ciclovias_cercanas_origen" href="#">Ciclovías cercanas</a>)</label>
+      	<label for="o">Origen</label>
      	<input type="text" size="30" name="o" id="o" title="Origen del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
-     	
      	
       	<label for="d">Destino</label>
      	<input type="text" size="30" name="d" id="d" title="Destino del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+		    
+	   	<fieldset class="opciones" > 
+			<legend>Tipo de transporte:</legend> 
+			<input type="checkbox"  name="op-colectivo" id="op-colectivo" checked="checked"/> 
+			<label style="display: inline;" for="op-colectivo" >Colectivo</label> 
+
+			<input type="checkbox" name="op-subte" id="op-subte" checked="checked"/> 
+			<label style="display: inline;" for="op-subte">Subte</label> 
+			
+			<input type="checkbox" name="op-tren" id="op-tren" checked="checked"/> 
+			<label style="display: inline;" for="op-tren">Tren</label> 		
+	   	</fieldset>  
+	   	<br/>
+	   	<div>
+	    	<label style="display: inline;" for="input-caminata" style="font-weight:normal;">Caminata máxima:</label>	
+			<input  type="text" name="input-caminata"  id="input-caminata" style="width:40px;" value="800"/>
+		</div>
+	   	<br/>
      	<a class="button" id="buscar" href="#">Buscar Recorrido</a>
 	    <div id="recorridos">No hay recorridos para mostrar</div>
        </form>
