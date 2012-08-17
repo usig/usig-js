@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>USIG - Libreta de direcciones</title>
+    <link rel="stylesheet" type="text/css" href="../css/ejemplos.css" />
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://servicios.usig.buenosaires.gov.ar/usig-js/dev/usig.StoredCollection.min.js"></script>
+		
+	<!-- DEV --><script src="http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.core.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.util.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../jquery.jsonp-1.1.0.1.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../json.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../jquery.class.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.AjaxComponent.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Punto.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Calle.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Direccion.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.GeoCoder.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.inventario.Clase.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.inventario.Objeto.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.inventario.Ubicacion.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Inventario.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.InputController.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.AutoCompleter.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.AutoCompleterDialog.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../../usig.Suggester.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../../usig.SuggesterLugares.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.SuggesterDirecciones.js" type="text/javascript"></script>
+	<!-- DEV --><script src="controllers/LibretaDirecciones.js" type="text/javascript"></script>
+	<!-- DEV --><script src="views/LibretaDirecciones.js" type="text/javascript"></script>
+	<!-- RELEASE <script src="../../usig.AutoCompleterFull.min.js" type="text/javascript"></script> -->
+
+    
+	<script type="text/javascript">
+	$.noConflict();
+	jQuery(document).ready(function($) {
+
+		var libretaDirecciones = null;
+		
+		var ac = new usig.AutoCompleter('direccion', {
+       		rootUrl: '../../',
+       		skin: 'usig4',
+       		onReady: function() {
+       			$('#direccion').val('').focus();
+       		},
+       		afterSelection: function(option) {
+           		if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+           			libretaDirecciones.add(option);
+           		  	$('#direccion').val('');
+           		  	$('#borrar').show();
+           		}
+       		}
+       	});
+
+		$('#mainForm').bind("submit", function () {
+			return false;
+		});
+
+		libretaDirecciones = new LibretaDirecciones('listaDirecciones', 'usig-ejLibretaDirecciones');
+
+		if (libretaDirecciones.count() > 0){
+			$('#borrar').show();
+		}
+		
+		$('#borrar').click(function(ev) {
+			ev.preventDefault();
+			libretaDirecciones.clear();
+			$('#borrar').hide();
+		});
+	});
+	</script>
+  </head>
+  <body>
+  <div id="page">
+    <div id="header">
+      <div id="logo"><h1>Ejemplo: Libreta de direcciones</h1>
+      <p>Este ejemplo muestra como usar el componente StoredCollection para hacer una libreta de direcciones sencilla.</p>
+      </div>
+    </div>
+    <div id="buscador">
+	       <form id="mainForm" accept-charset="utf-8">
+		      	<label for="direccion">Ingrese la direccion:</label>
+		     	<input type="text" size="30" name="direccion" id="direccion" title="Direccion" class="text"/>
+		     	<span id="ejemplo">ej.: Monroe 3677, Retiro</span>
+	       </form>
+	</div>  
+	<div id="misDirecciones">
+		<ul id="listaDirecciones">
+			
+		</ul>
+	</div>
+	<a class="button" id="borrar" href="#" style="display:none;">Borrar todo</a>
+    <div id="footer">
+       <p>&copy; 2012 USIG - Unidad de Sistemas de Información Geográfica</p>
+    </div>  
+    </div> 
+  </body>
+</html>
