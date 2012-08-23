@@ -56,8 +56,10 @@ return function(data, clase) {
 		}
 		
 		if (data.direccionAsociada) {
-			this.direccionAsociada = usig.Direccion.fromObj(data.direccionAsociada);
-			this.rawData.direccionAsociada = data.direccionAsociada;
+			try {
+				this.direccionAsociada = usig.Direccion.fromObj(data.direccionAsociada);
+				this.rawData.direccionAsociada = data.direccionAsociada;
+			} catch(e) {};
 		}
 		
 		if (data.contenido) {
