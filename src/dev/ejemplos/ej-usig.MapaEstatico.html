@@ -85,15 +85,13 @@
 			var radio = $('#radio').val();
 			if (direccion instanceof usig.ParcelaCatastral) {
 				optsMapaSMP = {
-					x: data.getPunto().getX(), 
-					y: data.getPunto().getY(),
+					punto: data.getPunto(),
 					smp: data.smp,
 					width: 500,
 					radio: radio
 				};
 				optsMapaDir = {
-					x: data.getPunto().getX(), 
-					y: data.getPunto().getY(),
+					punto: data.getPunto(),
 					marcarPunto: true,
 					desc: data.toString(),
 					width: 500,
@@ -120,16 +118,14 @@
 				};
 			}else if (direccion instanceof usig.inventario.Objeto) {
 				optsMapaSMP = {
-						x: direccion.ubicacion.getCentroide().getX(),
-						y: direccion.ubicacion.getCentroide().getY(),
+						punto: direccion.ubicacion.getCentroide(),
 						smp: data.parcela,
 						desc: direccion.toString(),
 						width: 500,
 						radio: radio  
 					};
 				optsMapaDir = {
-						x: direccion.ubicacion.getCentroide().getX(),
-						y: direccion.ubicacion.getCentroide().getY(),
+						punto: direccion.ubicacion.getCentroide(),
 						marcarPunto: true,
 						desc: direccion.toString(),
 						width: 500,
