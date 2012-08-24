@@ -40,6 +40,8 @@ usig.MapaEstatico = function(opts) {
 		regExpSMP = /[0-9][0-9]-[0-9]{3,3}[A-Z]?-[A-Z0-9]{3,4}/;
 	if (typeof(opts.x) != "undefined" && typeof(opts.y) != "undefined" && !isNaN(parseFloat(opts.x)) && !isNaN(parseFloat(opts.y))) {
 		params.push('x='+opts.x, 'y='+opts.y);
+	} else if (typeof(opts.punto) != "undefined" && opts.punto instanceof usig.Punto) {
+		params.push('x='+opts.punto.getX(), 'y='+opts.punto.getY());
 	} else if (typeof(opts.dir) != "undefined") {
 		params.push('dir='+opts.dir);
 	} else {
