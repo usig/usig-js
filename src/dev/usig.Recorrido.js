@@ -277,6 +277,7 @@ return function(datos, options) {
 					if(item.type == 'Street' ) { 
 						index++;
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
+							
 							text = 'Pedalear desde ';
 							turn_indication = 'seguir';
 						}else if (item.indicacion_giro=='0'){
