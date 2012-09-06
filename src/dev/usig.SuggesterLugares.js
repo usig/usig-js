@@ -34,7 +34,10 @@ return usig.Suggester.extend({
 		if (!this.opts.inventario) {
             this.opts.inventario = new usig.Inventario(opts);
 			this.cleanList.push(this.opts.inventario);
-		}	
+		}
+		if (opts.onReady && typeof(opts.onReady) == "function") {
+			opts.onReady();
+		}
 	},
 	
 	/**

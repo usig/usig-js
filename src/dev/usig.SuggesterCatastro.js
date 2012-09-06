@@ -29,8 +29,11 @@ return usig.Suggester.extend({
 		if (!this.opts.indiceCatastral) {
 			this.opts.indiceCatastral = new usig.IndiceCatastral(opts);
 //            this.opts.indiceCatastral = new usig.IndiceCatastral({ debug: opts.debug });
-			this.cleanList.push(this.opts.indiceCatasral);
-		}	
+			this.cleanList.push(this.opts.indiceCatastral);
+		}
+		if (opts.onReady && typeof(opts.onReady) == "function") {
+			opts.onReady();
+		}
 	},
 	
 	/**
