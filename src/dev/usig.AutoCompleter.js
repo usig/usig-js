@@ -256,12 +256,18 @@ return function(idField, options, viewCtrl) {
 	
 	/**
 	 * Indica si algun suggester esta listo para responder.
-	 * @return {Boolean} Retorna True en caso de que algun suggester esta listo para responder.
+	 * @param {String} suggesterName (optional) Nombre del suggester que se quiere saber si está listo o no.  
+	 * @return {Boolean} Si se especifico un suggester como parametro devuelve True en caso de que el suggester este listo, 
+	 * si no se especifico el parametro devuelve True en caso de que algun suggester este listo para responder.
 	 */	
-	this.ready = function() {
+	this.ready = function(suggesterName) {
 		var retval = false;
-		for (i=0; i<suggesters.length; i++){
-			retval = retval || suggesters[i].suggester.ready();
+		if (suggesterName){
+			retval = suggestersByName[suggesterName].ready();
+		}else{
+			for (i=0; i<suggesters.length; i++){
+				retval = retval || suggesters[i].suggester.ready();
+			}
 		}
 		return retval;
 	}
@@ -277,7 +283,7 @@ return function(idField, options, viewCtrl) {
 		
 		callbackSugerir = function callbackSugerir(results, inputStr){
 			if (field.value == inputStr) {
-				if (opts.debug) usig.debug(results);
+				if (opts.debug) {usig.debug("Resultados en autocompleter....");usig.debug(results);}
 	//			if (opts.debug) usig.debug('sugOpts.showError: '+sugOpts.showError);
 				if(results.getErrorMessage!=undefined){
 					try {
