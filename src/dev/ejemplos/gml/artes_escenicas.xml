@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ogr:FeatureCollection xmlns:gml="http://www.opengis.net/gml" xmlns:ogr="http://ogr.maptools.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ogr.maptools.org/ prueba_de_gml.xsd">
+  <gml:boundedBy>
+    <gml:Box>
+      <gml:coord>
+        <gml:X>94674.28771356214</gml:X>
+        <gml:Y>93838.7352805594</gml:Y>
+      </gml:coord>
+      <gml:coord>
+        <gml:X>107794.4980255477</gml:X>
+        <gml:Y>108427.6509049227</gml:Y>
+      </gml:coord>
+    </gml:Box>
+  </gml:boundedBy>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="1">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>108153.8621699999930570,102301.7785889999940991</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>34</ogr:Id>
+      <ogr:Nombre>Casa de la Cultura</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="2">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>100916.7051630000059959,102340.1601530000043567</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>35</ogr:Id>
+      <ogr:Nombre>Centro Cultural Alberto Olmedo</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="3">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>106853.4100119999930030,102648.5378510000009555</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>38</ogr:Id>
+      <ogr:Nombre>Centro Cultural General San Martín</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="4">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>106580.6796980000071926,104742.5534610000031535</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>40</ogr:Id>
+      <ogr:Nombre>Centro Cultural Recoleta</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="5">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>98475.3828125000000000,98664.9765625000000000</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>42</ogr:Id>
+      <ogr:Nombre>Complejo Cultural Chacra de los Remedios</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="6">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>109841.5078125000000000,100063.2656250000000000</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>44</ogr:Id>
+      <ogr:Nombre>Usina del Arte</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="7">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101977.7344650000013644,99261.8267397000017809</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>45</ogr:Id>
+      <ogr:Nombre>Centro Cultural Adán Buenos Ayres</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="8">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>99511.2439008999936050,106225.1311560000031022</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>50</ogr:Id>
+      <ogr:Nombre>Centro Cultural Belgrano R.</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="9">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101005.2490870000037830,105849.3210759999928996</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>53</ogr:Id>
+      <ogr:Nombre>Centro Cultural Colegiales</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="11">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>107013.6028820000065025,99548.6025159999990137</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>55</ogr:Id>
+      <ogr:Nombre>Centro Cultural Del Sur</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="12">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>102475.4316830000025220,101821.9558609999949113</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>58</ogr:Id>
+      <ogr:Nombre>Centro Cultural El Eternauta</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="13">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>103932.2143130000040401,97172.7690575000015087</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>63</ogr:Id>
+      <ogr:Nombre>Centro Cultural Homero Manzi</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="14">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>99644.7117204999958631,101457.1137350000062725</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>67</ogr:Id>
+      <ogr:Nombre>Centro Cultural La Paternal - Villa Mitre</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="15">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>98636.3350790999975288,108176.5245149999973364</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>69</ogr:Id>
+      <ogr:Nombre>Centro Cultural Lino E. Spilimbergo</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="16">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>102867.9310919999988982,102759.5048450000031153</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>70</ogr:Id>
+      <ogr:Nombre>Centro Cultural Lola Mora</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="17">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>95854.9123758000059752,97433.0076605000067502</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>71</ogr:Id>
+      <ogr:Nombre>Centro Cultural Macedonio Fernández</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="18">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>99848.3471453999954974,100202.9590380000008736</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>72</ogr:Id>
+      <ogr:Nombre>Centro Cultural Marcó del Pont</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="19">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>108386.1184539999958361,101673.7531849999941187</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>74</ogr:Id>
+      <ogr:Nombre>Centro Cultural Plaza Defensa</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="20">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>98638.0386338999960572,102521.5072220000001835</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>75</ogr:Id>
+      <ogr:Nombre>Centro Cultural Resurgimiento</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="21">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>99665.4249065000039991,100491.9111120000015944</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>76</ogr:Id>
+      <ogr:Nombre>Centro Cultural Roberto Arlt</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="22">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>99470.1513635000010254,105534.4435260000027483</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>77</ogr:Id>
+      <ogr:Nombre>Centro Cultural Roberto Santoro</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="23">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>100016.0214249999989988,93451.0022914000001037</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>78</ogr:Id>
+      <ogr:Nombre>Centro Cultural Saladiyo</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="24">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101474.8473220000014408,100265.5721789999952307</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>79</ogr:Id>
+      <ogr:Nombre>Centro Cultural Sebastián Piana</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="25">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101136.6450849999964703,105185.0507420000067214</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>81</ogr:Id>
+      <ogr:Nombre>Espacio Cultural Carlos Gardel</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="26">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>104765.5204300000041258,100494.9539059999951860</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>82</ogr:Id>
+      <ogr:Nombre>Espacio Cultural Julián Centeya</ogr:Nombre>
+      <ogr:ActividadPrincipal>Centro Cultural</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>3</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="27">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>104532.7333090000029188,102578.0278289999987464</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>85</ogr:Id>
+      <ogr:Nombre>Conservatorio Superior de Música de la Ciudad de Bs. As. Astor Piazzolla</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="28">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>102129.2404079999978421,100129.4755580000055488</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>86</ogr:Id>
+      <ogr:Nombre>Conservatorio Superior de Música Manuel de Falla - Anexo 1</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="29">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>104840.0228930000012042,105038.2463450000068406</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>87</ogr:Id>
+      <ogr:Nombre>Conservatorio Superior de Música Manuel de Falla - Anexo 2</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="30">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>104881.3701259999943431,100623.6006889999989653</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>88</ogr:Id>
+      <ogr:Nombre>Conservatorio Superior de Música Manuel de Falla - Anexo 3</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="31">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101955.0594310000014957,103391.0423299999965820</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>89</ogr:Id>
+      <ogr:Nombre>Conservatorio Superior de Música Manuel de Falla - Anexo 4</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="32">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>104554.6999939999950584,102596.7802090000041062</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>90</ogr:Id>
+      <ogr:Nombre>Conservatorio Superior de Música Manuel de Falla - Sede Central</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="33">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>103022.3639160000020638,103501.2170789999945555</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>91</ogr:Id>
+      <ogr:Nombre>Escuela Metropolitana de Arte Dramática - Anexo 1</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="34">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>105518.2642510000005132,102546.3651419999951031</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>92</ogr:Id>
+      <ogr:Nombre>Escuela Metropolitana de Arte Dramático</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="35">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101216.8669640000007348,104094.6111050000035902</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>93</ogr:Id>
+      <ogr:Nombre>Espacio Teatral Los Andes</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="36">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>98143.4956723999930546,98754.9002482000068994</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>97</ogr:Id>
+      <ogr:Nombre>Instituto Vocacional de Arte Manuel José de Labardén - Anexo 2</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="37">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>106800.5663530000019819,100218.6430680000048596</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>98</ogr:Id>
+      <ogr:Nombre>Instituto Vocacional de Arte Manuel José de Labardén - Sede Central</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio de Formación (Carreras, Seminarios y Talleres)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>6</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="39">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>98140.2273169999971287,105889.6254029999981867</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>102</ogr:Id>
+      <ogr:Nombre>Teatro 25 de Mayo</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="40">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>107417.6624440000014147,103127.0754599999927450</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>103</ogr:Id>
+      <ogr:Nombre>Teatro Colón</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="41">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>109400.1955829999933485,98913.2562261999992188</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>104</ogr:Id>
+      <ogr:Nombre>Teatro de la Ribera</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="42">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>106848.2972609999997076,102773.8657510000048205</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>105</ogr:Id>
+      <ogr:Nombre>Teatro General San Martín</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="43">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>106711.3479729999962728,102779.0871049999987008</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>106</ogr:Id>
+      <ogr:Nombre>Teatro Presidente Alvear</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="44">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>101603.3118129999929806,105025.5825780000013765</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>107</ogr:Id>
+      <ogr:Nombre>Teatro Regio</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="45">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>105361.1350780000066152,102531.5479840000043623</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>108</ogr:Id>
+      <ogr:Nombre>Teatro Sarmiento</ogr:Nombre>
+      <ogr:ActividadPrincipal>Espacio Escénico (Teatro, Música y Danza)</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>7</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="46">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>107040.2363389999954961,102134.1222359999956097</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>109</ogr:Id>
+      <ogr:Nombre>Casa Histórica Isaac Fernández Blanco</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="48">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>105080.1160030000028200,103063.3417460000055144</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>111</ogr:Id>
+      <ogr:Nombre>Museo Casa Carlos Gardel</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="49">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>100737.4107840000069700,107559.1169620000000577</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>112</ogr:Id>
+      <ogr:Nombre>Museo de Arte Español Enrique Larreta</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="50">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>107647.6325329999963287,104255.4717669999954524</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>113</ogr:Id>
+      <ogr:Nombre>Museo de Arte Hispanoamericano Isaac Fernández Blanco</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="51">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>108489.8819590000057360,100814.3171089999959804</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>114</ogr:Id>
+      <ogr:Nombre>Museo de Arte Moderno de Buenos Aires</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="52">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>105331.4868339999957243,105482.7494719999958761</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>115</ogr:Id>
+      <ogr:Nombre>Museo de Arte Popular José Hernández</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="53">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>103866.7542229999962728,106494.4993819999945117</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>116</ogr:Id>
+      <ogr:Nombre>Museo de Artes Plásticas Eduardo Sívori</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="54">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>95948.7926225999981398,106704.6571399999957066</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>122</ogr:Id>
+      <ogr:Nombre>Museo Histórico de Buenos Aires Cornelio de Saavedra</ogr:Nombre>
+      <ogr:ActividadPrincipal>Museo</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>8</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+  <gml:featureMember>
+    <ogr:prueba_de_gml fid="56">
+      <ogr:geometryProperty>
+        <gml:Point>
+          <gml:coordinates>103940.1327969999983907,105385.7732030000042869</gml:coordinates>
+        </gml:Point>
+      </ogr:geometryProperty>
+      <ogr:Id>125</ogr:Id>
+      <ogr:Nombre>Planetario de la Ciudad de Buenos Aires "Galileo Galilei"</ogr:Nombre>
+      <ogr:ActividadPrincipal>Planetario</ogr:ActividadPrincipal>
+      <ogr:IdActividadPrincipal>10</ogr:IdActividadPrincipal>
+    </ogr:prueba_de_gml>
+  </gml:featureMember>
+</ogr:FeatureCollection>
