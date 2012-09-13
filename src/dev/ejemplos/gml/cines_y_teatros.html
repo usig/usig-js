@@ -21,7 +21,7 @@
 		
 		$('#mapa').css('width', 600).css('height', 450);
           
-		var mapa = new usig.MapaInteractivo('mapa', {
+		mapa = new usig.MapaInteractivo('mapa', {
 			includeToolbar: true,
 			includePanZoomBar: true,
 			onReady: function() {
@@ -49,80 +49,100 @@
 				var layerCines = new OpenLayers.Layer.GML("GML", "cines.gml", {
 	            	 styleMap: new OpenLayers.StyleMap(smCines)
 	            });
-	            mapa.api.addLayer(layerCines);
+	            // mapa.api.addLayer(layerCines);
 				var smTeatros = new OpenLayers.StyleMap({
 					default: {
 			            externalGraphic: 'images/sitios_culturales.png',
 			            backgroundGraphic: 'images/fondos/cua_verde.png',
-			            pointRadius: 8,
+			            pointRadius: 10,
 						cursor: "pointer"						
 					},
 					select: {
-						pointRadius: 16			            
+						pointRadius: 18			            
 					}
 				});
 				var rules = {
-						bibliotecas: {
-							filter: new OpenLayers.Filter.Comparison({
-		                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
-		                	      property: "ActividadPrincipal",
-		                	      value: 'Biblioteca',
-		                	}),
-		                	symbolizer: {
-		                		externalGraphic: 'images/dep_culturales.png',
-					            backgroundGraphic: 'images/fondos/cua_violeta.png',
-		                		pointRadius: 8
-		                	}
-						},
-	                	centros_culturales: {
-	                		filter: new OpenLayers.Filter.Comparison({
-	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
-	                	      property: "ActividadPrincipal",
-	                	      value: 'Centro Cultural',
-		                	}),
-		                	symbolizer: {
-		                		externalGraphic: 'images/cen_culturales.png',
-					            backgroundGraphic: 'images/fondos/cua_azul.png',
-		                		pointRadius: 8		                		
-		                	}
+					bibliotecas: {
+						filter: new OpenLayers.Filter.Comparison({
+                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                	      property: "ActividadPrincipal",
+                	      value: 'Biblioteca',
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/dep_culturales.png',
+				            backgroundGraphic: 'images/fondos/cua_violeta.png',
+	                		pointRadius: 7
 	                	}
+					},
+                	centros_culturales: {
+                		filter: new OpenLayers.Filter.Comparison({
+                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                	      property: "ActividadPrincipal",
+                	      value: 'Centro Cultural',
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/cen_culturales.png',
+				            backgroundGraphic: 'images/fondos/cua_azul.png',
+	                		pointRadius: 7		                		
+	                	}
+                	}
 				}
 				smTeatros.styles['default'].addRules([
-			                  new OpenLayers.Rule({
-			                	minScaleDenominator: 80000,
-			                	filter: rules.bibliotecas.filter,
-			                	symbolizer: rules.bibliotecas.symbolizer
-			                  }),
-			                  new OpenLayers.Rule({
-				                	minScaleDenominator: 80000,
-				                	filter: rules.centros_culturales.filter,
-				                	symbolizer: rules.centros_culturales.symbolizer
-				                  }),
-			                  new OpenLayers.Rule({
-				                	maxScaleDenominator: 80000,
-				                	filter: rules.bibliotecas.filter,
-				                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 12}, rules.bibliotecas.symbolizer)
-				                  }),
-			                  new OpenLayers.Rule({
-					                	maxScaleDenominator: 80000,
-					                	filter: rules.centros_culturales.filter,
-					                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 12}, rules.centros_culturales.symbolizer)
-			                  }),
-			                  new OpenLayers.Rule({
-				                	minScaleDenominator: 80000,
-				                  	elseFilter: true,
-				                  	symbolizer: {
-				                  		pointRadius: 8
-				                  	}
-			                  }),				                  
-			                  new OpenLayers.Rule({
-			                	maxScaleDenominator: 80000,
-			                  	elseFilter: true,
-			                  	symbolizer: {
-			                  		pointRadius: 12
-			                  	}
-			                  })				                  
-		                  ]);
+	                  new OpenLayers.Rule({
+	                	minScaleDenominator:80000,
+	                	filter: rules.bibliotecas.filter,
+	                	symbolizer: rules.bibliotecas.symbolizer
+	                  }),
+	                  new OpenLayers.Rule({
+	                	minScaleDenominator: 80000,
+	                	filter: rules.centros_culturales.filter,
+	                	symbolizer: rules.centros_culturales.symbolizer
+	                  }),
+	                  new OpenLayers.Rule({
+	                	maxScaleDenominator: 80000,
+	                	minScaleDenominator: 20000,
+	                	filter: rules.bibliotecas.filter,
+	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.bibliotecas.symbolizer)
+	                  }),
+	                  new OpenLayers.Rule({
+	                	maxScaleDenominator: 80000,
+	                	minScaleDenominator: 20000,
+	                	filter: rules.centros_culturales.filter,
+	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.centros_culturales.symbolizer)
+	                  }),
+	                  new OpenLayers.Rule({
+	                	maxScaleDenominator: 20000,
+	                	filter: rules.bibliotecas.filter,
+	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.bibliotecas.symbolizer)
+	                  }),
+	                  new OpenLayers.Rule({
+	                	maxScaleDenominator: 20000,
+	                	filter: rules.centros_culturales.filter,
+	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.centros_culturales.symbolizer)
+	                  }),
+	                  new OpenLayers.Rule({
+	                	minScaleDenominator: 80000,
+	                  	elseFilter: true,
+	                  	symbolizer: {
+	                  		pointRadius: 7
+	                  	}
+	                  }),				                  
+	                  new OpenLayers.Rule({
+	                	maxScaleDenominator: 80000,
+	                	minScaleDenominator: 20000,
+	                  	elseFilter: true,
+	                  	symbolizer: {
+	                  		pointRadius: 9
+	                  	}
+	                  }),				                  
+	                  new OpenLayers.Rule({
+	                	maxScaleDenominator: 20000,
+	                  	elseFilter: true,
+	                  	symbolizer: {
+	                  		pointRadius: 13
+	                  	}
+	                  })				                  
+                  ]);
 			
 				var layerTeatros = new OpenLayers.Layer.Vector('Teatros', {
 	            	styleMap: smTeatros
