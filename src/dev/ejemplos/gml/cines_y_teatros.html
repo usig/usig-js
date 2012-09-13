@@ -50,27 +50,82 @@
 	            	 styleMap: new OpenLayers.StyleMap(smCines)
 	            });
 	            mapa.api.addLayer(layerCines);
-				var smTeatros = new OpenLayers.Style({
-		            externalGraphic: 'images/punto_verde_20.png',
-					cursor: "pointer"
+				var smTeatros = new OpenLayers.StyleMap({
+					default: {
+			            externalGraphic: 'images/sitios_culturales.png',
+			            backgroundGraphic: 'images/fondos/cua_verde.png',
+			            pointRadius: 8,
+						cursor: "pointer"						
+					},
+					select: {
+						pointRadius: 16			            
+					}
 				});
-				smTeatros.addRules([
-				                  new OpenLayers.Rule({
+				var rules = {
+						bibliotecas: {
+							filter: new OpenLayers.Filter.Comparison({
+		                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+		                	      property: "ActividadPrincipal",
+		                	      value: 'Biblioteca',
+		                	}),
+		                	symbolizer: {
+		                		externalGraphic: 'images/dep_culturales.png',
+					            backgroundGraphic: 'images/fondos/cua_violeta.png',
+		                		pointRadius: 8
+		                	}
+						},
+	                	centros_culturales: {
+	                		filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "ActividadPrincipal",
+	                	      value: 'Centro Cultural',
+		                	}),
+		                	symbolizer: {
+		                		externalGraphic: 'images/cen_culturales.png',
+					            backgroundGraphic: 'images/fondos/cua_azul.png',
+		                		pointRadius: 8		                		
+		                	}
+	                	}
+				}
+				smTeatros.styles['default'].addRules([
+			                  new OpenLayers.Rule({
+			                	minScaleDenominator: 80000,
+			                	filter: rules.bibliotecas.filter,
+			                	symbolizer: rules.bibliotecas.symbolizer
+			                  }),
+			                  new OpenLayers.Rule({
 				                	minScaleDenominator: 80000,
-				                	symbolizer: {
-				                		pointRadius: 7
-				                	}
+				                	filter: rules.centros_culturales.filter,
+				                	symbolizer: rules.centros_culturales.symbolizer
 				                  }),
-				                  new OpenLayers.Rule({
+			                  new OpenLayers.Rule({
+				                	maxScaleDenominator: 80000,
+				                	filter: rules.bibliotecas.filter,
+				                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 12}, rules.bibliotecas.symbolizer)
+				                  }),
+			                  new OpenLayers.Rule({
+					                	maxScaleDenominator: 80000,
+					                	filter: rules.centros_culturales.filter,
+					                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 12}, rules.centros_culturales.symbolizer)
+			                  }),
+			                  new OpenLayers.Rule({
+				                	minScaleDenominator: 80000,
 				                  	elseFilter: true,
 				                  	symbolizer: {
-				                  		pointRadius: 10
+				                  		pointRadius: 8
 				                  	}
-				                  })				                  
-				                  ]);
-				
+			                  }),				                  
+			                  new OpenLayers.Rule({
+			                	maxScaleDenominator: 80000,
+			                  	elseFilter: true,
+			                  	symbolizer: {
+			                  		pointRadius: 12
+			                  	}
+			                  })				                  
+		                  ]);
+			
 				var layerTeatros = new OpenLayers.Layer.Vector('Teatros', {
-	            	styleMap: new OpenLayers.StyleMap(smTeatros)
+	            	styleMap: smTeatros
 	            });
 				/*
 				var layerTeatros = new OpenLayers.Layer.GML("GML", "artes_escenicas.xml", {
@@ -80,7 +135,7 @@
 				mapa.api.addLayer(layerTeatros);
 
 				$.ajax({
-					url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/buscar?actividades=7",
+					url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/buscar?sector=1",
 					dataType: 'jsonp',
 					success: function(data) {
 						var gml = new OpenLayers.Format.GML();
@@ -92,6 +147,13 @@
 					}
 				});
 
+				var highlightControl = new OpenLayers.Control.SelectFeature(
+		                [layerTeatros, layerCines],
+		                {
+							hover: true,
+		                    highlightOnly: true
+		                }
+		            );
 				var selectControl = new OpenLayers.Control.SelectFeature(
 			                [layerTeatros, layerCines],
 			                {
@@ -102,7 +164,9 @@
 			                }
 			            );
 			            
+	            mapa.api.addControl(highlightControl);
 	            mapa.api.addControl(selectControl);
+	            highlightControl.activate();
 	            selectControl.activate();
 	            
 	            layerTeatros.events.on({
@@ -125,9 +189,11 @@
 	    					url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/detalle/"+e.feature.attributes['Id']+"/",
 	    					dataType: 'jsonp',
 	    					success: function(data) {
-	    	        			$('div.popup p.indicator').remove();
-	    	        			$('div.popup').append('<p>Sector: '+data.sector+'</p>');
-	    	        			popup.updateSize();
+	    						if (popup != null && data.id==feature.attributes['Id']) {
+		    	        			$('div.popup p.indicator').remove();
+		    	        			$('div.popup').append('<p>Sector: '+data.sector+'</p>');
+		    	        			popup.updateSize();
+	    						}
 	    					},
 	    					error: function(e) {
 	    						usig.debug(e);
@@ -154,47 +220,7 @@
 	            mapa.api.addLayer(new OpenLayers.Layer.GML("GML", "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/buscar?actividades=7", {
 	            	styleMap: new OpenLayers.StyleMap(smTeatros)
 	            }));
-				*/
-				// Carga los datos del archivo gml
-				/*
-				OpenLayers.loadURL("tmi_sensores_de_ruido.gml", "", null, function parseData(req) {
-					var g =  new OpenLayers.Format.GML();
-					var features = g.read(req.responseText);
-					var i = 0;
-					for(var feat in features) {
-						if (typeof(features[feat].geometry)!="undefined") {
-							
-							// Creación del marker con el ícono personalizado
-							// Este ejemplo usa dos íconos distintos 
-							if (i%2==0){
-								var iconUrl = 'images/punto_ruido.png';
-								var iconSize = new OpenLayers.Size(20, 22);
-							} else {
-								var iconUrl = 'images/punto_ruido_verde.png';
-								var iconSize = new OpenLayers.Size(20, 22);
-							}
-							++i;
-							
-							// Fabrica el marker y lo coloca en las cordenadas
-							var customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(features[feat].geometry.x,features[feat].geometry.y),new OpenLayers.Icon(iconUrl, iconSize));
-							
-							// Genera el contenido del tooltip
-							
-							var contentHTML="";	
-							// Se puede seleccionar el campo a mostrar
-							contentHTML += "TMI: " + features[feat].attributes['TMI'];
-							contentHTML += "<br />";
-							contentHTML += "BARRIO: " + features[feat].attributes['BARRIO'];
-							// y acá se combinan los datos 
-							if (typeof(datos_sensores[features[feat].attributes['TMI']]) != "undefined"){
-								contentHTML += "<br />";
-								contentHTML += "Decibeles: " + datos_sensores[features[feat].attributes['TMI']].decibeles;
-							}
-							var markerId = mapa.addMarker(customMarker, false, contentHTML);
-						}
-		            }
-				});
-				*/				
+				*/							
 			}
 		});
 
