@@ -60,7 +60,7 @@
 		loadActividades();
 
 		var miMapa = new usig.MapaInteractivo('mapa', {
-			includeToolbar: true,
+			includeToolbar: false,
 			includePanZoomBar: true,
 			onReady: function() {
 				loadGML({sector: 1});	
@@ -287,7 +287,7 @@
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/arte.png',
-				            backgroundGraphic: 'images/fondos/rom_azul.png',
+				            backgroundGraphic: 'images/fondos/cua_azul.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -299,7 +299,7 @@
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/biblioteca.png',
-				            backgroundGraphic: 'images/fondos/rom_rojo.png',
+				            backgroundGraphic: 'images/fondos/cua_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -335,7 +335,7 @@
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/pena.png',
-				            backgroundGraphic: 'images/fondos/cir_naranjal.png',
+				            backgroundGraphic: 'images/fondos/cir_naranja.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -347,7 +347,7 @@
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/planetario.png',
-				            backgroundGraphic: 'images/fondos/cir_amarillo.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -407,7 +407,7 @@
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/television.png',
-				            backgroundGraphic: 'images/fondos/rom_naranja.png',
+				            backgroundGraphic: 'images/fondos/cua_naranja.png',
 	                		pointRadius: 7
 	                	}
 					}
@@ -439,112 +439,6 @@
 			});
 			smDependencias.styles['default'].addRules(rules);
 			
-		/*	smDependencias.styles['default'].addRules([
-	                  new OpenLayers.Rule({
-	                	minScaleDenominator: 80000,
-	                	filter: rules.bibliotecas.filter,
-	                	symbolizer: rules.bibliotecas.symbolizer
-	                  }),
-	                  new OpenLayers.Rule({
-	                	minScaleDenominator: 80000,
-	                	filter: rules.centros_culturales.filter,
-	                	symbolizer: rules.centros_culturales.symbolizer
-	                  }),
-	                  new OpenLayers.Rule({
-	                	minScaleDenominator: 80000,
-	                	filter: rules.archivo.filter,
-	                	symbolizer: rules.archivo.symbolizer
-	                  }),
-	                  new OpenLayers.Rule({
-	                	minScaleDenominator: 80000,
-	                	filter: rules.bar_notable.filter,
-	                	symbolizer: rules.bar_notable.symbolizer
-	                  }),
-	                  new OpenLayers.Rule({
-	                	minScaleDenominator: 80000,
-	                	filter: rules.bar_cultural.filter,
-	                	symbolizer: rules.bar_cultural.symbolizer
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 80000,
-	                	minScaleDenominator: 20000,
-	                	filter: rules.bibliotecas.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.bibliotecas.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 80000,
-	                	minScaleDenominator: 20000,
-	                	filter: rules.centros_culturales.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.centros_culturales.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 80000,
-	                	minScaleDenominator: 20000,
-	                	filter: rules.archivo.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.archivo.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 80000,
-	                	minScaleDenominator: 20000,
-	                	filter: rules.bar_notable.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.bar_notable.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 80000,
-	                	minScaleDenominator: 20000,
-	                	filter: rules.bar_cultural.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 9}, rules.bar_cultural.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 20000,
-	                	filter: rules.bibliotecas.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.bibliotecas.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 20000,
-	                	filter: rules.centros_culturales.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.centros_culturales.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 20000,
-	                	filter: rules.archivo.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.archivo.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 20000,
-	                	filter: rules.bar_cultural.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.bar_cultural.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 20000,
-	                	filter: rules.bar_notable.filter,
-	                	symbolizer: OpenLayers.Util.applyDefaults({pointRadius: 13}, rules.bar_notable.symbolizer)
-	                  }),
-	                  new OpenLayers.Rule({
-	                	minScaleDenominator: 80000,
-	                  	elseFilter: true,
-	                  	symbolizer: {
-	                  		pointRadius: 7
-	                  	}
-	                  }),				                  
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 80000,
-	                	minScaleDenominator: 20000,
-	                  	elseFilter: true,
-	                  	symbolizer: {
-	                  		pointRadius: 9
-	                  	}
-	                  }),				                  
-	                  new OpenLayers.Rule({
-	                	maxScaleDenominator: 20000,
-	                  	elseFilter: true,
-	                  	symbolizer: {
-	                  		pointRadius: 13
-	                  	}
-	                  })				                  
-                 
-       		 ]);*/
-			
 			layerDependencias = new OpenLayers.Layer.Vector('Dependencias', {
             	styleMap: smDependencias
             });
@@ -562,7 +456,14 @@
 			});
 
 			miMapa.api.addLayer(layerDependencias);
-				
+			var highlightControl = new OpenLayers.Control.SelectFeature(
+	                [layerDependencias],
+	                {
+						hover: true,
+	                    highlightOnly: true
+	                }
+	            );
+            
 			var selectControl = new OpenLayers.Control.SelectFeature(
 		                [layerDependencias],
 		                {
@@ -572,8 +473,10 @@
 		                    multipleKey: "shiftKey" // shift key adds to selection
 		                }
 		            );
-		            
+
+			miMapa.api.addControl(highlightControl);
             miMapa.api.addControl(selectControl);
+            highlightControl.activate();
             selectControl.activate();
             
             layerDependencias.events.on({
