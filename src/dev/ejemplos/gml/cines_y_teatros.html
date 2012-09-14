@@ -22,7 +22,7 @@
 		$('#mapa').css('width', 600).css('height', 450);
           
 		mapa = new usig.MapaInteractivo('mapa', {
-			includeToolbar: true,
+			includeToolbar: false,
 			includePanZoomBar: true,
 			onReady: function() {
 				var smCines = new OpenLayers.Style({
@@ -238,9 +238,11 @@
 	    					success: function(data) {
 	    						if (popup != null && data.id==feature.attributes['Id']) {
 		    	        			$('div.popup p.indicator').remove();
-		    	        			var content = '<ul style="list-style-type: none; margin: 5px 0; padding: 0;">';
+		    	        			var content = '<ul style="width: 300px; list-style-type: none; margin: 5px 0; padding: 0;">';
 		    	        			$.each(data.contenido, function(k, v) {
-		    	        				content+='<li><b>'+v.nombre+'</b>: '+v.valor+'</li>';
+		    	        				if (v.nombreId != 'nombre' && v.valor != '') {
+		    	        					content+='<li><b>'+v.nombre+'</b>: '+v.valor+'</li>';
+		    	        				}
 		    	        			});
 		    	        			content+='</ul>';
 		    	        			$('div.popup').append(content);
