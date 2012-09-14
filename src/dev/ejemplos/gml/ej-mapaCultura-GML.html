@@ -86,7 +86,7 @@
 			$('.menu').html(optionDefault);
 			
 			$.ajax({
-				url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/actividades/",
+				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/actividades/",
 				dataType: 'jsonp',
 				success: function(actividades) {
 					var options = '<option value=99>Ministerio de Cultura</option>';
@@ -107,17 +107,17 @@
 		function loadDetalle(idDetalle, popup) {
 			
 			$.ajax({
-				url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/detalle/"+idDetalle+"/",
+				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/detalle/"+idDetalle+"/",
 				dataType: 'jsonp',
 				success: function(detalle) {
 					$('div.popup p.indicator').remove();
-					contentHTML = '<p><ul>';
+					contentHTML = '<ul style="width: 300px; list-style-type: none; margin: 5px 0; padding: 0;">';
 					$.each(detalle.contenido, function(i, item){
-						if (item.valor!=''){
-							contentHTML+='<li>'+item.nombre+': '+item.valor+'</li>'
+						if (item.nombreId!='nombre' && item.valor!=''){
+							contentHTML+='<li><b>'+item.nombre+'</b>: '+item.valor+'</li>'
 						}
 					});
-					contentHTML += '</ul></p>';
+					contentHTML += '</ul>';
 
 					$('div.popup').append(contentHTML);
 					popup.updateSize();
@@ -146,7 +146,7 @@
 					pointRadius: 18			            
 				}
 			});
-			var rules = {
+			var clases = {
 					bibliotecas: {
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
@@ -154,8 +154,8 @@
 	                	      value: '2',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_violeta.png',
+	                		externalGraphic: 'images/biblioteca.png',
+				            backgroundGraphic: 'images/fondos/cir_naranja.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -178,8 +178,8 @@
 	                	      value: '1',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/archivo.png',
+				            backgroundGraphic: 'images/fondos/cua_naranja.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -190,8 +190,8 @@
 	                	      value: '13',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/bar.png',
+				            backgroundGraphic: 'images/fondos/tri_azul.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -202,8 +202,8 @@
 	                	      value: '15',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/bar.png',
+				            backgroundGraphic: 'images/fondos/tri_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -214,8 +214,8 @@
 	                	      value: '4',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/cine.png',
+				            backgroundGraphic: 'images/fondos/cua_naranja.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -226,8 +226,8 @@
 	                	      value: '5',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/circo.png',
+				            backgroundGraphic: 'images/fondos/cua_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -238,8 +238,8 @@
 	                	      value: '12',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/editorial.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -250,8 +250,8 @@
 	                	      value: '26',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/disqueria.png',
+				            backgroundGraphic: 'images/fondos/cua_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -262,8 +262,8 @@
 	                	      value: '6',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/escuela.png',
+				            backgroundGraphic: 'images/fondos/cua_verde.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -274,8 +274,8 @@
 	                	      value: '7',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/teatro.png',
+				            backgroundGraphic: 'images/fondos/cir_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -286,8 +286,8 @@
 	                	      value: '19',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/arte.png',
+				            backgroundGraphic: 'images/fondos/rom_azul.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -298,8 +298,8 @@
 	                	      value: '22',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/biblioteca.png',
+				            backgroundGraphic: 'images/fondos/rom_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -310,8 +310,8 @@
 	                	      value: '14',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/tangueria.png',
+				            backgroundGraphic: 'images/fondos/cir_verde.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -322,8 +322,8 @@
 	                	      value: '8',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/museo.png',
+				            backgroundGraphic: 'images/fondos/cir_azul.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -334,8 +334,8 @@
 	                	      value: '9',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/pena.png',
+				            backgroundGraphic: 'images/fondos/cir_naranjal.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -346,8 +346,8 @@
 	                	      value: '10',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/planetario.png',
+				            backgroundGraphic: 'images/fondos/cir_amarillo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -358,8 +358,8 @@
 	                	      value: '25',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/productoraAV.png',
+				            backgroundGraphic: 'images/fondos/tri_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -370,8 +370,8 @@
 	                	      value: '23',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/radio.png',
+				            backgroundGraphic: 'images/fondos/tri_verde.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -382,8 +382,8 @@
 	                	      value: '11',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/cine.png',
+				            backgroundGraphic: 'images/fondos/tri_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -394,8 +394,8 @@
 	                	      value: '24',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/disqueria.png',
+				            backgroundGraphic: 'images/fondos/tri_amarillo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -406,14 +406,40 @@
 	                	      value: '27',
 	                	}),
 	                	symbolizer: {
-	                		externalGraphic: 'images/dep_culturales.png',
-				            backgroundGraphic: 'images/fondos/cua_amarillo.png',
+	                		externalGraphic: 'images/television.png',
+				            backgroundGraphic: 'images/fondos/rom_naranja.png',
 	                		pointRadius: 7
 	                	}
 					}
 			}
-
-			smDependencias.styles['default'].addRules([
+			var escalas = [
+				{ 
+					minScaleDenominator: 80000,
+					symbolizer: {pointRadius: 7}
+				},
+				{
+					minScaleDenominator: 20000,
+					maxScaleDenominator: 80000,
+					symbolizer: {pointRadius: 9}
+				},
+				{
+					maxScaleDenominator: 20000,
+					symbolizer: {pointRadius: 13}
+				}
+			];
+			var rules = new Array();
+			$.each(escalas, function(i, escala) {					
+				$.each(clases, function(j, clase) {
+					var s = $.extend({}, clase.symbolizer, escala.symbolizer);
+					rules.push(new OpenLayers.Rule(
+						$.extend({}, clase, escala, {symbolizer: s})
+					));
+				});
+				rules.push(new OpenLayers.Rule($.extend({}, escala, {elseFilter: true})));
+			});
+			smDependencias.styles['default'].addRules(rules);
+			
+		/*	smDependencias.styles['default'].addRules([
 	                  new OpenLayers.Rule({
 	                	minScaleDenominator: 80000,
 	                	filter: rules.bibliotecas.filter,
@@ -516,15 +542,15 @@
 	                  		pointRadius: 13
 	                  	}
 	                  })				                  
-			                  
-       		 ]);
+                 
+       		 ]);*/
 			
 			layerDependencias = new OpenLayers.Layer.Vector('Dependencias', {
             	styleMap: smDependencias
             });
 
 			$.ajax({
-				url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
+				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
 				dataType: 'jsonp',
 				success: function(gmlData) {
 					var gml = new OpenLayers.Format.GML();
@@ -575,18 +601,8 @@
                     miMapa.api.removePopup(e.feature.popup);
                     e.feature.popup.destroy();
                     e.feature.popup = null;	                	
-                    //usig.debug("unselected feature "+e.feature.id+" on Vector Layer 1");
                 }
             });
-            /*layerDependencias.events.on({
-                "featureselected": function(e) {
-                    //usig.debug("selected feature "+e.feature.id+" on Vector Layer 2");
-                },
-                "featureunselected": function(e) {
-                    //usig.debug("unselected feature "+e.feature.id+" on Vector Layer 2");
-                }
-            });*/	            
-		
 		}
 		
 		var ac = new usig.AutoCompleter('b', {
@@ -628,8 +644,7 @@
 		});
 	});	
 
-
-	</script>
+</script>
   </head>
   <body>
     <div id="page">
