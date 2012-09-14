@@ -61,7 +61,7 @@
 						pointRadius: 18			            
 					}
 				});
-				var rules = {
+				var clases = {
 					bibliotecas: {
 						filter: new OpenLayers.Filter.Comparison({
                 	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
@@ -87,6 +87,33 @@
 	                	}
                 	}
 				}
+				var escalas = [
+					{ 
+						minScaleDenominator: 80000,
+						symbolizer: {pointRadius: 7}
+					},
+					{
+						minScaleDenominator: 20000,
+						maxScaleDenominator: 80000,
+						symbolizer: {pointRadius: 9}
+					},
+					{
+						maxScaleDenominator: 20000,
+						symbolizer: {pointRadius: 13}
+					}
+				];
+				var rules = new Array();
+				$.each(escalas, function(i, escala) {					
+					$.each(clases, function(j, clase) {
+						var s = $.extend({}, clase.symbolizer, escala.symbolizer);
+						rules.push(new OpenLayers.Rule(
+							$.extend({}, clase, escala, {symbolizer: s})
+						));
+					});
+					rules.push(new OpenLayers.Rule($.extend({}, escala, {elseFilter: true})));
+				});
+				smTeatros.styles['default'].addRules(rules);
+				/*
 				smTeatros.styles['default'].addRules([
 	                  new OpenLayers.Rule({
 	                	minScaleDenominator:80000,
@@ -143,7 +170,7 @@
 	                  	}
 	                  })				                  
                   ]);
-			
+				*/
 				var layerTeatros = new OpenLayers.Layer.Vector('Teatros', {
 	            	styleMap: smTeatros
 	            });
@@ -196,7 +223,7 @@
 	        					e.feature.id,
 	        					new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
 	        	                null, //new OpenLayers.Size(10, 10),
-	        	                "<div class='popup'><b>" + e.feature.attributes['Nombre'] +"</b><p class='indicator'>Buscando información...</p></div>",
+	        	                "<div class='popup'><h3>" + e.feature.attributes['Nombre'] +"</h3><p class='indicator'>Buscando información...</p></div>",
 	        	                null,
 	        					true,
 	        					function() {
@@ -211,7 +238,12 @@
 	    					success: function(data) {
 	    						if (popup != null && data.id==feature.attributes['Id']) {
 		    	        			$('div.popup p.indicator').remove();
-		    	        			$('div.popup').append('<p>Sector: '+data.sector+'</p>');
+		    	        			var content = '<ul style="list-style-type: none; margin: 5px 0; padding: 0;">';
+		    	        			$.each(data.contenido, function(k, v) {
+		    	        				content+='<li><b>'+v.nombre+'</b>: '+v.valor+'</li>';
+		    	        			});
+		    	        			content+='</ul>';
+		    	        			$('div.popup').append(content);
 		    	        			popup.updateSize();
 	    						}
 	    					},
