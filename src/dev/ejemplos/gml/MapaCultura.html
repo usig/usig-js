@@ -41,11 +41,10 @@
 	<!-- DEV --><script src="../../usig.AutoCompleterDialog.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.MapaInteractivo.js" type="text/javascript"></script>
     <!-- DEV --><script src="../../usig.Suggester.js" type="text/javascript"></script>
-    <!-- DEV --><script src="../../usig.SuggesterLugares.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.SuggesterDirecciones.js" type="text/javascript"></script>
     	
-	<!-- RELEASE <script src="../../usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
-    <!-- RELEASE <script src="../../usig.AutoCompleterFull.min.js" type="text/javascript"></script> -->
+	<!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
+    <!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.AutoCompleterDireccionesFull.min.js" type="text/javascript"></script> -->
     
 	<script type="text/javascript">
 
@@ -136,13 +135,13 @@
 			}
 			
 			var smDependencias = new OpenLayers.StyleMap({
-				default: {
+				'default': {
 		            externalGraphic: 'images/sitios_culturales.png',
 		            backgroundGraphic: 'images/fondos/cua_verde.png',
 		            pointRadius: 10,
 					cursor: "pointer"						
 				},
-				select: {
+				'select': {
 					pointRadius: 18			            
 				}
 			});
@@ -151,7 +150,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '2',
+	                	      value: '2'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/biblioteca.png',
@@ -163,7 +162,7 @@
                 		filter: new OpenLayers.Filter.Comparison({
                 	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
                 	      property: "IdActividadPrincipal",
-                	      value: '3',
+                	      value: '3'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/cen_culturales.png',
@@ -175,7 +174,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '1',
+	                	      value: '1'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/archivo.png',
@@ -187,11 +186,11 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '13',
+	                	      value: '13'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/bar.png',
-				            backgroundGraphic: 'images/fondos/tri_azul.png',
+				            backgroundGraphic: 'images/fondos/cir_azul.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -199,11 +198,11 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '15',
+	                	      value: '15'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/bar.png',
-				            backgroundGraphic: 'images/fondos/tri_violeta.png',
+				            backgroundGraphic: 'images/fondos/cir_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -211,7 +210,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '4',
+	                	      value: '4'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/cine.png',
@@ -223,7 +222,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '5',
+	                	      value: '5'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/circo.png',
@@ -235,7 +234,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '12',
+	                	      value: '12'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/editorial.png',
@@ -247,7 +246,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '26',
+	                	      value: '26'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/disqueria.png',
@@ -259,7 +258,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '6',
+	                	      value: '6'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/escuela.png',
@@ -271,7 +270,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '7',
+	                	      value: '7'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/teatro.png',
@@ -283,7 +282,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '19',
+	                	      value: '19'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/arte.png',
@@ -295,7 +294,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '22',
+	                	      value: '22'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/biblioteca.png',
@@ -307,7 +306,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '14',
+	                	      value: '14'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/tangueria.png',
@@ -319,7 +318,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '8',
+	                	      value: '8'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/museo.png',
@@ -331,7 +330,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '9',
+	                	      value: '9'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/pena.png',
@@ -343,7 +342,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '10',
+	                	      value: '10'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/planetario.png',
@@ -355,11 +354,11 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '25',
+	                	      value: '25'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/productoraAV.png',
-				            backgroundGraphic: 'images/fondos/tri_rojo.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -367,11 +366,11 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '23',
+	                	      value: '23'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/radio.png',
-				            backgroundGraphic: 'images/fondos/tri_verde.png',
+				            backgroundGraphic: 'images/fondos/cir_verde.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -379,11 +378,11 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '11',
+	                	      value: '11'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/cine.png',
-				            backgroundGraphic: 'images/fondos/tri_violeta.png',
+				            backgroundGraphic: 'images/fondos/cir_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -391,11 +390,11 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '24',
+	                	      value: '24'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/disqueria.png',
-				            backgroundGraphic: 'images/fondos/tri_amarillo.png',
+				            backgroundGraphic: 'images/fondos/cua_violeta.png',
 	                		pointRadius: 7
 	                	}
 					},
@@ -403,7 +402,7 @@
 						filter: new OpenLayers.Filter.Comparison({
 	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
 	                	      property: "IdActividadPrincipal",
-	                	      value: '27',
+	                	      value: '27'
 	                	}),
 	                	symbolizer: {
 	                		externalGraphic: 'images/television.png',
@@ -509,9 +508,6 @@
 		}
 		
 		var ac = new usig.AutoCompleter('b', {
-       		debug: true,
-       		rootUrl: '../../',
-       		skin: 'usig2',
        		onReady: function() {
        			$('#b').val('').removeAttr('disabled').focus();	        			
        		},
@@ -520,8 +516,8 @@
        				selectedOption = option;
        			}
        		},
-       		afterGeoCoding: afterGeoCoding
-       		//suggesters: [{suggester: 'Direcciones', options: { inputPause: 10, minTextLength: 3 , showError: true} }]
+       		afterGeoCoding: afterGeoCoding,
+       		suggesters: [{suggester: 'Direcciones', options: { inputPause: 10, minTextLength: 3 , showError: true} }]
        	});
 
 		$('#mainForm').bind("submit", function () {
@@ -566,7 +562,7 @@
 
       	<label for="b">Buscar</label>
      	<input type="text" size="40" name="b" id="b" title="Lugar a buscar" class="text"/>
-     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, etc.</span>
 	    <div id="mapa"></div>
        </form>
       </div>
