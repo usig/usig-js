@@ -92,7 +92,7 @@ return new (usig.AjaxComponent.extend({
 				piwikTracker.enableLinkTracking();
 			} catch( err ) {}
 		};
-		if (opts.trackVisits) {
+		if (usig.Recorridos && opts.trackVisits) {
 			if (typeof(Piwik) == "undefined") {	
 				usig.loadJs(opts.piwikBaseUrl+'piwik.js', trackVisits.createDelegate(this,[opts.piwikSiteId]));
 			} else {

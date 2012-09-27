@@ -332,7 +332,7 @@ return function(datos, options) {
 		return traveled_distance;
 	};
 	
-	this.time_string = function() {
+	this.getTimeString = function() {
 		time = '';
 		//Mas de 60 mins
 		if(tiempo > 60) {
