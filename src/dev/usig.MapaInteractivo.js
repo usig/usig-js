@@ -48,14 +48,17 @@ return function(idDiv, options) {
 		myself = this,
 		$indicatorImage = null,
 		preloadedImages = [],
-		$divIndicator = $('<div class="indicator" style="-moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; -moz-border-radius-bottomleft: 10px; -webkit-border-bottom-left-radius: 10px; -moz-border-radius-bottomright: 10px; -webkit-border-bottom-right-radius: 10px;"></div>'),
-		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = markersShadows = myMarkers = null;
+		$divIndicator = $('<div class="indicator" style="-moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;"></div>'),
+		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = myMarkers = selectControl = highlightControl = null;
 
 	function init() {
 		$divIndicator.remove();
 		opts.OpenLayersOptions.maxExtent = new OpenLayers.Bounds(opts.bounds[0], opts.bounds[1], opts.bounds[2], opts.bounds[3]);
 		opts.OpenLayersOptions.initBounds = new OpenLayers.Bounds(opts.initBounds[0], opts.initBounds[1], opts.initBounds[2], opts.initBounds[3]);
 	    map = new OpenLayers.Map(idDiv, opts.OpenLayersOptions);
+	    
+	    $('div.olMapViewport', $div).append($divIndicator);
+	    
 	    /**
 	     * API de OpenLayers para manipular el mapa. Ver documentacion disponible en http://docs.openlayers.org/
 	     */
@@ -135,41 +138,121 @@ return function(idDiv, options) {
 	    map.addControl(statusBar);
 	    
 		//Direcciones
-        markersShadows = new OpenLayers.Layer.Vector(
-                "MarkersShadows", 
+        myMarkers = new OpenLayers.Layer.Vector(
+                "MyMarkers", 
                 {
                     styleMap: new OpenLayers.StyleMap({
-                        // Set the external graphic and background graphic images.
-                        externalGraphic: opts.rootUrl+"images/blank.gif", // marcador.png",
-                        backgroundGraphic: opts.rootUrl+"images/pincho_inclinado_shadow.png",
-                        
-                        // Makes sure the background graphic is placed correctly relative
-                        // to the external graphic.
-                        graphicWidth: 33,
-                        graphicHeight: 10,
-                        graphicXOffset: -2,
-                        graphicYOffset: -29,
-                        backgroundXOffset: 1,
-                        backgroundYOffset: -11,
-                        
-                        // Set the z-indexes of both graphics to make sure the background
-                        // graphics stay in the background (shadows on top of markers looks
-                        // odd; let's not do that).
-                        graphicZIndex: opts.MARKER_Z_INDEX,
-                        backgroundGraphicZIndex: opts.SHADOW_Z_INDEX,
-                        
-                        pointRadius: 10
+                    	'default' : {
+	                        // Set the external graphic and background graphic images.
+	                        externalGraphic: opts.rootUrl+"images/pincho_inclinado.png", // marcador.png",
+	                        backgroundGraphic: opts.rootUrl+"images/pincho_inclinado_shadow.png",
+	                        
+	                        // Makes sure the background graphic is placed correctly relative
+	                        // to the external graphic.
+	                        graphicWidth: 17,
+	                        graphicHeight: 30,
+	                        graphicXOffset: -4,
+	                        graphicYOffset: -30,
+	                        backgroundWidth: 28,
+	                        backgroundHeight: 8,
+	                        backgroundXOffset: 1,
+	                        backgroundYOffset: -8,
+	                        
+	                        // Set the z-indexes of both graphics to make sure the background
+	                        // graphics stay in the background (shadows on top of markers looks
+	                        // odd; let's not do that).
+	                        graphicZIndex: opts.MARKER_Z_INDEX,
+	                        backgroundGraphicZIndex: opts.SHADOW_Z_INDEX,
+	                        
+	                        // pointRadius: 7,
+	                        cursor: 'pointer'
+                    	},
+                    	'select': {
+	                        graphicWidth: 20,
+	                        graphicHeight: 36,
+	                        graphicXOffset: -5,
+	                        graphicYOffset: -36,
+	                        backgroundWidth: 33,
+	                        backgroundHeight: 10,
+	                        backgroundXOffset: 1,
+	                        backgroundYOffset: -11
+                    	}
                     }),
                     rendererOptions: {yOrdering: true}
                 }
         );
         
-		myMarkers = new OpenLayers.Layer.Markers("MyMarkers");
+		// myMarkers = new OpenLayers.Layer.Markers("MyMarkers");
 
-		map.addLayer(markersShadows);
+		// map.addLayer(markersShadows);
 		map.addLayer(myMarkers);
 	    
-		if (typeof(opts.onReady) == "function") {
+		highlightControl = new OpenLayers.Control.SelectFeature(
+            [myMarkers],
+            {
+				hover: true,
+                highlightOnly: true
+            }
+        );
+		
+		selectControl = new OpenLayers.Control.SelectFeature(
+            [myMarkers],
+            {
+                clickout: true, toggle: false,
+                multiple: false, hover: false,
+                toggleKey: "ctrlKey", // ctrl key removes from selection
+                multipleKey: "shiftKey" // shift key adds to selection
+            }
+        );
+		
+        
+        myMarkers.events.on({
+            "featureselected": function(e) {
+                if (opts.debug) usig.debug("selected feature "+e.feature.id+" on Markers Layer");
+            	var feature=e.feature;
+        		var marker = markersMap[e.feature.attributes['fid']];
+        		if (marker.place.options.popup) {
+        			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
+	    			var popup = new OpenLayers.Popup.FramedCloud(
+						e.feature.id,
+						new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
+		                null, //new OpenLayers.Size(10, 10),
+		                marker.popupContent,
+		                null,
+						true,
+						function() {
+		                	selectControl.unselect(feature);
+		                }
+	    	        );
+	    			e.feature.popup = popup;
+	    			popup.hide();
+	    			map.addPopup(popup, true);
+        		}
+    			if (typeof(marker.onClick) == "function") {
+    				marker.onClick(e, marker.place, popup);
+    			} else if (popup) {
+    				popup.show();
+    			}
+    			if (!popup)    				
+    				selectControl.unselect(feature);
+            },
+            "featureunselected": function(e) {
+                if (opts.debug) usig.debug("unselected feature "+e.feature.id+" on Markers Layer");
+                if (e.feature.popup) {
+	                map.removePopup(e.feature.popup);
+	                e.feature.popup.destroy();
+	                e.feature.popup = null;
+                }
+            }
+        });
+		
+	            
+        map.addControl(highlightControl);
+        map.addControl(selectControl);
+        highlightControl.activate();
+        selectControl.activate();
+        
+        if (typeof(opts.onReady) == "function") {
 			opts.onReady(this);
 		}
 		
@@ -187,6 +270,7 @@ return function(idDiv, options) {
 				trackVisits(opts.piwikSiteId);
 			}
 		}
+		$divIndicator.hide();
 	};
 	
 	function preloadImages() {
@@ -241,37 +325,52 @@ return function(idDiv, options) {
 	}
 	
 	function getMarkerFromPlace(place) {
+		var marker = { style: null, lonlat: null };
 		if (place instanceof OpenLayers.Marker) {
-			return place;
-
+			marker = {
+				style: {
+					externalGraphic: place.icon.url,
+                    backgroundGraphic: opts.rootUrl+"images/blank.gif",
+                    graphicWidth: place.icon.size.w,
+                    graphicHeight: place.icon.size.h,
+                    graphicXOffset: place.icon.offset.x,
+                    graphicYOffset: place.icon.offset.y					
+				},
+				lonlat: place.lonlat.clone()
+			};
+			place.destroy();
+			return marker;
 		}
-		
-		var size = new OpenLayers.Size(20, 36),
-			offset = new OpenLayers.Pixel(-5, -size.h),
-			icon = new OpenLayers.Icon(opts.rootUrl+'images/pincho_inclinado.png', size, offset),
-			pt = null;
-		
-		if (place.options) {
-			size = new OpenLayers.Size(place.options.iconWidth, place.options.iconHeight);
-			//offset = new OpenLayers.Pixel(-5, -size.h),
-			icon = new OpenLayers.Icon(place.options.iconUrl, size);
-			//pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
+		if (place.options && place.options.iconUrl) {
+			// size = new OpenLayers.Size(place.options.iconWidth, place.options.iconHeight);
+			// icon = new OpenLayers.Icon(place.options.iconUrl, size);
+			marker = {
+				style: {
+					externalGraphic: place.options.iconUrl,
+                    backgroundGraphic: opts.rootUrl+"images/blank.gif",
+                    graphicWidth: place.options.iconWidth,
+                    graphicHeight: place.options.iconHeight,
+                    graphicXOffset: place.options.offsetX,
+                    graphicYOffset: place.options.offsetY					
+				}					
+			};
 		}
 		
 		if (place.x != undefined && place.y != undefined) {
-			pt = new OpenLayers.LonLat(place.x,place.y);
+			marker.lonlat = new OpenLayers.LonLat(place.x,place.y);
 		}
 		
 		if (usig.Direccion && place instanceof usig.Direccion) {
-			pt = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
+			marker.lonlat = new OpenLayers.LonLat(place.getCoordenadas().x, place.getCoordenadas().y);
 		}
 		
 		if (usig.inventario && usig.inventario.Objeto && place instanceof usig.inventario.Objeto) {
-			pt = new OpenLayers.LonLat(place.ubicacion.getCentroide().x, place.ubicacion.getCentroide().y);			
+			marker.lonlat = new OpenLayers.LonLat(place.ubicacion.getCentroide().x, place.ubicacion.getCentroide().y);
 		}
 		// le agregamos una clase Marker para cambiar el puntero del mouse en el over
-		icon.imageDiv.className = 'Marker';  
-		return new OpenLayers.Marker(pt, icon);
+		// icon.imageDiv.className = 'Marker';  
+		// return new OpenLayers.Marker(pt, icon);
+		return marker;
 	}
 	
 	function cargarNormalizadorDirecciones() {
@@ -363,25 +462,21 @@ return function(idDiv, options) {
 	
 	function _addMarker(place, id, goTo, onClick, options) {
 		var defaults = {
-				iconUrl: opts.rootUrl+'images/pincho_inclinado.png',
-				iconWidth: 20,
-				iconHeight: 36,
-				offsetX: -5,
-				offsetY: -36,
-				instantPopup: false
+ 			instantPopup: false,
+ 			popup: true
 		}
 		// fijarse si el marker ya existe...
 		statusBar.activate(opts.texts.processing, true);
 		
-		if (options) {
-			place.options = $.extend({}, defaults, options);
-		} else {
-			if (typeof(onClick) == "object") {
-				place.options = $.extend({}, defaults, onClick);
-			}
+		place.options = $.extend({}, defaults, options);
+		if (typeof(onClick) == "object") {
+			// Se omitio el parametro onClick y por lo tanto "onClick" es "options"
+			place.options = $.extend({}, defaults, onClick);
 		}
 		
 		var marker = getMarkerFromPlace(place);
+		if (opts.debug) usig.debug(marker);
+		
 		// muestra el place por default
 		var contentHTML = place;
 		
@@ -390,16 +485,18 @@ return function(idDiv, options) {
 		}	
 		
 		marker.place = place;
+		marker.feature = new OpenLayers.Feature.Vector(
+	            new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat),
+	            { fid: id }
+	    );
+		marker.feature.style = marker.style;
+		marker.popupContent = contentHTML;
+		marker.onClick = typeof(onClick)=="function"?onClick:null;
+
+		if (opts.debug) usig.debug('addMarker '+id);
 		markersMap[''+id] = marker;
-		myMarkers.addMarker(marker);
-		
-		if (!(place instanceof OpenLayers.Marker) && (typeof(options) != "object") && typeof(onClick) != "object") {
-	    	var markerShadow = new OpenLayers.Feature.Vector(
-	            new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat)	            
-	        );
-			marker.shadow = markerShadow;
-			markersShadows.addFeatures(markerShadow);
-		}
+		// myMarkers.addMarker(marker);
+		myMarkers.addFeatures(marker.feature);
 		
 		if(goTo) {
 			_goTo(marker.lonlat, true);
@@ -407,47 +504,8 @@ return function(idDiv, options) {
 			
 		// Si esta seteada la opcion de instantPopup
 		if (place.options && place.options.instantPopup){
-			var framedCloud = new OpenLayers.Popup.FramedCloud(
-						id,
-						marker.lonlat,
-		                new OpenLayers.Size(10, 10),
-		                contentHTML,
-		                marker.icon,
-						true,
-						null);
-				
-				marker.popup = framedCloud;
-				framedCloud.hide();
-				map.addPopup(framedCloud, true);
-				
-				if (typeof(onClick) == "function") {
-					onClick(null, place, framedCloud);
-				}else {
-					framedCloud.show();
-				}
+			selectControl.select(marker.feature);
 		}
-		
-		marker.events.registerPriority('click', marker, function(ev) {
-			OpenLayers.Event.stop(ev, false);
-			var framedCloud = new OpenLayers.Popup.FramedCloud(
-					id,
-					marker.lonlat,
-	                new OpenLayers.Size(10, 10),
-	                contentHTML,
-	                marker.icon,
-					true,
-					null);
-			
-			marker.popup = framedCloud;
-			framedCloud.hide();
-			map.addPopup(framedCloud, true);	
-			
-			if (typeof(onClick) == "function") {
-				onClick(ev, place, framedCloud);
-			} else {
-				framedCloud.show();
-			}
-		});
 		
 		statusBar.deactivate();
 		
@@ -590,7 +648,7 @@ return function(idDiv, options) {
 	 * @param {OpenLayers.Marker/usig.Direccion/usig.inventario.Objeto/usig.DireccionMapabsas/usig.Punto/String} place Lugar que se desea marcar. Es posible indicar un string conteniendo una direccion valida
 	 * @param {Boolean} goTo Indica si se desea hacer zoom sobre el lugar agregado
 	 * @param {Function/String} onClick (optional) Callback que se llama cuando el usuario hace click sobre el marcador o bien acepta un contenido html para el tooltip
-	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, offsetX, offsetY, instantPopup)
+	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles (iconUrl, iconWidth, iconHeight, offsetX, offsetY, popup, instantPopup)
 	 * @return {Integer} Id del marcador agregado
 	 */
 	this.addMarker = function(place, goTo, onClick, options) {
@@ -615,6 +673,7 @@ return function(idDiv, options) {
 	 */
 	this.removeMarker = function(id)	{
 		marker = markersMap[''+id];
+		/*
 		if (marker.popup) {
 			map.removePopup(marker.popup);
 			marker.popup.destroy();
@@ -622,6 +681,8 @@ return function(idDiv, options) {
 		myMarkers.removeMarker(marker);
 		if (marker.shadow)
 			markersShadows.removeFeatures(marker.shadow);
+		*/
+		myMarkers.removeFeatures(marker.feature);
 		marker.destroy();
 		marker = undefined;
 		markersMap[id] = undefined;
@@ -633,6 +694,15 @@ return function(idDiv, options) {
 	 * @param {Boolean} display True para prender el marcador y False para apagarlo
 	 */
 	this.toggleMarker = function(id, display) {
+		var marker = markersMap[''+id]
+		if (display) {
+			myMarkers.getFeatureById(marker.feature.id).style = marker.style;
+		} else {
+			myMarkers.getFeatureById(marker.feature.id).style = $.extend({}, marker.style, { display: 'none'});			
+		}
+		if (opts.debug) usig.debug(myMarkers.getFeatureById(marker.feature.id).style);
+		myMarkers.redraw();
+		/*
 		markersMap[''+id].display(display);
 		if (markersMap[''+id].shadow) {
 			if (!display)
@@ -640,6 +710,7 @@ return function(idDiv, options) {
 			else
 				markersShadows.addFeatures(markersMap[''+id].shadow);
 		}
+		*/
 	}
 	
 	/**
@@ -658,6 +729,14 @@ return function(idDiv, options) {
 		
 	this.hideStatus = function() {
 		statusBar.deactivate();
+	}
+	
+	this.showIndicator = function() {
+		$divIndicator.show();
+	}
+	
+	this.hideIndicator = function() {
+		$divIndicator.hide();
 	}
 	
 	this.raiseMarkers =function(index){
@@ -715,6 +794,8 @@ return function(idDiv, options) {
 			.css('height', '52px')
 			.css('border', '1px solid #ddd')
 			.css('position', 'relative')
+			.css('zIndex', '1000')
+			.css('opacity', '0.85')
 			.css('left', (mapWidth/2-26)+'px')
 			.css('top', (mapHeight/2-26)+'px')
 			.append($indicatorImage);

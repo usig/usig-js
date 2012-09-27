@@ -50,7 +50,7 @@
 							
 				var markerId = miMapa.addMarker(customMarker, true, function(ev, marker) {
 	 					alert('Click en '+marker.dir.toString());
-	 				});
+	 				}, { popup: false });
 				
 			}		
 		}
@@ -83,7 +83,8 @@
 							
 				var markerId = miMapa.addMarker(customMarker, true, "<b>Texto de prueba</b>");
 				
-			}
+			},
+			debug: true
 		});
 
 		

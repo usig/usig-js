@@ -24,6 +24,7 @@ usig.Inventario = (function($) { // Soporte jQuery noConflict
 return usig.AjaxComponent.extend({
 	
 	lastRequest: null,
+	lastRequestEpok: null,
 	
 	init: function(options) {
 		var opts = $.extend({}, usig.Inventario.defaults, options);		
@@ -110,7 +111,7 @@ return usig.AjaxComponent.extend({
 	 */
 	buscar: function(text, success, error, options) {
 
-		function buscarResultsHandler (results, callback) {
+		function buscarResultsHandler (results, callback, prefix) {
 			var clases = {}, objetos = [];
 			
 			$.each(results.clasesEncontradas, function(i, clase) {
@@ -118,7 +119,9 @@ return usig.AjaxComponent.extend({
 			});
 			
 			$.each(results.instancias, function(i, obj) {
-				objetos.push(new usig.inventario.Objeto(obj, clases[obj.claseId]));
+				var o = new usig.inventario.Objeto(obj, clases[obj.claseId]);
+				o.id = prefix+o.id;
+				objetos.push(o);
 			});
 			
 			if (typeof(callback) == "function") {
@@ -140,13 +143,17 @@ return usig.AjaxComponent.extend({
 		}
 		
 		
-		var onSuccess = buscarResultsHandler.createDelegate(this, [success], 1); 
+		var onSuccess = buscarResultsHandler.createDelegate(this, [success, 0], 1); 
+		var onSuccessEpok = buscarResultsHandler.createDelegate(this, [success, 'epok'], 1); 
 		
 		if (ops.returnRawData) {
 			onSuccess = success;
 		}
 		
 		this.lastRequest = this.mkRequest(data, onSuccess, error, this.opts.server + 'buscar/');
+
+		this.lastRequestEpok = this.mkRequest(data, onSuccessEpok, error, this.opts.serverEpok + 'buscar?formato=json');
+
 	}, 	
 	
 	/**
@@ -157,21 +164,34 @@ return usig.AjaxComponent.extend({
 	 * @param {Function} error (optional) Funcion que es llamada en caso de error
 	 */
 	getObjeto: function(obj, success, error) {
-	
-		function getObjetoResultsHandler (result, callback, obj) {
+		
+		function getObjetoResultsHandler (result, callback, obj, prefix) {
 			if (obj instanceof usig.inventario.Objeto) {
 				if (this.opts.debug) usig.debug('Completando el objeto recibido');
 				obj.fill(result);
+				obj.id = prefix+obj.id;
 				callback(obj);
 			} else {
 				if (this.opts.debug) usig.debug('Creando objeto nuevo');
-				callback(new usig.inventario.Objeto(result));
+				var o = new usig.inventario.Objeto(result);
+				o.id = prefix+o.id;
+				callback(o);
 			}
 		}
 		
-		var id = parseInt(obj)?parseInt(obj):parseInt(obj.id);
-		if (id > 0) {
-			this.lastRequest = this.mkRequest({ id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.server + 'getObjectContent/');						
+		var id = typeof(obj) == 'object'?obj.id:obj;
+		
+		if (typeof(id)=="string" && id.substring(0, 4) == 'epok') {
+			id = parseInt(id.substring(4));
+			if (id > 0) {
+				this.lastRequest = this.mkRequest({}, getObjetoResultsHandler.createDelegate(this, [success, obj, 'epok'], 1), error, this.opts.serverEpok + 'detalle/'+id+'/');						
+			}
+		} else {
+			id = parseInt(id);
+			usig.debug(id);
+			if (id > 0) {
+				this.lastRequest = this.mkRequest({ id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.server + 'getObjectContent/');						
+			}
 		}
 	},
 	
@@ -183,6 +203,7 @@ return usig.AjaxComponent.extend({
 	 * @param {Function} error (optional) Funcion callback que es llamada en caso de error
 	 */
 	getFeatureInfo: function(data, success, error) {
+		usig.debug('getFeatureInfo');
 		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'getObjectContent/');
 	},
 	
@@ -204,6 +225,7 @@ return usig.AjaxComponent.extend({
 	 * @param {Function} error (optional) Function que es llamada en caso de error
 	 */
 	getGeom: function(objectId, success, error) {
+		usig.debug('getGeom');
 		this.lastRequest = this.mkRequest({id:objectId}, success, error, this.opts.server + 'getGeometria/');
 	},
 	
@@ -230,6 +252,7 @@ return usig.AjaxComponent.extend({
 usig.Inventario.defaults = {
 	debug: false,
 	server: 'http://inventario.usig.buenosaires.gob.ar/publico/',
+	serverEpok: 'http://epok.buenosaires.gob.ar/dependenciasculturales/',
 	// server: 'http://inventario.asi.buenosaires.gov.ar/publico/',
 	searchOptions: {
 		start: 0,
