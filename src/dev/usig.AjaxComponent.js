@@ -55,7 +55,7 @@ return jQuery.Class.create({
 	 * utiliza el default seteado en la inicializacion del componente.
 	 */
 	mkRequest: function(data, success, error, url) {
-		var requestTimeout = null;
+		var requestTimeout = null, numRetries = 0;
 		
 		function onAjaxSuccess(data, callback) {
 			clearTimeout(requestTimeout);
@@ -67,7 +67,18 @@ return jQuery.Class.create({
 			callback(data);
 		}; 
 		
-		function onAjaxTimeout(requester, params, numRetries) {
+		function onAjaxError(data, callback) {
+			if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Error'); }			
+	       	if (numRetries >= this.opts.maxRetries) {
+				if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Max Errors Reached'); }			
+	       		clearTimeout(requestTimeout);
+	       		callback(data);
+	       	} else {
+				if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Error. Retrying... ('+numRetries+')'); }			
+	       	}
+		}; 
+		
+		function onAjaxTimeout(requester, params) {
 			if (requester != null && requester.readyState != 0 && requester.readyState != 4) {
 				if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Aborting request...');
 				requester.abort();
@@ -76,13 +87,14 @@ return jQuery.Class.create({
 		       		this.opts.afterAbort();
 		       	}
 		       	if (this.opts.maxRetries > numRetries) {
+		       		numRetries++;
 			       	var ajaxReq = (params.dataType == 'jsonp')?$.jsonp(params):$.ajax(params);
 			       	if (typeof(this.opts.afterRetry) == "function") {
 				       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterRetry');
 			       		this.opts.afterRetry();
 			       	}
-					if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Retrying request...');
-		       		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams, (numRetries + 1)]), this.opts.serverTimeout);
+					if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Retrying request... ('+numRetries+')');
+		       		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams]), this.opts.serverTimeout);
 		       	} else {
 					if (this.opts.debug) usig.debug('ERROR: Se alcanzo el maximo numero de reintentos al servidor sin exito.');
 					if (typeof(params.error) == "function")
@@ -103,7 +115,7 @@ return jQuery.Class.create({
 		
        	var ajaxParams = $.extend(true, {}, this.defaultParams, { 
        		success: onAjaxSuccess.createDelegate(this, [success], 1), 
-       		error: error, 
+       		error: onAjaxError.createDelegate(this, [error], 1), 
        		data: data 
        	});
        	if (url) ajaxParams.url = url;
@@ -118,7 +130,7 @@ return jQuery.Class.create({
        	}
        		
        	if (this.opts.serverTimeout > 0)
-       		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams, 0]), this.opts.serverTimeout);
+       		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams]), this.opts.serverTimeout);
        	
        	return ajaxReq;
 	},
@@ -146,6 +158,6 @@ return jQuery.Class.create({
 
 usig.AjaxComponent.defaults = {
 	debug: false,
-	serverTimeout: 5000,
-	maxRetries: 5
+	serverTimeout: 30000,
+	maxRetries: 1
 }
