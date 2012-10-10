@@ -160,10 +160,13 @@
 		
 		function mostrarOpciones(opciones) {
 			recorridos = opciones;
+			var distance;
 			var html = '<p>Se hallaron las siguientes opciones:</p><table style="width:100%"><tbody>';
+
 			for (var i=0,len=opciones.length; i<len; i++) {
 				html+='<tr class="'+(i%2?'impar':'par')+'"><td style="width: 20px;text-align: center;"><input type="checkbox" class="ver_detalle" id="recorrido_'+i+'"/></td><td style="width: 80%;">'+opciones[i].toHtmlString()+'</td><td class="tiempo">'+opciones[i].getTime()+'\'</td><td style="width: 20px;"><div class="ref" id="ref_'+i+'">&nbsp;</div></td></tr>';
-				html+='<tr class="detalle_recorrido"><td class="detalle" colspan="4" id="detalle_recorrido_'+i+'"></td>'
+				html+='<tr class="detalle_recorrido"><td class="detalle" colspan="4" id="detalle_recorrido_'+i+'"></td></tr>'
+				distance = recorridos[i].getTraveledDistance();
 			}
 			html+='</tbody></table>';
 			$('#recorridos').html(html);
@@ -173,11 +176,21 @@
 				if ($(this).is(':checked')) {
 					$('#detalle_recorrido_'+target_id).html('Cargando detalle...').parent('tr').show();
 					recorridos[target_id].getDetalle(function(detalle) {
-						var html = '<ol>';
+						var html = '<table border="0" width="100%" margin= "100px">';
+						var index=1;
 						for(var i=0,l=detalle.length;i<l;i++) {
-							html+='<li>'+detalle[i].text+'</li>';
+							html += '<tr id="tr-street-code-'+detalle[i].id+'" class="selectable"> \
+								<td width="5%">'+index+'. </td> \
+								<td>'+detalle[i].text+'</td> \
+								<td width="20%" align="right">'+detalle[i].distance+' m</td></tr>';
+							index++;							
 						}
-						html+='</ol>';
+						html += '<tr> \
+									<td width="5%"></td> \
+									<td ></td> \
+									<td width="20%" align="right">'+distance+' m</td> \
+								</tr></table>';
+						//html+='</table>';
 						$('#detalle_recorrido_'+target_id).html(html).parent('tr').show();
 						miMapa.mostrarRecorrido(recorridos[target_id]);
 						$('#ref_'+target_id).addClass(recorridos[target_id].getTemplate().cls);
