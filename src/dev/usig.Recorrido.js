@@ -75,14 +75,16 @@ return function(datos, options) {
 			descripcion = opts.texts.descCar;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartDriving') {
-						descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
+					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
 				}
 			});
 		}else if (tipo=="bike"){
+			usig.debug("estoy en descripcionHTML");
 			descripcion = opts.texts.descBike;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartBiking') {
-						descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
+					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
+					return false;
 				}
 			});
 		}
@@ -264,43 +266,87 @@ return function(datos, options) {
 			}
 			//return {gml:gml, detail:actions};
 			detalle = actions;
-		}else if(tipo=="bike"){
+		}else if (tipo=="bike"){
+	 		var walking = false;
 	 		actions = new Array();
-	 		index = 0;
+	 		var index = 0;
 	 		var text;
+	 		
 			for(i=0;i<plan.length;i++) {
 			
 				var item = plan[i];
 				if(item.type != undefined){
-
-					var turn_indication;
-					if(item.type == 'Street' ) { 
-						index++;
+					
+					if(item.type == 'StartWalking'){
+						walking = true;
+					}else if(item.type == 'FinishWalking') { 
+						walking = false;
+					//}if(item.type == 'StartBiking'){
+						//walking = false;
+					//}else if(item.type == 'FinishBiking') { 
+						//walking = false;
+					}else if(item.type == 'Street') {
+						
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
-							text = 'Pedalear desde ';
+							if (walking){
+								text = 'Caminar desde ';								
+							}else{
+								if (item.tipo=='Ciclovía'){
+									text = 'Pedalear por ciclovia desde ';	
+								}else if (item.tipo == 'Carril preferencial'){
+									text = 'Pedalear por carril preferencial desde ';
+								}else{
+									text = 'Pedalear desde ';
+								}
+							}
 							turn_indication = 'seguir';
 						}else if (item.indicacion_giro=='0'){
-							text = 'Seguir por ';
+							if (item.tipo=='Ciclovía'){
+								text = 'Tomar ciclovia por ';	
+							}else if (item.tipo == 'Carril preferencial'){
+								text = 'Tomar por carril preferencial en ';
+							}else{
+								text = 'Seguir por ';
+							}
 							turn_indication = 'seguir';
-						}else if(item.indicacion_giro=='1'){
-							text = 'Doblar a la izquierda en ';
+
+						}else if(item.indicacion_giro=='1' ){
+							if (item.tipo=='Ciclovía'){
+								text = 'Doblar a la izquierda y tomar ciclovia en ';	
+							}else if (item.tipo == 'Carril preferencial'){
+								text = 'Doblar a la izquierda y tomar por carril preferencial en ';
+							}else{
+								text = 'Doblar a la izquierda en ';
+							}
 							turn_indication = 'izquierda';
+						
 						}else if(item.indicacion_giro=='2'){
-							text = 'Doblar a la derecha en ';
+							if (item.tipo=='Ciclovía'){
+								text = 'Doblar a la derecha y tomar ciclovia en ';	
+							}else if (item.tipo == 'Carril preferencial'){
+								text = 'Doblar a la derecha y tomar por carril preferencial en ';
+							}else{
+								text = 'Doblar a la derecha en ';
+							}
 							turn_indication = 'derecha';
 						}
-							
+						
 						text += item.name  + ' ' ;
-						if(item.from)
+						if(item.from){
 							text += item.from;
-						if(item.to)
+						}
+						if(item.to){
 							text += ' hasta el ' + item.to;
-							actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'bike', id:item.id});
-					}
+						}
+						actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'bike', id:item.id});
+						
+					// end Street	
+					}  
+					
 				}
 			}
-			//return {gml:gml, detail:actions};
 			detalle = actions;
+		
 		}
 	}
 		
