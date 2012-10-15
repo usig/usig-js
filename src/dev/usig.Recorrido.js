@@ -316,9 +316,9 @@ return function(datos, options) {
 								text += item.distance +' m ';
 							}
 							if (item.tipo=='Ciclovía'){
-								text = 'por ciclovia en ';
+								text += 'por ciclovia en ';
 							}else if (item.tipo == 'Carril preferencial'){
-								text = 'por carril preferencial en ';
+								text += 'por carril preferencial en ';
 							}else{
 								text += 'por ';
 							}
