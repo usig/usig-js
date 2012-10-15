@@ -79,7 +79,6 @@ return function(datos, options) {
 				}
 			});
 		}else if (tipo=="bike"){
-			usig.debug("estoy en descripcionHTML");
 			descripcion = opts.texts.descBike;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartBiking') {
@@ -87,6 +86,9 @@ return function(datos, options) {
 					return false;
 				}
 			});
+			if (descripcionHtml==""){
+				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
+			}
 		}
 	}	
 	function procesarPlan() {
@@ -289,51 +291,71 @@ return function(datos, options) {
 						
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
 							if (walking){
-								text = 'Caminar desde ';								
+								text = 'Caminar ';
+								if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
+									text += item.distance +' m ';
+								}
+								text += 'desde ';
 							}else{
+								text = 'Pedalear ';
+								if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
+									text += item.distance +' m ';
+								}
 								if (item.tipo=='Ciclovía'){
-									text = 'Pedalear por ciclovia desde ';	
+									text += 'por ciclovia desde ';
 								}else if (item.tipo == 'Carril preferencial'){
-									text = 'Pedalear por carril preferencial desde ';
+									text += 'por carril preferencial desde ';
 								}else{
-									text = 'Pedalear desde ';
+									text += 'desde ';
 								}
 							}
 							turn_indication = 'seguir';
 						}else if (item.indicacion_giro=='0'){
+							text = 'Seguir ';
+							if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
+								text += item.distance +' m ';
+							}
 							if (item.tipo=='Ciclovía'){
-								text = 'Tomar ciclovia por ';	
+								text = 'por ciclovia en ';
 							}else if (item.tipo == 'Carril preferencial'){
-								text = 'Tomar por carril preferencial en ';
+								text = 'por carril preferencial en ';
 							}else{
-								text = 'Seguir por ';
+								text += 'por ';
 							}
 							turn_indication = 'seguir';
 
 						}else if(item.indicacion_giro=='1' ){
+							text = 'Doblar a la izquierda y seguir ';
+							if(item.to==0 || item.from ==0 || item.to==null || item.from ==null){
+								text += item.distance +' m ';
+							}
 							if (item.tipo=='Ciclovía'){
-								text = 'Doblar a la izquierda y tomar ciclovia en ';	
+								text += 'por ciclovia en ';
 							}else if (item.tipo == 'Carril preferencial'){
-								text = 'Doblar a la izquierda y tomar por carril preferencial en ';
+								text += 'por carril preferencial en ';
 							}else{
-								text = 'Doblar a la izquierda en ';
+								text += 'por ';
 							}
 							turn_indication = 'izquierda';
 						
 						}else if(item.indicacion_giro=='2'){
+							text = 'Doblar a la derecha y seguir ';
+							if(item.to==0 || item.from ==0 || item.to==null || item.from ==null){
+								text += item.distance +' m ';
+							}
 							if (item.tipo=='Ciclovía'){
-								text = 'Doblar a la derecha y tomar ciclovia en ';	
+								text += 'por ciclovia en ';
 							}else if (item.tipo == 'Carril preferencial'){
-								text = 'Doblar a la derecha y tomar por carril preferencial en ';
+								text += 'por carril preferencial en ';
 							}else{
-								text = 'Doblar a la derecha en ';
+								text += 'por ';
 							}
 							turn_indication = 'derecha';
 						}
 						
-						text += item.name  + ' ' ;
+						text += item.name;
 						if(item.from){
-							text += item.from;
+							text += ' ' +item.from;
 						}
 						if(item.to){
 							text += ' hasta el ' + item.to;
