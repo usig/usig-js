@@ -360,7 +360,9 @@ return function(datos, options) {
 						if(item.to){
 							text += ' hasta el ' + item.to;
 						}
-						actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'bike', id:item.id});
+						if (walking) {modo = 'walk'} else{modo='bike'}
+						
+						actions.push({text:text, turn_indication:turn_indication, modo: modo, index:index, distance:item.distance,type:'bike', id:item.id});
 						
 					// end Street	
 					}  
