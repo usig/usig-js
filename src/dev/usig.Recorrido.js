@@ -301,25 +301,18 @@ return function(datos, options) {
 								text = 'Caminar $metros desde $calle$desde$hasta';
 							}else{
 								text = 'Pedalear $metros desde $via$calle$desde$hasta';
-								if (item.tipo=='Ciclovía'){
-									text=text.replace('$via','ciclovia ');
-								}else if (item.tipo == 'Carril preferencial'){
-									text=text.replace('$via','carril preferencial ');
-								}else{
-									text=text.replace('$via','');									
-								}
 							}
 							turn_indication = 'seguir';
 						}else {
 							text = indicaciones_giro[walking?'walking':'biking'][item.indicacion_giro].texto;								
 							turn_indication = indicaciones_giro[walking?'walking':'biking'][item.indicacion_giro].turn_indication;							
-							if (item.tipo=='Ciclovía'){
-								text=text.replace('$via','ciclovia ');
-							}else if (item.tipo == 'Carril preferencial'){
-								text=text.replace('$via','carril preferencial ');								
-							}else{
-								text=text.replace('$via','');
-							}
+						}
+						if (item.tipo=='Ciclovía'){
+							text=text.replace('$via','ciclovia ');
+						}else if (item.tipo == 'Carril preferencial'){
+							text=text.replace('$via','carril preferencial ');								
+						}else{
+							text=text.replace('$via','');
 						}
 						if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
 							text=text.replace('$metros', item.distance +' m ');
