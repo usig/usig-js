@@ -273,9 +273,13 @@ return function(datos, options) {
 	 		actions = new Array();
 	 		var index = 0;
 	 		var text;
-	 		var indicaciones_giro = [{texto: 'Seguir ', turn_indication: 'seguir'},
-	 		                         {texto: 'Doblar a la izquierda y seguir ', turn_indication: 'izquierda'},
-	 		                         {texto: 'Doblar a la derecha y seguir ', turn_indication: 'derecha'}];
+	 		var indicaciones_giro = {'walking':[{texto: 'Caminar $metros por $calle$desde$hasta', turn_indication: 'seguir'},
+	 		                                    {texto: 'Doblar a la izquierda en $calle$desde y caminar $metros$hasta', turn_indication: 'izquierda'},
+	 		                                    {texto: 'Doblar a la derecha en $calle$desde y caminar $metros$hasta', turn_indication: 'derecha'}],
+	 		                         'biking':[{texto: 'Seguir $metros por $via$calle$desde$hasta', turn_indication: 'seguir'},
+	 			 		                       {texto: 'Doblar a la izquierda en $via$calle$desde y seguir $metros$hasta', turn_indication: 'izquierda'},
+	 			 		                       {texto: 'Doblar a la derecha en $via$calle$desde y seguir $metros$hasta', turn_indication: 'derecha'}]
+	 		};
 	 		
 			for(i=0;i<plan.length;i++) {
 			
@@ -294,46 +298,44 @@ return function(datos, options) {
 						
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
 							if (walking){
-								text = 'Caminar ';
-								if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
-									text += item.distance +' m ';
-								}
-								text += 'desde ';
+								text = 'Caminar $metros desde $calle$desde$hasta';
 							}else{
-								text = 'Pedalear ';
-								if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
-									text += item.distance +' m ';
-								}
+								text = 'Pedalear $metros desde $via$calle$desde$hasta';
 								if (item.tipo=='Ciclovía'){
-									text += 'por ciclovia desde ';
+									text=text.replace('$via','ciclovia ');
 								}else if (item.tipo == 'Carril preferencial'){
-									text += 'por carril preferencial desde ';
+									text=text.replace('$via','carril preferencial ');
 								}else{
-									text += 'desde ';
+									text=text.replace('$via','');									
 								}
 							}
 							turn_indication = 'seguir';
 						}else {
-							text = indicaciones_giro[item.indicacion_giro].texto;
-							turn_indication = indicaciones_giro[item.indicacion_giro].turn_indication;							
-							if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
-								text += item.distance +' m ';
-							}
+							text = indicaciones_giro[walking?'walking':'biking'][item.indicacion_giro].texto;								
+							turn_indication = indicaciones_giro[walking?'walking':'biking'][item.indicacion_giro].turn_indication;							
 							if (item.tipo=='Ciclovía'){
-								text += 'por ciclovia en ';
+								text=text.replace('$via','ciclovia ');
 							}else if (item.tipo == 'Carril preferencial'){
-								text += 'por carril preferencial en ';
+								text=text.replace('$via','carril preferencial ');								
 							}else{
-								text += 'por ';
+								text=text.replace('$via','');
 							}
 						}
-						
-						text += item.name;
+						if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
+							text=text.replace('$metros', item.distance +' m ');
+						} else {
+							text=text.replace('$metros', '');
+						}
+						text=text.replace('$calle', item.name);
 						if(item.from){
-							text += ' ' +item.from;
+							text=text.replace('$desde',' '+item.from);
+						} else {
+							text=text.replace('$desde','');							
 						}
 						if(item.to){
-							text += ' hasta el ' + item.to;
+							text=text.replace('$hasta',' hasta el ' + item.to);
+						} else {
+							text=text.replace('$hasta','');														
 						}
 						modo=walking?'walk':'bike';
 						
