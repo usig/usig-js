@@ -273,7 +273,7 @@ return function(datos, options) {
 	 		actions = new Array();
 	 		var index = 0;
 	 		var text;
-	 		var indicaciones_giro = [{texto: 'Seguir', turn_indication: 'seguir'},
+	 		var indicaciones_giro = [{texto: 'Seguir ', turn_indication: 'seguir'},
 	 		                         {texto: 'Doblar a la izquierda y seguir ', turn_indication: 'izquierda'},
 	 		                         {texto: 'Doblar a la derecha y seguir ', turn_indication: 'derecha'}];
 	 		
