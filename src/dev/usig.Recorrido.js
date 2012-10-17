@@ -273,6 +273,9 @@ return function(datos, options) {
 	 		actions = new Array();
 	 		var index = 0;
 	 		var text;
+	 		var indicaciones_giro = [{texto: 'Seguir', turn_indication: 'seguir'},
+	 		                         {texto: 'Doblar a la izquierda y seguir ', turn_indication: 'izquierda'},
+	 		                         {texto: 'Doblar a la derecha y seguir ', turn_indication: 'derecha'}];
 	 		
 			for(i=0;i<plan.length;i++) {
 			
@@ -310,8 +313,9 @@ return function(datos, options) {
 								}
 							}
 							turn_indication = 'seguir';
-						}else if (item.indicacion_giro=='0'){
-							text = 'Seguir ';
+						}else {
+							text = indicaciones_giro[item.indicacion_giro].texto;
+							turn_indication = indicaciones_giro[item.indicacion_giro].turn_indication;							
 							if(item.to==0 || item.from ==0|| item.to==null || item.from ==null){
 								text += item.distance +' m ';
 							}
@@ -322,35 +326,6 @@ return function(datos, options) {
 							}else{
 								text += 'por ';
 							}
-							turn_indication = 'seguir';
-
-						}else if(item.indicacion_giro=='1' ){
-							text = 'Doblar a la izquierda y seguir ';
-							if(item.to==0 || item.from ==0 || item.to==null || item.from ==null){
-								text += item.distance +' m ';
-							}
-							if (item.tipo=='Ciclovía'){
-								text += 'por ciclovia en ';
-							}else if (item.tipo == 'Carril preferencial'){
-								text += 'por carril preferencial en ';
-							}else{
-								text += 'por ';
-							}
-							turn_indication = 'izquierda';
-						
-						}else if(item.indicacion_giro=='2'){
-							text = 'Doblar a la derecha y seguir ';
-							if(item.to==0 || item.from ==0 || item.to==null || item.from ==null){
-								text += item.distance +' m ';
-							}
-							if (item.tipo=='Ciclovía'){
-								text += 'por ciclovia en ';
-							}else if (item.tipo == 'Carril preferencial'){
-								text += 'por carril preferencial en ';
-							}else{
-								text += 'por ';
-							}
-							turn_indication = 'derecha';
 						}
 						
 						text += item.name;
@@ -360,7 +335,7 @@ return function(datos, options) {
 						if(item.to){
 							text += ' hasta el ' + item.to;
 						}
-						if (walking) {modo = 'walk'} else{modo='bike'}
+						modo=walking?'walk':'bike';
 						
 						actions.push({text:text, turn_indication:turn_indication, modo: modo, index:index, distance:item.distance,type:'bike', id:item.id});
 						
