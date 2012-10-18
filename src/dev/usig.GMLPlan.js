@@ -41,11 +41,11 @@ usig.GMLPlan = (function($) {
 			    markers: null,
 			    
 			    styleMap:null,
-			    
+			    rendererOptions: {zIndexing: true},
 			    
 				initialize: function(name, options) {
 			        var newArguments = [];
-			        this.styleMap = this.getStyle(options.template, options.baseUrl);
+			        this.styleMap = this.getStyle(options.template, options.baseUrl, options.tipoRecorrido);
 			        newArguments.push(name, {styleMap: this.styleMap});
 			        OpenLayers.Layer.Vector.prototype.initialize.apply(this, newArguments);
 			        this.edges = new Array();
@@ -67,6 +67,8 @@ usig.GMLPlan = (function($) {
 			    	gml += this.edges.join();
 			    	gml += this.markers.join();
 			    	gml += '</wfs:FeatureCollection>'; 
+			    	usig.debug("en GML Plan");
+					usig.debug(gml);
 			    	this.loaded = true;
 			    	this.addFeatures(gmlReader.read(gml));
 			    	this.events.triggerEvent("loadend"); 
@@ -141,62 +143,103 @@ usig.GMLPlan = (function($) {
 			    	this.drawFeature(feature, this.styleMap.styles.select);
 			    },
 			    
+			    setStyle: function(style){
+			    	 this.styleMap = style;
+			    },
 			    
-			    getStyle: function(template, baseUrl) {
+			    getStyle: function(template, baseUrl, tipoRecorrido) {
 						
-						defaultOpacity = 0.8;
-						lineOptions = {strokeWidth: 6, strokeOpacity: defaultOpacity};
-						lineOptionsWalk = {strokeWidth: 4, strokeDashstyle: 'dashdot',strokeOpacity: defaultOpacity};			
-						
-						if(template.marker != undefined) {
-			   		    	externalGraphic = baseUrl+"images/" + template.marker;
-			   		    } else {
-			   		    	externalGraphic = baseUrl+"images/pincho_inclinado.png";
-			   		    }
-			   		    
-			   		    color = template.color;
-						
-						styleMap = new OpenLayers.StyleMap(OpenLayers.Util.applyDefaults(
-						        {fillColor: color, fillOpacity: 1, strokeColor: color , strokeWidth: 3, strokeOpacity:1},
-							OpenLayers.Feature.Vector.style["default"]));
-						
-						
-			
+					defaultOpacity = 0.8;
+					zIndexLine = 5;
+					zIndexPoint = 6;
+					zIndexMarker = 7;
+					lineOptions = {strokeWidth: 5, strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
+					lineOptionsWalk = {strokeWidth: 4, strokeDashstyle: 'dashdot',strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};			
+
+					//lineOptionsBikeCiclovia = {strokeWidth: 4, strokeColor: bikeColor,strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
+
+					if(template.marker != undefined) {
+		   		    	externalGraphic = baseUrl+"images/" + template.marker;
+		   		    } else {
+		   		    	externalGraphic = baseUrl+"images/pincho_inclinado.png";
+		   		    }
+		   		    
+		   		    color = template.color;
+					
+					styleMap = new OpenLayers.StyleMap(OpenLayers.Util.applyDefaults(
+					        {fillColor: color, fillOpacity: 1, strokeColor: color , strokeWidth: 3, strokeOpacity:1},
+						OpenLayers.Feature.Vector.style["default"]));
+					
+					if (tipoRecorrido=='transporte_publico'){
 						var lookup = {
-						    "walk": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/recorrido_pie.png",graphicZIndex:5}, 
-								"Line": lineOptionsWalk },
-						    "bus": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_colectivo.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
-						    "car": {"Point": {externalGraphic:baseUrl+"images/recorrido_auto.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
-						    "bike": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
-						    "subway": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/recorrido_subte.png",graphicZIndex:5}, "Line": lineOptions  },
-						    "subwayA": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/lineasubte41x41-a.png",graphicZIndex:5}, "Line": lineOptions  },
-						    "subwayB": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/lineasubte41x41-b.png",graphicZIndex:5}, "Line": lineOptions  },
-						    "subwayC": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/lineasubte41x41-c.png",graphicZIndex:5}, "Line": lineOptions  },
-						    "subwayD": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/lineasubte41x41-d.png",graphicZIndex:5}, "Line": lineOptions  },
-						    "subwayE": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/lineasubte41x41-e.png",graphicZIndex:5}, "Line": lineOptions  },
-							"subwayH": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,
-								externalGraphic:baseUrl+"images/lineasubte41x41-h.png",graphicZIndex:5}, "Line": lineOptions  },
+						    "walk": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,externalGraphic:baseUrl+"images/recorrido_pie20x20.png",graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+						    "bus": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_colectivo20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+						    "subway": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/recorrido_subte20x20.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+						    "subwayA": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/lineasubte-a.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+						    "subwayB": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/lineasubte-b.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+						    "subwayC": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/lineasubte-c.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+						    "subwayD": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/lineasubte-d.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+						    "subwayE": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/lineasubte-e.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+							"subwayH": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
+								externalGraphic:baseUrl+"images/lineasubte-h.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
 			
-							"connection": {"Point": {pointRadius:6}, "Line": {strokeWidth: 8, strokeOpacity: defaultOpacity} },
+							"connection": {"Point": {pointRadius:6,graphicZIndex:zIndexPoint}, "Line": {strokeWidth: 8, strokeOpacity: defaultOpacity} },
 						    //"connection": {"Point": {pointRadius:6, graphicWidth:35, graphicHeight:35,
 					    	//externalGraphic:"images/recorrido_subte.png"}, "Line": lineOptions},
 				   		
-				   		    "train": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_tren.png",graphicWidth:35, graphicHeight:35},graphicZIndex:5, "Line": lineOptions  },
+				   		    "train": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_tren20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexMarker}, "Line": lineOptions  },
 				   		    
-				   		    "marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,
-								graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
+				   		   	//"marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
+				   		    "marker": {"Point": {pointRadius: 7,fillColor:'#ffffff',strokeColor:color,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
 			
-						}
-			
-						styleMap.addUniqueValueRules("default", "type", lookup);
-						return styleMap;
-					},
+						}		
+					}else if (tipoRecorrido=='walk'){
+						var lookup = {
+						    //"walk": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/recorrido_pie.png",graphicZIndex:5},"Line": lineOptionsWalk },
+							"walk": {"Point": {graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/desde.png",graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+							"marker": {"Point": {externalGraphic:baseUrl+"images/hasta.png",graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker},  "Line": lineOptions  }
+				   		    //"marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
+				   		    //"marker": {"Point": {pointRadius: 8,fillColor:"#aa9900",strokeColor: "#aa1100",graphicWidth:35, graphicHeight:35},graphicZIndex:5, "Line": lineOptions  }
+						}	
+					}else if (tipoRecorrido=='car'){
+						var lookup = {
+						    //"car": {"Point": {externalGraphic:baseUrl+"images/recorrido_auto.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
+							"car": {"Point": {externalGraphic:baseUrl+"images/desde_verde.png",graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+							"marker": {"Point": {externalGraphic:baseUrl+"images/hasta_verde.png",graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
+				   		    //"marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
+				   		    //"marker": {"Point": {pointRadius: 8,fillColor:"#aa9900",strokeColor: "#aa1100",graphicWidth:35, graphicHeight:35},graphicZIndex:5, "Line": lineOptions  }
+						}	
+					}else if (tipoRecorrido=='bike'){
+						walkColor = '#4EF039';
+						bikeColor = '#aa1100';
+						pointRadius = 4;
+						lineOptionsBike = {strokeWidth: 3, strokeColor: bikeColor,strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
+						lineOptionsWalk = {strokeWidth: 4, strokeColor: walkColor, strokeDashstyle: 'dashdot',strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
+						//externalGraphic = baseUrl+"images/pincho_inclinado.png";
+						var lookup = {
+						    //"walk": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/recorrido_pie.png",graphicZIndex:5},"Line": lineOptionsWalk },
+						    //"walk": {"Point": {pointRadius: pointRadius,  fillOpacity:1,strokeColor: walkColor, graphicWidth:35, graphicHeight:35,graphicZIndex:5},"Line": lineOptionsWalk },
+							"walk": {"Point": {pointRadius: pointRadius,strokeColor: walkColor, fillColor:walkColor,graphicZIndex:zIndexPoint},"Line": lineOptionsWalk },
+						    //"bike": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptionsBike  },
+						    "bike": {"Point": {pointRadius: pointRadius,strokeColor: bikeColor,fillColor:bikeColor,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike  },
+							//"Carril preferencial": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptionsBike  },
+						    "Carril preferencial": {"Point": {pointRadius: pointRadius,fillColor:bikeColor,strokeColor: bikeColor,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike  },
+						    //"Ciclovía": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptionsBike  },
+						    "Ciclovía": {"Point": {pointRadius: pointRadius,fillColor:bikeColor,strokeColor:bikeColor,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike},
+				   		    "begin": {"Point": {externalGraphic:baseUrl+"images/desde_verde.png", pointRadius: 8,graphicWidth:35, graphicHeight:35, graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+				   		    "end": {"Point": {externalGraphic:baseUrl+"images/hasta_verde.png", pointRadius: 8,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
+						}	
+					}
+		
+					styleMap.addUniqueValueRules("default", "type", lookup);
+					return styleMap;
+				},
 					
 					
 					CLASS_NAME: "usig.GMLPlan"
