@@ -511,10 +511,11 @@ return function(idDiv, options) {
 		
 		return id;
 	}
-	
+					
 	function generarGMLTripPlan(recorrido) {
+		
 		var trip_plan = recorrido.getPlan();
-		var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl});
+		var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl, tipoRecorrido: recorrido.getTipo()});
  		
 		for(i=0;i<trip_plan.length;i++) {
 		
