@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>USIG - Mapa Interactivo de Buenos Aires</title>
+   
+    <link rel="stylesheet" type="text/css" href="../css/ejemplos.css" />
+    
+    <style>         
+    	.menu {
+			width: 250px; 
+    	}
+    	#mapa {
+    		float: left;
+    	}
+    	body {
+		  width: 850px;
+		}
+    </style>
+    
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	
+	<!-- DEV --><script src="http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.core.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.util.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../jquery.jsonp-1.1.0.1.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../json.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../jquery.class.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.AjaxComponent.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Punto.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Calle.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Direccion.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.GeoCoder.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.inventario.Clase.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.inventario.Objeto.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.inventario.Ubicacion.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.Inventario.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.InputController.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.AutoCompleter.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.AutoCompleterDialog.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.MapaInteractivo.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../../usig.Suggester.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.SuggesterDirecciones.js" type="text/javascript"></script>
+    	
+	<!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
+    <!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.AutoCompleterDireccionesFull.min.js" type="text/javascript"></script> -->
+    
+	<script type="text/javascript">
+
+		
+	$.noConflict();
+	jQuery(document).ready(function($) {
+		
+		$('#mapa').css('width', $('body').width()-40).css('height', 650);
+		
+		var layerDependencias =null;
+
+		loadActividades();
+
+		var miMapa = new usig.MapaInteractivo('mapa', {
+			includeToolbar: false,
+			includePanZoomBar: true,
+			onReady: function() {
+				loadGML({sector: 1});	
+			}
+		});
+		
+					
+		function afterGeoCoding(pt) {
+			if (pt instanceof usig.Punto) {
+				if (selectedOption instanceof usig.Direccion) {
+					selectedOption.setCoordenadas(pt);
+				}				
+	
+				var dirId = miMapa.addMarker(selectedOption, true, function(ev, place, popup) {
+					popup.show();
+				});
+			}		
+		}
+
+		function loadActividades() {
+
+			var optionDefault = '<option value="">Cargando Mapas...</option>';
+			$('.menu').html(optionDefault);
+			
+			$.ajax({
+				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/actividades/",
+				//url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/actividades/",
+				dataType: 'jsonp',
+				success: function(actividades) {
+					var options = '<option value=99>--- Ministerio de Cultura ---</option>';
+					//var options = '';
+//					$.each(actividades.rows,
+//							function(i, actividad){
+//								options += '<option value="' + actividad.id + '">' + actividad.nombre + '</option>';
+//							}
+//					);
+					options+='<option value="7,5">Espacios escénicos (teatro, música, danza y circo): teatros, salas de música, danza y circo</option>';
+					options+='<option value="8">Museos</option>';
+					options+='<option value="1,2">Bibliotecas y archivos</option>';
+					options+='<option value="13,15">Bares culturales: bares notables y los bares culturales</option>';
+					options+='<option value="6">Espacios de formación: espacios que dictan carreras, cursos y talleres culturales</option>';
+					options+='<option value="4">Cines</option>';
+					options+='<option value="3">Centros Culturales</option>';
+					options+='<option value="23,27,25,12,24">Espacios de producción cultural: emisoras de televisión local y radio (AM/FM) local, productoras audiovisuales, editoriales y sellos discográficos</option>';
+					options+='<option value="9,14">Tanguerías,  milongas y peñas</option>';
+					options+='<option value="11,19">Galerías de arte y salas de exposición</option>';
+					options+='<option value="22,26">Librerías y disquerías</option>';
+					options+='<option value="10">Planetario</option>';
+					options+='<option value="28">Calesitas</option>';
+						
+					$('.menu').html(options);
+				},
+				error: function(e) {
+					usig.debug(e);
+				}
+			});
+		}
+
+		function loadDetalle(idDetalle, popup) {
+			
+			$.ajax({
+				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/detalle/"+idDetalle+"/",
+				//url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/detalle/"+idDetalle+"/",
+				dataType: 'jsonp',
+				success: function(detalle) {
+					$('div.popup p.indicator').remove();
+					contentHTML = '<ul style="width: 300px; list-style-type: none; margin: 5px 0; padding: 0;">';
+					$.each(detalle.contenido, function(i, item){
+						if (item.nombreId!='nombre' && item.valor!=''){
+							contentHTML+='<li><b>'+item.nombre+'</b>: '+item.valor+'</li>'
+						}
+					});
+					contentHTML += '</ul>';
+
+					$('div.popup').append(contentHTML);
+					popup.updateSize();
+				},
+				error: function(e) {
+					usig.debug(e);
+				}
+			});
+			
+		}
+		
+		function loadGML(data) {
+
+			if (layerDependencias != null){
+				layerDependencias.destroy();
+			}
+			
+			var smDependencias = new OpenLayers.StyleMap({
+				'default': {
+		            externalGraphic: 'images/sitios_culturales.png',
+		            backgroundGraphic: 'images/fondos/cua_verde.png',
+		            pointRadius: 10,
+					cursor: "pointer"						
+				},
+				'select': {
+					pointRadius: 18			            
+				}
+			});
+			var clases = {
+					bibliotecas: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '2'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/biblioteca.png',
+				            backgroundGraphic: 'images/fondos/cir_naranja.png',
+	                		pointRadius: 7
+	                	}
+					},
+                	centros_culturales: {
+                		filter: new OpenLayers.Filter.Comparison({
+                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                	      property: "IdActividadPrincipal",
+                	      value: '3'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/cen_culturales.png',
+				            backgroundGraphic: 'images/fondos/cua_azul.png',
+	                		pointRadius: 7		                		
+	                	}
+                	},
+					archivo: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '1'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/archivo.png',
+				            backgroundGraphic: 'images/fondos/cua_naranja.png',
+	                		pointRadius: 7
+	                	}
+					},
+					bar_cultural: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '13'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/bar.png',
+				            backgroundGraphic: 'images/fondos/cir_azul.png',
+	                		pointRadius: 7
+	                	}
+					},
+					bar_notable: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '15'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/bar.png',
+				            backgroundGraphic: 'images/fondos/cir_violeta.png',
+	                		pointRadius: 7
+	                	}
+					},
+					calesita: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '28'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/planetario.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
+	                		pointRadius: 7
+	                	}
+					},
+					
+					cine: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '4'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/cine.png',
+				            backgroundGraphic: 'images/fondos/cua_naranja.png',
+	                		pointRadius: 7
+	                	}
+					},
+					circo: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '5'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/circo.png',
+				            backgroundGraphic: 'images/fondos/cua_violeta.png',
+	                		pointRadius: 7
+	                	}
+					},
+					editorial: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '12'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/editorial.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
+	                		pointRadius: 7
+	                	}
+					},
+					disqueria: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '26'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/disqueria.png',
+				            backgroundGraphic: 'images/fondos/cua_rojo.png',
+	                		pointRadius: 7
+	                	}
+					},
+					espacio_formacion: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '6'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/escuela.png',
+				            backgroundGraphic: 'images/fondos/cua_verde.png',
+	                		pointRadius: 7
+	                	}
+					},
+					espacio_escenico: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '7'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/teatro.png',
+				            backgroundGraphic: 'images/fondos/cir_violeta.png',
+	                		pointRadius: 7
+	                	}
+					},
+					galeria_arte: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '19'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/arte.png',
+				            backgroundGraphic: 'images/fondos/cua_azul.png',
+	                		pointRadius: 7
+	                	}
+					},
+					libreria: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '22'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/biblioteca.png',
+				            backgroundGraphic: 'images/fondos/cua_rojo.png',
+	                		pointRadius: 7
+	                	}
+					},
+					milonga: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '14'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/tangueria.png',
+				            backgroundGraphic: 'images/fondos/cir_verde.png',
+	                		pointRadius: 7
+	                	}
+					},
+					museo: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '8'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/museo.png',
+				            backgroundGraphic: 'images/fondos/cir_azul.png',
+	                		pointRadius: 7
+	                	}
+					},
+					pena: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '9'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/pena.png',
+				            backgroundGraphic: 'images/fondos/cir_naranja.png',
+	                		pointRadius: 7
+	                	}
+					},
+					planetario: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '10'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/planetario.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
+	                		pointRadius: 7
+	                	}
+					},
+					productora: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '25'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/productoraAV.png',
+				            backgroundGraphic: 'images/fondos/cir_rojo.png',
+	                		pointRadius: 7
+	                	}
+					},
+					radio: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '23'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/radio.png',
+				            backgroundGraphic: 'images/fondos/cir_verde.png',
+	                		pointRadius: 7
+	                	}
+					},
+					sala: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '11'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/cine.png',
+				            backgroundGraphic: 'images/fondos/cir_violeta.png',
+	                		pointRadius: 7
+	                	}
+					},
+					sello: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '24'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/disqueria.png',
+				            backgroundGraphic: 'images/fondos/cua_violeta.png',
+	                		pointRadius: 7
+	                	}
+					},
+					television: {
+						filter: new OpenLayers.Filter.Comparison({
+	                	      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+	                	      property: "IdActividadPrincipal",
+	                	      value: '27'
+	                	}),
+	                	symbolizer: {
+	                		externalGraphic: 'images/television.png',
+				            backgroundGraphic: 'images/fondos/cua_naranja.png',
+	                		pointRadius: 7
+	                	}
+					}
+			}
+			var escalas = [
+				{ 
+					minScaleDenominator: 80000,
+					symbolizer: {pointRadius: 7}
+				},
+				{
+					minScaleDenominator: 20000,
+					maxScaleDenominator: 80000,
+					symbolizer: {pointRadius: 9}
+				},
+				{
+					maxScaleDenominator: 20000,
+					symbolizer: {pointRadius: 13}
+				}
+			];
+			var rules = new Array();
+			$.each(escalas, function(i, escala) {					
+				$.each(clases, function(j, clase) {
+					var s = $.extend({}, clase.symbolizer, escala.symbolizer);
+					rules.push(new OpenLayers.Rule(
+						$.extend({}, clase, escala, {symbolizer: s})
+					));
+				});
+				rules.push(new OpenLayers.Rule($.extend({}, escala, {elseFilter: true})));
+			});
+			smDependencias.styles['default'].addRules(rules);
+			
+			layerDependencias = new OpenLayers.Layer.Vector('Dependencias', {
+            	styleMap: smDependencias
+            });
+
+			$.ajax({
+				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
+				//url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
+				dataType: 'jsonp',
+				success: function(gmlData) {
+					var gml = new OpenLayers.Format.GML();
+					layerDependencias.addFeatures(gml.read(gmlData));
+					
+				},
+				error: function(e) {
+					usig.debug(e);
+				}
+			});
+
+			miMapa.api.addLayer(layerDependencias);
+			var highlightControl = new OpenLayers.Control.SelectFeature(
+	                [layerDependencias],
+	                {
+						hover: true,
+	                    highlightOnly: true
+	                }
+	            );
+            
+			var selectControl = new OpenLayers.Control.SelectFeature(
+		                [layerDependencias],
+		                {
+		                    clickout: true, toggle: false,
+		                    multiple: false, hover: false,
+		                    toggleKey: "ctrlKey", // ctrl key removes from selection
+		                    multipleKey: "shiftKey" // shift key adds to selection
+		                }
+		            );
+
+			miMapa.api.addControl(highlightControl);
+            miMapa.api.addControl(selectControl);
+            highlightControl.activate();
+            selectControl.activate();
+            
+            layerDependencias.events.on({
+                "featureselected": function(e) {
+                	var feature=e.feature;
+        			var popup = new OpenLayers.Popup.FramedCloud(
+        					e.feature.id,
+        					new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
+        	                null, 
+        	                //new OpenLayers.Size(10, 10),
+        	                "<div class='popup'><b>" + e.feature.attributes['Nombre'] +"</b><p class='indicator'>Buscando informacion...</p></div>",
+        	                null,
+        					true,
+        					function() {
+        	                	selectControl.unselect(feature);
+        	                });
+        			
+        			e.feature.popup = popup;
+        			miMapa.api.addPopup(popup, true);
+
+        			loadDetalle(e.feature.attributes['Id'],popup);
+
+                },
+                "featureunselected": function(e) {
+                    miMapa.api.removePopup(e.feature.popup);
+                    e.feature.popup.destroy();
+                    e.feature.popup = null;	                	
+                }
+            });
+		}
+		
+		var ac = new usig.AutoCompleter('b', {
+       		onReady: function() {
+       			$('#b').val('').removeAttr('disabled').focus();	        			
+       		},
+       		afterSelection: function(option) {
+       			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+       				selectedOption = option;
+       			}
+       		},
+       		afterGeoCoding: afterGeoCoding,
+       		suggesters: [{suggester: 'Direcciones', options: { inputPause: 10, minTextLength: 3 , showError: true} }]
+       	});
+
+		$('#mainForm').bind("submit", function () {
+			return false;
+		});
+		
+		$('.menu').change(function() {
+			var optSelected = $('.menu').attr('value');
+			var data = null;
+			
+			if (optSelected == 99){
+				data = {
+					sector: 1,
+					formato: 'gml'
+				}
+			}else {
+				data = {
+					actividades:optSelected, 
+					formato: 'gml'
+				}
+			}
+			loadGML(data);
+		});
+	});	
+
+</script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div id="logo"><h1>Mapa de Dependencias Culturales</h1>
+        	<p>Elija la actividad para ver las dependencias culturales en el mapa.</p>
+        </div>
+      </div>
+      
+      <div id="buscador">
+       <form id="mainForm" accept-charset="utf-8">
+       	
+       	<select name="menu" class="menu">
+		
+		</select>
+
+      	<label for="b">Buscar</label>
+     	<input type="text" size="40" name="b" id="b" title="Lugar a buscar" class="text"/>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, etc.</span>
+	    <div id="mapa"></div>
+       </form>
+      </div>
+      <div id="footer">
+        <p>&copy; 2011 USIG - Unidad de Sistemas de Información Geográfica</p>
+      </div>
+    </div>
+  </body>
+</html>
