@@ -30,7 +30,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Function} onReady Callback que es llamada cuando el componente finalizo de cargar
  * @cfg {Function} onMapClick Callback que es llamada cuando se hace click sobre el mapa  
  * @constructor 
-  * @param {String} idDiv Identificador del div en el que construir el mapa
+ * @param {String} idDiv Identificador del div en el que construir el mapa
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
 usig.MapaInteractivo = (function($) { // Soporte jQuery noConflict
@@ -511,9 +511,8 @@ return function(idDiv, options) {
 		
 		return id;
 	}
-					
+	
 	function generarGMLTripPlan(recorrido) {
-		
 		var trip_plan = recorrido.getPlan();
 		var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl, tipoRecorrido: recorrido.getTipo()});
  		
@@ -723,19 +722,33 @@ return function(idDiv, options) {
 	this.goTo = function(point, zoomIn) {
 		_goTo(point, zoomIn);
 	}
-
+	
+	/**
+	 * Permite mostrar un mensaje de status y un opcionalmente un indicador de carga
+	 * @param {String} text Mensaje de status
+	 * @param {Boolean} showIndicator Indica si se desea mostrar el indicador de carga
+	 */
 	this.showStatus = function(text, showIndicator) {
 		statusBar.activate(text, showIndicator);
 	}
 		
+	/**
+	 * Oculta la barra de status
+	 */
 	this.hideStatus = function() {
 		statusBar.deactivate();
 	}
 	
+	/**
+	 * Muestra un indicador de carga general
+	 */
 	this.showIndicator = function() {
 		$divIndicator.show();
 	}
 	
+	/**
+	 * Oculta el indicador de carga general
+	 */
 	this.hideIndicator = function() {
 		$divIndicator.hide();
 	}
@@ -747,6 +760,7 @@ return function(idDiv, options) {
 	this.getMarkersIndex =function(){
 		return map.getLayerIndex(myMarkers);
 	}
+	
 	this.getMarkersZIndex =function(){
 		return myMarkers.getZIndex();
 	}
@@ -786,7 +800,213 @@ return function(idDiv, options) {
 			map.removeLayer(recorrido.gmlLayer);
 		}
 	}
-		
+	
+	/*
+	 * Esta funcion construye un OpenLayers.StyleMap a partir de un conjunto de opciones obtenido del merge
+	 * de las opciones default para un vector layer y los parametros indicados por el usuario en la llamada
+	 * a addVectorLayer. 
+	 */
+	function buildVectorStyleMap(opts) {
+		opts.defaultStyle = $.extend({}, opts.defaultStyle, opts.symbolizer);
+		if (!opts.selectStyle) {
+			opts.selectStyle = $.extend({}, opts.defaultStyle);
+			// El estilo de seleccion por defecto solo escala el icono
+			opts.selectStyle.externalGraphic = undefined;
+			opts.selectStyle.backgroundGraphic = undefined;
+		}
+		var sm = new OpenLayers.StyleMap({
+			'default': opts.defaultStyle,
+			'select': opts.selectStyle
+		});
+		var rules = new Array();
+		$.each(opts.escalas, function(i, escala) {
+			if (opts.symbolizer.graphicWidth && opts.symbolizer.graphicHeight) {
+				escala.symbolizer.graphicWidth = parseInt(Math.round(opts.symbolizer.graphicWidth * escala.symbolizer.size));
+				escala.symbolizer.graphicHeight = parseInt(Math.round(opts.symbolizer.graphicHeight * escala.symbolizer.size));
+				if (opts.symbolizer.backgroundWidth && opts.symbolizer.backgroundHeight) {
+					escala.symbolizer.backgroundWidth = parseInt(Math.round(opts.symbolizer.backgroundWidth * escala.symbolizer.size));
+					escala.symbolizer.backgroundHeight = parseInt(Math.round(opts.symbolizer.backgroundHeight * escala.symbolizer.size));					
+				}
+			} else {
+				escala.symbolizer.pointRadius = Math.max(parseInt(Math.round(opts.selectStyle.pointRadius * escala.symbolizer.size)), opts.minPointRadius);
+			}
+			if (opts.symbolizer.graphicXOffset && opts.symbolizer.graphicYOffset) {
+				escala.symbolizer.graphicXOffset = parseInt(Math.round(opts.symbolizer.graphicXOffset * escala.symbolizer.size));
+				escala.symbolizer.graphicYOffset = parseInt(Math.round(opts.symbolizer.graphicYOffset * escala.symbolizer.size));				
+			}
+			if (opts.symbolizer.backgroundXOffset && opts.symbolizer.backgroundYOffset) {
+				escala.symbolizer.backgroundXOffset = parseInt(Math.round(opts.symbolizer.backgroundXOffset * escala.symbolizer.size));
+				escala.symbolizer.backgroundYOffset = parseInt(Math.round(opts.symbolizer.backgroundYOffset * escala.symbolizer.size));				
+			}
+			$.each(opts.clases, function(j, clase) {
+				if (!(clase.filter instanceof OpenLayers.Filter)) {
+					clase.filter = new OpenLayers.Filter.Comparison(clase.filter);
+				}
+				var s = $.extend({}, clase.symbolizer, escala.symbolizer);
+				if (!clase.symbolizer) {
+					s.fillColor = opts.colors[j];
+				}
+				rules.push(new OpenLayers.Rule(
+					$.extend({}, clase, escala, {symbolizer: s})
+				));
+			});
+			rules.push(new OpenLayers.Rule($.extend({}, escala, {elseFilter: true})));
+		});
+		sm.styles['default'].addRules(rules);
+		return sm;
+	}
+	
+	/**
+	 * Permite agregar al mapa un nuevo layer vectorial y cargar su contenido a partir de una url externa
+	 * que devuelva GML o bien manualmente. Las opciones disponibles son:
+	 * <div class="mdetail-params">
+	 * <strong>Options:</strong>
+	 * <ul>
+	 * <li>
+	 * 		<code>url</code>: String
+	 * 		<div class="sub-desc">Url de donde obtener los features para esta capa</div>
+	 * </li>
+	 * <li>
+	 * 		<code>highlightable</code>: Boolean
+	 * 		<div class="sub-desc">Indica si la capa debe ser sensible al evento highlight</div>
+	 * </li>
+	 * <li>
+	 * 		<code>popup</code>: Boolean
+	 * 		<div class="sub-desc">Indica si al clickear sobre un feature se debe crear un popup default para pasarle al	handler del onClick</div>
+	 * </li>
+	 * <li>
+	 * 		<code>visible</code>: Boolean
+	 * 		<div class="sub-desc">Indica si la capa debe ser visible</div>
+	 * </li>
+	 * <li>
+	 * 		<code>onClick</code>: Function
+	 * 		<div class="sub-desc">Funcion a llamar ante el evento click</div>
+	 * </li>
+	 * <li>
+	 * 		<code>symbolizer</code>: Object
+	 * 		<div class="sub-desc">Un objeto conteniendo seteos de simbologia definidos de acuerdo a <a href="http://dev.openlayers.org/releases/OpenLayers-2.8/doc/apidocs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style">OpenLayers.Feature.Vector.style</a></div>
+	 * </li>
+	 * <li>
+	 * 		<code>minPointRadius</code>: Integer
+	 * 		<div class="sub-desc">Cuando el symbolizer define ancho y alto a traves de la propiedad pointRadius (por defecto) es posible indicar un minimo valor para evitar que el escalado automatico reduzca excesivamente los simbolos.</div>
+	 * </li>
+	 * <li>
+	 * 		<code>clases</code>: Array
+	 * 		<div class="sub-desc">Un array de objetos con la siguiente estructura:<br/><pre><code>
+	 * 		clases: [
+	 * 			{ filter: {property: 'Atributo', type: '==', value: 'Valor'}, symbolizer: { ... } }
+     *        	...
+	 * 		]
+	 * </code></pre><br/>Con el atributo filter que define cada clase se crea automaticamente una instancia de <a href="http://dev.openlayers.org/docs/files/OpenLayers/Filter/Comparison-js.html">OpenLayers.Filter.Comparison</a> o bien puede especificarse directamente el filter creando un OpenLayers.Filter del tipo que se desee y pasarlo de parametro para conseguir filtros mas complejos. La especificacion del symbolizer para cada clase es opcional.</div>
+	 * </li>
+	 * </ul>
+	 * </div>
+	 * <br/>
+	 * Puede encontrar un ejemplo completo de uso de este metodo <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/ejemplos/gml/capas-gml.html">aqui</a>.<br/>
+	 * 
+	 * @param {String} layerName Nombre del nuevo layer (no debe coincidir con otra capa preexistente)
+	 * @param {Object} options (optional) Objeto conteniendo overrides para las opciones disponibles
+	 * @return {OpenLayers.Layer.Vector} Capa creada 
+	 */
+	this.addVectorLayer = function(layerName, options) {
+		var opts = $.extend(true, {}, usig.MapaInteractivo.defaults.vectorLayer, options);
+		if (opts.onClick && !opts.symbolizer.cursor) {
+			opts.symbolizer.cursor = 'pointer';
+		}
+		var layer = new OpenLayers.Layer.Vector(layerName, { 
+			styleMap: buildVectorStyleMap(opts),
+			visibility: opts.visible,
+            rendererOptions: {yOrdering: true } 
+		});
+		map.addLayer(layer);
+		if (opts.url && opts.url != "") {
+			$.ajax({
+				url: opts.url,
+				dataType: 'jsonp',
+				success: function(data) {
+					var gml = new OpenLayers.Format.GML();
+					layer.addFeatures(gml.read(data));
+				},
+				error: function(e) {
+					usig.debug(e);
+				}
+			});
+		}
+		if (opts.highlightable) {
+			var layers = highlightControl.layers;
+			layers.push(layer);
+			highlightControl.setLayer(layers);
+		}
+		if (opts.onClick) {
+			var layers = selectControl.layers;
+			layers.push(layer);
+			selectControl.setLayer(layers);
+			layer.events.on({
+	            "featureselected": function(e) {
+	                if (opts.debug) usig.debug("selected feature "+e.feature.id+" on Layer "+layerName);
+	            	var feature=e.feature;
+	        		if (opts.popup) {
+	        			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
+		    			var popup = new OpenLayers.Popup.FramedCloud(
+							e.feature.id,
+							new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
+			                null,
+			                '<div id="contenido_'+e.feature.id+'"></div>',
+			                null,
+							true,
+							function() {
+			                	selectControl.unselect(feature);
+			                }
+		    	        );
+		    			e.feature.popup = popup;
+		    			popup.hide();
+		    			map.addPopup(popup, true);
+	        		}
+	    			if (typeof(opts.onClick) == "function") {
+	    				opts.onClick(e, popup);
+	    			} else if (popup) {
+	    				popup.show();
+	    			}
+	    			if (!popup)    				
+	    				selectControl.unselect(feature);
+	            },
+	            "featureunselected": function(e) {
+	                if (opts.debug) usig.debug("unselected feature "+e.feature.id+" on Layer "+layerName);
+	                if (e.feature.popup) {
+		                map.removePopup(e.feature.popup);
+		                e.feature.popup.destroy();
+		                e.feature.popup = null;
+	                }
+	            }
+	        });			
+		}
+		return layer;
+	}
+	
+	/**
+	 * Elimina un layer del mapa y destruye el layer. 
+	 * @param {OpenLayers.Layer} layer Capa a eliminar
+	 */
+	this.removeLayer = function(layer) {
+		try {
+			layer.destroy();
+		} catch(e) {
+			return e;
+		};
+		return true;
+	}
+	
+	/**
+	 * Cambia la visibilidad de la capa
+	 * @param {OpenLayers.Layer} layer Capa cuya visibilidad se desea cambiar
+	 */
+	this.toggleLayer = function(layer) {
+		layer.setVisibility(!layer.visibility);
+	}
+
+	/*
+	 * INICIALIZACION
+	 */
 	if (typeof(OpenLayers) == "undefined") {
 		$indicatorImage = $('<img src="'+opts.rootUrl+'images/animated_indicator_medium.gif" alt="'+opts.texts.loading+'"/>');
 		$indicatorImage.css('padding', '10px');
@@ -897,6 +1117,38 @@ usig.MapaInteractivo.defaults = {
 		    	measureArea: 'Medir Área'
 		    }
 		}
+	},
+	vectorLayer: {
+		highlightable: true,
+		popup: false,
+		visible: true,
+		escalas: [
+			{ 
+				minScaleDenominator: 80000,
+				symbolizer: {size: 0.4}
+			},
+			{
+				minScaleDenominator: 20000,
+				maxScaleDenominator: 80000,
+				symbolizer: {size: 0.5}
+			},
+			{
+				maxScaleDenominator: 20000,
+				symbolizer: {size: 0.7}
+			}
+		],
+		clases: [],
+		minPointRadius: 3,
+		symbolizer: {
+			fillColor: '#0000ee',
+			strokeColor: "#666666", 
+			strokeOpacity: 0.7, 
+			strokeWidth: 1,
+			fillOpacity: 0.85,
+			pointRadius: 7,
+			cursor: "pointer"
+		},
+		colors: ['#8F58C7','#E34900','#C3E401','#F9B528','#D71440','#007baf','#495a78','#b56c7d','#669966','#ff3300']	
 	},
 	goToZoomLevel: 7,
     SHADOW_Z_INDEX: 10,
