@@ -937,12 +937,12 @@ return function(idDiv, options) {
 				}
 			});
 		}
-		if (opts.highlightable) {
-			var layers = highlightControl.layers;
-			layers.push(layer);
-			highlightControl.setLayer(layers);
-		}
 		if (opts.onClick) {
+			if (opts.highlightable) {
+				var layers = highlightControl.layers;
+				layers.push(layer);
+				highlightControl.setLayer(layers);
+			}
 			var layers = selectControl.layers;
 			layers.push(layer);
 			selectControl.setLayer(layers);
