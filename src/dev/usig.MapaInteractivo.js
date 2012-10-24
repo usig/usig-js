@@ -921,6 +921,7 @@ return function(idDiv, options) {
             rendererOptions: {yOrdering: true } 
 		});
 		map.addLayer(layer);
+		this.raiseMarkers(map.layers.length);
 		if (opts.url && opts.url != "") {
 			this.showIndicator();
 			$.ajax({
