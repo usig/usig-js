@@ -156,11 +156,6 @@
 							url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades=2"
 						} 
 				};
-				/*
-				var layerBibliotecas = mapa.addVectorLayer('Bibliotecas', { 
-					url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades=2"
-				});
-				*/
 				
 				/* 
 				Agrego una capa personalizando el color del punto y especificando
@@ -177,16 +172,6 @@
 						onClick: clickHandler
 					} 
 				};
-				/*
-				var layerCines = mapa.addVectorLayer('Cines', { 
-					url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades=4",
-					symbolizer: {
-						fillColor: '#00ffff' // Cyan 
-					},
-					popup: true,
-					onClick: clickHandler
-				});
-				*/
 
 				/* 
 				Agrego una capa seteando una imagen como icono y especificando
@@ -206,19 +191,6 @@
 							onClick: clickHandler
 						}
 				};
-				/*
-				var layerEscuelas = mapa.addVectorLayer('Escuelas', { 
-					url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades=6",
-                	symbolizer: {
-                		externalGraphic: 'images/escuela.png',
-			            backgroundGraphic: 'images/fondos/cir_rojo.png',
-			            pointRadius: 15
-                	},
-                	minPointRadius: 7,
-					popup: true,
-					onClick: clickHandler
-				});
-				*/
 				
 				/* 
 				Agrego una capa seteando una imagen como icono y otra como sombra con 
@@ -247,27 +219,6 @@
 							onClick: clickHandler
 						} 
 				};
-				/*
-				var layerArchivos = mapa.addVectorLayer('Archivos', { 
-					url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades=1",
-					symbolizer: {
-						externalGraphic: '../../images/pincho_inclinado.png',
-						graphicWidth: 20,
-						graphicHeight: 36,
-						graphicXOffset: -4,
-						graphicYOffset: -34,
-						backgroundGraphic: '../../images/pincho_inclinado_shadow.png',
-                        backgroundWidth: 28,
-                        backgroundHeight: 8,
-                        backgroundXOffset: 1,
-                        backgroundYOffset: -7,
-                        graphicZIndex: 10,
-                        backgroundGraphicZIndex: 9
-					},
-					popup: true,
-					onClick: clickHandler
-				});	
-				*/
 				
 				/* 
 				Agrego una capa especficando una clasificacion para los elementos a partir
@@ -340,42 +291,6 @@
 							onClick: clickHandler
 						}
 				};
-				/*
-				var layerCultura = mapa.addVectorLayer('Cultura', { 
-					url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?sector=1",
-                	symbolizer: {
-                		externalGraphic: 'images/sitios_culturales.png',
-			            backgroundGraphic: 'images/fondos/cua_verde.png',
-			            pointRadius: 15
-                	},
-					minPointRadius: 7,
-					clases: [
-				         {
-							filter: {
-	                	      property: 'ActividadPrincipal',
-	                	      type: '==',
-	                	      value: 'Biblioteca'
-		                	},
-		                	symbolizer: {
-		                		externalGraphic: 'images/dep_culturales.png',
-					            backgroundGraphic: 'images/fondos/cua_violeta.png'
-		                	}
-						},
-		               	{
-							filter: {
-	                	      property: 'ActividadPrincipal',
-	                	      type: '==',
-	                	      value: 'Centro Cultural'
-			                },
-		                	symbolizer: {
-		                		externalGraphic: 'images/cen_culturales.png',
-					            backgroundGraphic: 'images/fondos/cua_azul.png'
-		                	}
-	                	}],
-					popup: true,
-					onClick: clickHandler
-				});
-				*/
 				
 				function activate(layerId) {
 					if (activeLayer != null) {
@@ -458,7 +373,7 @@ var layer = mapa.addVectorLayer('Escuelas', {
       	<pre id="archivos" class="prettyprint">
 /* 
 Agrego una capa seteando una imagen como icono y otra como 
-sombra con sus respectivos offsets y especificando	un handler 
+sombra con sus respectivos offsets y especificando un handler 
 para el click. 
 Aplica highlight y escalado automatico. 
  */
