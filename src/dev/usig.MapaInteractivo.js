@@ -813,6 +813,8 @@ return function(idDiv, options) {
 			// El estilo de seleccion por defecto solo escala el icono
 			opts.selectStyle.externalGraphic = undefined;
 			opts.selectStyle.backgroundGraphic = undefined;
+			opts.selectStyle.fillColor = undefined;
+			opts.selectStyle.strokeColor = undefined; 
 		}
 		var sm = new OpenLayers.StyleMap({
 			'default': opts.defaultStyle,
@@ -920,13 +922,15 @@ return function(idDiv, options) {
 		});
 		map.addLayer(layer);
 		if (opts.url && opts.url != "") {
+			this.showIndicator();
 			$.ajax({
 				url: opts.url,
 				dataType: 'jsonp',
-				success: function(data) {
+				success: (function(data) {
 					var gml = new OpenLayers.Format.GML();
 					layer.addFeatures(gml.read(data));
-				},
+					this.hideIndicator();
+				}).createDelegate(this),
 				error: function(e) {
 					usig.debug(e);
 				}
@@ -989,6 +993,13 @@ return function(idDiv, options) {
 	 */
 	this.removeLayer = function(layer) {
 		try {
+			map.removeLayer(layer);
+			var layers = highlightControl.layers;
+			layers.removeObject(layer);
+			highlightControl.setLayer(layers);
+			layers = selectControl.layers;
+			layers.removeObject(layer);
+			selectControl.setLayer(layers);
 			layer.destroy();
 		} catch(e) {
 			return e;
@@ -1142,9 +1153,7 @@ usig.MapaInteractivo.defaults = {
 		symbolizer: {
 			fillColor: '#0000ee',
 			strokeColor: "#666666", 
-			strokeOpacity: 0.7, 
 			strokeWidth: 1,
-			fillOpacity: 0.85,
 			pointRadius: 7,
 			cursor: "pointer"
 		},
