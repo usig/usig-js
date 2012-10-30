@@ -683,7 +683,7 @@ return function(idDiv, options) {
 			markersShadows.removeFeatures(marker.shadow);
 		*/
 		myMarkers.removeFeatures(marker.feature);
-		marker.destroy();
+		// marker.destroy();
 		marker = undefined;
 		markersMap[id] = undefined;
 	}
