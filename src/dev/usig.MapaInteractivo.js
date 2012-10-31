@@ -149,10 +149,10 @@ return function(idDiv, options) {
 	                        
 	                        // Makes sure the background graphic is placed correctly relative
 	                        // to the external graphic.
-	                        graphicWidth: 17,
-	                        graphicHeight: 30,
-	                        graphicXOffset: -4,
-	                        graphicYOffset: -30,
+	                        graphicWidth: 32,
+	                        graphicHeight: 42,
+	                        graphicXOffset: -16,
+	                        graphicYOffset: -36,
 	                        /*
 	                        backgroundWidth: 28,
 	                        backgroundHeight: 8,
@@ -169,10 +169,10 @@ return function(idDiv, options) {
 	                        cursor: 'pointer'
                     	},
                     	'select': {
-	                        graphicWidth: 20,
-	                        graphicHeight: 36,
-	                        graphicXOffset: -5,
-	                        graphicYOffset: -36,
+	                        graphicWidth: 38,
+	                        graphicHeight: 50,
+	                        graphicXOffset: -19,
+	                        graphicYOffset: -43,
 	                        /*
 	                        backgroundWidth: 33,
 	                        backgroundHeight: 10,
@@ -1068,9 +1068,11 @@ usig.MapaInteractivo.defaults = {
 	},
 	
 	baseLayer:'mapabsas_default',
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/theme/default/style.css',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.9.1-6/OpenLayers.js',
+	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-0/theme/mapabsas2/style.css',
+	// OpenLayersCSS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/theme/mapabsas2/style.css',
+	// OpenLayersJS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/OpenLayers.js',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-0/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
