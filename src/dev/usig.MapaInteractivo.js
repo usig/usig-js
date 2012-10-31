@@ -144,8 +144,8 @@ return function(idDiv, options) {
                     styleMap: new OpenLayers.StyleMap({
                     	'default' : {
 	                        // Set the external graphic and background graphic images.
-	                        externalGraphic: opts.rootUrl+"images/pincho_inclinado.png", // marcador.png",
-	                        backgroundGraphic: opts.rootUrl+"images/pincho_inclinado_shadow.png",
+	                        externalGraphic: opts.rootUrl+"images/marker-2.2.png", // marcador.png",
+	                        // backgroundGraphic: opts.rootUrl+"images/pincho_inclinado_shadow.png",
 	                        
 	                        // Makes sure the background graphic is placed correctly relative
 	                        // to the external graphic.
@@ -153,16 +153,17 @@ return function(idDiv, options) {
 	                        graphicHeight: 30,
 	                        graphicXOffset: -4,
 	                        graphicYOffset: -30,
+	                        /*
 	                        backgroundWidth: 28,
 	                        backgroundHeight: 8,
 	                        backgroundXOffset: 1,
 	                        backgroundYOffset: -8,
-	                        
+	                        */
 	                        // Set the z-indexes of both graphics to make sure the background
 	                        // graphics stay in the background (shadows on top of markers looks
 	                        // odd; let's not do that).
 	                        graphicZIndex: opts.MARKER_Z_INDEX,
-	                        backgroundGraphicZIndex: opts.SHADOW_Z_INDEX,
+	                        // backgroundGraphicZIndex: opts.SHADOW_Z_INDEX,
 	                        
 	                        // pointRadius: 7,
 	                        cursor: 'pointer'
@@ -172,10 +173,12 @@ return function(idDiv, options) {
 	                        graphicHeight: 36,
 	                        graphicXOffset: -5,
 	                        graphicYOffset: -36,
+	                        /*
 	                        backgroundWidth: 33,
 	                        backgroundHeight: 10,
 	                        backgroundXOffset: 1,
 	                        backgroundYOffset: -11
+	                        */
                     	}
                     }),
                     rendererOptions: {yOrdering: true}
