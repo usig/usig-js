@@ -159,12 +159,14 @@
 		});	
 		
 		function mostrarOpciones(opciones) {
+			usig.debug("en mostrarOpciones");
+			usig.debug(opciones);
 			recorridos = opciones;
 			var distance;
 			var html = '<p>Se hallaron las siguientes opciones:</p><table style="width:100%"><tbody>';
 
 			for (var i=0,len=opciones.length; i<len; i++) {
-				html+='<tr class="'+(i%2?'impar':'par')+'"><td style="width: 20px;text-align: center;"><input type="checkbox" class="ver_detalle" id="recorrido_'+i+'"/></td><td style="width: 80%;">'+opciones[i].toHtmlString()+'</td><td class="tiempo">'+opciones[i].getTime()+'\'</td><td style="width: 20px;"><div class="ref" id="ref_'+i+'">&nbsp;</div></td></tr>';
+				html+='<tr class="'+(i%2?'impar':'par')+'"><td style="width: 20px;text-align: center;"><input type="checkbox" class="ver_detalle" id="recorrido_'+i+'"/></td><td style="width: 80%;">'+opciones[i].toHtmlString()+'</td><td class="tiempo">'+opciones[i].getTimeString()+'\'</td><td style="width: 20px;"><div class="ref" id="ref_'+i+'">&nbsp;</div></td></tr>';
 				html+='<tr class="detalle_recorrido"><td class="detalle" colspan="4" id="detalle_recorrido_'+i+'"></td></tr>'
 				distance = recorridos[i].getTraveledDistance();
 			}
