@@ -67,11 +67,10 @@ usig.GMLPlan = (function($) {
 			    	gml += this.edges.join();
 			    	gml += this.markers.join();
 			    	gml += '</wfs:FeatureCollection>'; 
-			    	usig.debug("en GML Plan");
-					usig.debug(gml);
+			    	
 			    	this.loaded = true;
 			    	this.addFeatures(gmlReader.read(gml));
-			    	this.events.triggerEvent("loadend"); 
+			    	this.events.triggerEvent("loadend");
 			    },
 			    
 			    
@@ -150,19 +149,19 @@ usig.GMLPlan = (function($) {
 			    getStyle: function(template, baseUrl, tipoRecorrido) {
 						
 					defaultOpacity = 0.8;
-					zIndexLine = 5;
-					zIndexPoint = 6;
-					zIndexMarker = 7;
+					zIndexLine = 8;
+					zIndexPoint = 9;
+					zIndexMarker = 14;
 					lineOptions = {strokeWidth: 5, strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
 					lineOptionsWalk = {strokeWidth: 4, strokeDashstyle: 'dashdot',strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};			
-
+									
 					//lineOptionsBikeCiclovia = {strokeWidth: 4, strokeColor: bikeColor,strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
 
-					if(template.marker != undefined) {
+					/*if(template.marker != undefined) {
 		   		    	externalGraphic = baseUrl+"images/" + template.marker;
 		   		    } else {
 		   		    	externalGraphic = baseUrl+"images/pincho_inclinado.png";
-		   		    }
+		   		    }*/
 		   		    
 		   		    color = template.color;
 					
@@ -172,68 +171,77 @@ usig.GMLPlan = (function($) {
 					
 					if (tipoRecorrido=='transporte_publico'){
 						var lookup = {
-						    "walk": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,externalGraphic:baseUrl+"images/recorrido_pie20x20.png",graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
-						    "bus": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_colectivo20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+							"beginwalk": {"Point": {pointRadius: 12, graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/caminando.png",graphicXOffset:-10,graphicYOffset:-30,
+											backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+						    "walk": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,externalGraphic:baseUrl+"images/recorrido_pie20x20.png",graphicZIndex:zIndexPoint},"Line": lineOptionsWalk },
+							"beginbus": {"Point": {pointRadius: 12, graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/colectivo.png",graphicXOffset:-10,graphicYOffset:-30,
+											backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+						    "bus": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_colectivo20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 						    "subway": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/recorrido_subte20x20.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/recorrido_subte20x20.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
+							"beginsubway": {"Point": {pointRadius: 12, graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/subte.png",graphicXOffset:-10,graphicYOffset:-30,
+											backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
 						    "subwayA": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/lineasubte-a.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/lineasubte-a.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 						    "subwayB": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/lineasubte-b.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/lineasubte-b.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 						    "subwayC": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/lineasubte-c.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/lineasubte-c.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 						    "subwayD": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/lineasubte-d.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/lineasubte-d.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 						    "subwayE": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/lineasubte-e.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/lineasubte-e.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 							"subwayH": {"Point": {pointRadius: 12, graphicWidth:20, graphicHeight:20,
-								externalGraphic:baseUrl+"images/lineasubte-h.png",graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+								externalGraphic:baseUrl+"images/lineasubte-h.png",graphicZIndex:zIndexPoint}, "Line": lineOptions  },
 			
-							"connection": {"Point": {pointRadius:6,graphicZIndex:zIndexPoint}, "Line": {strokeWidth: 8, strokeOpacity: defaultOpacity} },
-						    //"connection": {"Point": {pointRadius:6, graphicWidth:35, graphicHeight:35,
-					    	//externalGraphic:"images/recorrido_subte.png"}, "Line": lineOptions},
+							"connection": {"Point": {pointRadius:6,graphicZIndex:zIndexPoint}, "Line": {strokeWidth: 8, strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine} },
 				   		
-				   		    "train": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_tren20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexMarker}, "Line": lineOptions  },
+				   		    "train": {"Point": {pointRadius: 12, externalGraphic:baseUrl+"images/recorrido_tren20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexPoint}, "Line": lineOptions  },
+							"begintrain": {"Point": {pointRadius: 12, graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/tren.png",graphicXOffset:-10,graphicYOffset:-30,
+											backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
 				   		    
-				   		   	//"marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
-				   		    "marker": {"Point": {pointRadius: 7,fillColor:'#ffffff',strokeColor:color,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
+				   		    "marker": {"Point": {pointRadius: 12,externalGraphic:baseUrl+"images/llegada2.png",
+											backgroundGraphic:baseUrl+"images/fondo_hasta.png", graphicXOffset:-10,graphicYOffset:-30,backgroundXOffset:-10,backgroundYOffset:-30,graphicWidth:24, graphicHeight:37,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
 			
 						}		
 					}else if (tipoRecorrido=='walk'){
 						var lookup = {
-						    //"walk": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/recorrido_pie.png",graphicZIndex:5},"Line": lineOptionsWalk },
-							"walk": {"Point": {graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/desde.png",graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
-							"marker": {"Point": {externalGraphic:baseUrl+"images/hasta.png",graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker},  "Line": lineOptions  }
-				   		    //"marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
-				   		    //"marker": {"Point": {pointRadius: 8,fillColor:"#aa9900",strokeColor: "#aa1100",graphicWidth:35, graphicHeight:35},graphicZIndex:5, "Line": lineOptions  }
+
+							"beginwalk": {"Point": {graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/caminando.png",graphicXOffset:-10,graphicYOffset:-30,
+									backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+
+							"walk": {"Point": {graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/caminando.png",graphicXOffset:-10,graphicYOffset:-30,
+										backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+				   		    "marker": {"Point": {pointRadius: 12,externalGraphic:baseUrl+"images/llegada2.png",
+											backgroundGraphic:baseUrl+"images/fondo_hasta.png", graphicXOffset:-10,graphicYOffset:-30,backgroundXOffset:-10,backgroundYOffset:-30,graphicWidth:24, graphicHeight:37,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
 						}	
 					}else if (tipoRecorrido=='car'){
 						var lookup = {
-						    //"car": {"Point": {externalGraphic:baseUrl+"images/recorrido_auto.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptions  },
-							"car": {"Point": {externalGraphic:baseUrl+"images/desde_verde.png",graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  },
-							"marker": {"Point": {externalGraphic:baseUrl+"images/hasta_verde.png",graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
-				   		    //"marker": {"Point": {externalGraphic:externalGraphic,graphicYOffset:-20,graphicWidth:20, graphicHeight:36},graphicZIndex:5, "Line": lineOptions  }
-				   		    //"marker": {"Point": {pointRadius: 8,fillColor:"#aa9900",strokeColor: "#aa1100",graphicWidth:35, graphicHeight:35},graphicZIndex:5, "Line": lineOptions  }
+							"car": {"Point": {graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/auto.png",graphicXOffset:-10,graphicYOffset:-30,
+											backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptions },
+
+   				   		    "marker": {"Point": {pointRadius: 12,externalGraphic:baseUrl+"images/llegada2.png",
+								backgroundGraphic:baseUrl+"images/fondo_hasta.png", graphicXOffset:-10,graphicYOffset:-30,backgroundXOffset:-10,backgroundYOffset:-30,graphicWidth:24, graphicHeight:37,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
 						}	
 					}else if (tipoRecorrido=='bike'){
-						walkColor = '#4EF039';
-						bikeColor = '#aa1100';
+						walkColor = '#D71440';
+						bikeColor = '#D71440';
 						pointRadius = 4;
 						lineOptionsBike = {strokeWidth: 3, strokeColor: bikeColor,strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
 						lineOptionsWalk = {strokeWidth: 4, strokeColor: walkColor, strokeDashstyle: 'dashdot',strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
-						//externalGraphic = baseUrl+"images/pincho_inclinado.png";
 						var lookup = {
-						    //"walk": {"Point": {pointRadius: 12, graphicWidth:35, graphicHeight:35,externalGraphic:baseUrl+"images/recorrido_pie.png",graphicZIndex:5},"Line": lineOptionsWalk },
-						    //"walk": {"Point": {pointRadius: pointRadius,  fillOpacity:1,strokeColor: walkColor, graphicWidth:35, graphicHeight:35,graphicZIndex:5},"Line": lineOptionsWalk },
-							"walk": {"Point": {pointRadius: pointRadius,strokeColor: walkColor, fillColor:walkColor,graphicZIndex:zIndexPoint},"Line": lineOptionsWalk },
-						    //"bike": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptionsBike  },
-						    "bike": {"Point": {pointRadius: pointRadius,strokeColor: bikeColor,fillColor:bikeColor,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike  },
-							//"Carril preferencial": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptionsBike  },
+							"walk": {"Point": {graphicWidth:20, graphicHeight:20,externalGraphic:baseUrl+"images/recorrido_pie20x20.png",graphicZIndex:zIndexPoint},"Line": lineOptionsWalk },
+						    "bike": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici20x20.png",graphicWidth:20, graphicHeight:20,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike  },							
 						    "Carril preferencial": {"Point": {pointRadius: pointRadius,fillColor:bikeColor,strokeColor: bikeColor,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike  },
-						    //"Ciclovía": {"Point": {externalGraphic:baseUrl+"images/recorrido_bici.png",graphicWidth:35, graphicHeight:35,graphicZIndex:5}, "Line": lineOptionsBike  },
 						    "Ciclovía": {"Point": {pointRadius: pointRadius,fillColor:bikeColor,strokeColor:bikeColor,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexPoint}, "Line": lineOptionsBike},
-				   		    "begin": {"Point": {externalGraphic:baseUrl+"images/desde_verde.png", pointRadius: 8,graphicWidth:35, graphicHeight:35, graphicZIndex:zIndexMarker}, "Line": lineOptions  },
-				   		    "end": {"Point": {externalGraphic:baseUrl+"images/hasta_verde.png", pointRadius: 8,graphicWidth:35, graphicHeight:35,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
+				   		   
+  							"beginwalk": {"Point": {pointRadius: 12, graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/caminando.png",graphicXOffset:-10,graphicYOffset:-30,
+									backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsWalk },
+							"beginbike": {"Point": {pointRadius: 12, graphicWidth:24, graphicHeight:37,externalGraphic:baseUrl+"images/bici.png",graphicXOffset:-10,graphicYOffset:-30,
+											backgroundGraphic:baseUrl+"images/fondo_desde.png", backgroundXOffset:-10,backgroundYOffset:-30,graphicZIndex:zIndexMarker},"Line": lineOptionsBike },
+							"end": {"Point": {pointRadius: 12,externalGraphic:baseUrl+"images/llegada2.png",
+								backgroundGraphic:baseUrl+"images/fondo_hasta.png", graphicXOffset:-10,graphicYOffset:-30,backgroundXOffset:-10,backgroundYOffset:-30,graphicWidth:24, graphicHeight:37,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
+						
 						}	
 					}
 		
