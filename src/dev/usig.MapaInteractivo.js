@@ -134,6 +134,7 @@ return function(idDiv, options) {
 		    }));
 		    
 		    map.addControl(navBar); // Si ponemos el navBar no hace falta el Navigation
+		    this.toolbar = navBar;
 	    } else {
 		 	map.addControl(new OpenLayers.Control.Navigation()); 	    	
 	    }
@@ -309,7 +310,8 @@ return function(idDiv, options) {
 	}
 	
 	this.getMarkers =function(){
-		return myMarkers;
+		// return myMarkers;
+		return markersMap;
 	}
 	
 	this.setBaseLayer = function(layerName) {
@@ -1135,7 +1137,7 @@ usig.MapaInteractivo.defaults = {
 	       },
 	       {
 	    	name: 'none',
-	    	display: 'Vista del Plano',
+	    	display: 'Información General',
 	    	desc: 'Mapa que incluye información de calles con altura y sentido, veredas, manzanas, parcelas, espacios verdes, trenes, subterráneos y salidas de la Ciudad de Buenos Aires.'
 		   },
 	       {
