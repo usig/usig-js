@@ -118,10 +118,14 @@ return function(idDiv, options) {
 		    	activeMap: opts.baseLayer,
 		    	mapSelectorText: opts.texts.mapSelectorDefault,
 		    	mapSelectorTrigger: (function(map) {
-		    		if (map != 'none') {
-		    			this.setBaseLayer(map);
+		    		if (typeof(opts.onMapSelect) == "function") {
+		    			opts.onMapSelect(map);
 		    		} else {
-		    			this.setBaseLayer(opts.baseLayer);
+			    		if (map != 'none') {
+			    			this.setBaseLayer(map);
+			    		} else {
+			    			this.setBaseLayer(opts.baseLayer);
+			    		}
 		    		}
 		    	}).createDelegate(this),
 		    	clickHandler: opts.onMapClick,
