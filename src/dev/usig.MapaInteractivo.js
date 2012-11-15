@@ -314,6 +314,10 @@ return function(idDiv, options) {
 		return markersMap;
 	}
 	
+	this.unselectFeature = function(feature) {
+		selectControl.unselect(feature);		
+	}
+	
 	this.setBaseLayer = function(layerName) {
 		var currentLayer = map.baseLayer;
 		if(currentLayer == undefined) {
