@@ -176,7 +176,7 @@ return function(idDiv, options) {
 	                        graphicWidth: 38,
 	                        graphicHeight: 50,
 	                        graphicXOffset: -19,
-	                        graphicYOffset: -43,
+	                        graphicYOffset: -43
 	                        /*
 	                        backgroundWidth: 33,
 	                        backgroundHeight: 10,
@@ -530,21 +530,28 @@ return function(idDiv, options) {
 			if(item.type != undefined){
 				
 				if(item.type == 'StartWalking' || item.type == 'FinishWalking'){
-					gml.addMarker(item.gml);					
+					if(i==0){
+						gml.addMarker(item.gml.replace('walk','beginwalk'));
+					}else{
+						gml.addMarker(item.gml);
+					}
 				} else if(item.type == 'Board') {
 				
-					if (item.service_type == '1'){
-						switch (item.service){
-							case 'Línea A': item.gml = item.gml.replace('subway','subwayA');break;
-							case 'Línea B': item.gml = item.gml.replace('subway','subwayB');break;
-							case 'Línea C': item.gml = item.gml.replace('subway','subwayC');break;
-							case 'Línea D': item.gml = item.gml.replace('subway','subwayD');break;
-							case 'Línea E': item.gml = item.gml.replace('subway','subwayE');break;
-							case 'Línea H': item.gml = item.gml.replace('subway','subwayH');break;
+					if(i==0){
+						gml.addMarker(item.gml.replace(/(bus|subway|train)/g,'begin$1'));
+					}else{
+						if (item.service_type == '1'){
+							switch (item.service){
+								case 'Línea A': item.gml = item.gml.replace('subway','subwayA');break;
+								case 'Línea B': item.gml = item.gml.replace('subway','subwayB');break;
+								case 'Línea C': item.gml = item.gml.replace('subway','subwayC');break;
+								case 'Línea D': item.gml = item.gml.replace('subway','subwayD');break;
+								case 'Línea E': item.gml = item.gml.replace('subway','subwayE');break;
+								case 'Línea H': item.gml = item.gml.replace('subway','subwayH');break;
+							}
 						}
+						gml.addMarker(item.gml);
 					}
-					gml.addMarker(item.gml);
-					
 				} else if (item.type == 'Bus' || item.type == 'SubWay' || item.type == 'Street') {
 					gml.addEdges([item.gml]);
 				} else if(item.type == 'SubWayConnection') {
@@ -563,12 +570,15 @@ return function(idDiv, options) {
 				} else if(item.type == 'StartDriving' || item.type == 'FinishDriving') { 
 					gml.addMarker(item.gml);
 				} else if(item.type == 'StartBiking' || item.type == 'FinishBiking') { 
-					gml.addMarker(item.gml);
+					if(i==0){
+						gml.addMarker(item.gml.replace('bike','beginbike'));
+					}else{
+						gml.addMarker(item.gml);
+					}
 				}
 				
 			}
 		}
-		
 		recorrido.gmlLayer = gml;
 		
 		return gml;		
