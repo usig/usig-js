@@ -1005,6 +1005,12 @@ return function(idDiv, options) {
 		return layer;
 	}
 	
+	this.addLayerToSelectControl = function(layer) {
+		var layers = selectControl.layers;
+		layers.push(layer);
+		selectControl.setLayer(layers);
+	}
+	
 	/**
 	 * Elimina un layer del mapa y destruye el layer. 
 	 * @param {OpenLayers.Layer} layer Capa a eliminar
