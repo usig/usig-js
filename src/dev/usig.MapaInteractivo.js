@@ -48,6 +48,7 @@ return function(idDiv, options) {
 		myself = this,
 		$indicatorImage = null,
 		preloadedImages = [],
+		vectorLayers = [],
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;"></div>'),
 		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = myMarkers = selectControl = highlightControl = null;
 
@@ -88,7 +89,7 @@ return function(idDiv, options) {
 	 	
 	    if (opts.includePanZoomBar) {
 			panZoomBar = new OpenLayers.Control.PanZoomBar({
-			      panner: true, 
+			      panner: false, 
 			      zoomWorldIcon:true, 
 			      textAcercar: opts.texts.panZoomBar.textAcercar,
 			      textAlejar: opts.texts.panZoomBar.textAlejar,
@@ -306,7 +307,11 @@ return function(idDiv, options) {
 	}
 	
 	this.updateSize = function(){
-		map.updateSize.defer(200, map);
+		(function() {
+			map.updateSize();
+			$divIndicator.css('left', (parseInt($div.css('width'))/2-26)+'px');
+			$divIndicator.css('top', (parseInt($div.css('height'))/2-26)+'px');			
+		}).defer(200, this);
 	}
 	
 	this.getMarkers =function(){
@@ -982,8 +987,10 @@ return function(idDiv, options) {
 			                '<div id="contenido_'+e.feature.id+'"></div>',
 			                null,
 							true,
-							function() {
+							function(ev) {
 			                	selectControl.unselect(feature);
+			            		ev.cancelBubble = true;
+			            		return false;
 			                }
 		    	        );
 		    			e.feature.popup = popup;
@@ -1011,6 +1018,10 @@ return function(idDiv, options) {
 		return layer;
 	}
 	
+	/**
+	 * Agrega una capa vectorial al control de seleccion del mapa para permitir que sea clickeable
+	 * @param {OpenLayers.Layer.Vector} layer Capa a agregar
+	 */
 	this.addLayerToSelectControl = function(layer) {
 		var layers = selectControl.layers;
 		layers.push(layer);
@@ -1032,6 +1043,7 @@ return function(idDiv, options) {
 			selectControl.setLayer(layers);
 			layer.destroy();
 		} catch(e) {
+			usig.debug(e);
 			return e;
 		};
 		return true;
@@ -1043,6 +1055,35 @@ return function(idDiv, options) {
 	 */
 	this.toggleLayer = function(layer) {
 		layer.setVisibility(!layer.visibility);
+	};
+	
+	/**
+	 * Permite cambiar la capa de base y cargar automaticamente una serie de capas vectoriales definidas
+	 * en la configuracion que se pasa como parametro
+	 * @param {Object} mapConfig Objeto conteniendo la definicion del mapa de acuerdo con la siguiente sintaxis:
+	 */
+	this.loadMap = function(mapConfig) {
+		this.removeVectorLayers();
+		if (mapConfig.baseLayer) {
+			this.setBaseLayer(mapConfig.baseLayer);
+		}
+		var myself = this;
+		$.each(mapConfig.layers, function(i, layerConfig) {
+			if (layerConfig.options.popup==undefined) {
+				layerConfig.options.popup = mapConfig.popup;
+			}
+			if (layerConfig.options.onClick==undefined) {
+				layerConfig.options.onClick = mapConfig.onClick;
+			}
+			vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
+		});
+	};
+	
+	this.removeVectorLayers = function() {
+		for (var i=0,l=vectorLayers.length;i<l;i++) {
+			this.removeLayer(vectorLayers[i]);
+		}
+		vectorLayers = [];		
 	}
 
 	/*
