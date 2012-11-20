@@ -121,7 +121,7 @@
 		function loadDetalle(idDetalle, popup) {
 			
 			$.ajax({
-				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/detalle/"+idDetalle+"/",
+				url: "http://epok.buenosaires.gob.ar/getObjectContent?id="+idDetalle,
 				//url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/detalle/"+idDetalle+"/",
 				dataType: 'jsonp',
 				success: function(detalle) {
@@ -472,7 +472,7 @@
             });
 
 			$.ajax({
-				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
+				url: "http://epok.buenosaires.gob.ar/getGeoLayer?categoria=dependencias_culturales&actividades="+data.actividades,
 				//url: "http://epok.buho-dev.usig.gcba.gov.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
 				dataType: 'jsonp',
 				success: function(gmlData) {
