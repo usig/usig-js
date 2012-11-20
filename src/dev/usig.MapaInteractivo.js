@@ -89,7 +89,7 @@ return function(idDiv, options) {
 	 	
 	    if (opts.includePanZoomBar) {
 			panZoomBar = new OpenLayers.Control.PanZoomBar({
-			      panner: false, 
+			      panner: true, 
 			      zoomWorldIcon:true, 
 			      textAcercar: opts.texts.panZoomBar.textAcercar,
 			      textAlejar: opts.texts.panZoomBar.textAlejar,
