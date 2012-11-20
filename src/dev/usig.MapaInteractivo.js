@@ -220,9 +220,10 @@ return function(idDiv, options) {
                 if (opts.debug) usig.debug("selected feature "+e.feature.id+" on Markers Layer");
             	var feature=e.feature;
         		var marker = markersMap[e.feature.attributes['fid']];
+        		var popup = null;
         		if (marker.place.options.popup) {
         			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
-	    			var popup = new OpenLayers.Popup.FramedCloud(
+	    			popup = new OpenLayers.Popup.FramedCloud(
 						e.feature.id,
 						new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
 		                null, //new OpenLayers.Size(10, 10),
@@ -238,7 +239,7 @@ return function(idDiv, options) {
 	    			map.addPopup(popup, true);
         		}
     			if (typeof(marker.onClick) == "function") {
-    				marker.onClick(e, marker.place, popup);
+    				marker.onClick(e, marker.place, popup, selectControl);
     			} else if (popup) {
     				popup.show();
     			}
@@ -701,16 +702,9 @@ return function(idDiv, options) {
 	 */
 	this.removeMarker = function(id)	{
 		marker = markersMap[''+id];
-		/*
-		if (marker.popup) {
-			map.removePopup(marker.popup);
-			marker.popup.destroy();
+		if (marker) {
+			myMarkers.removeFeatures(marker.feature);
 		}
-		myMarkers.removeMarker(marker);
-		if (marker.shadow)
-			markersShadows.removeFeatures(marker.shadow);
-		*/
-		myMarkers.removeFeatures(marker.feature);
 		// marker.destroy();
 		marker = undefined;
 		markersMap[id] = undefined;
@@ -730,15 +724,6 @@ return function(idDiv, options) {
 		}
 		if (opts.debug) usig.debug(myMarkers.getFeatureById(marker.feature.id).style);
 		myMarkers.redraw();
-		/*
-		markersMap[''+id].display(display);
-		if (markersMap[''+id].shadow) {
-			if (!display)
-				markersShadows.removeFeatures(markersMap[''+id].shadow);
-			else
-				markersShadows.addFeatures(markersMap[''+id].shadow);
-		}
-		*/
 	}
 	
 	/**
