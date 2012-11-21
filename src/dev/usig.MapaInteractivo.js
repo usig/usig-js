@@ -1009,8 +1009,10 @@ return function(idDiv, options) {
 	 */
 	this.addLayerToSelectControl = function(layer) {
 		var layers = selectControl.layers;
-		layers.push(layer);
-		selectControl.setLayer(layers);
+		if (layers.indexOf(layer) < 0) {
+			layers.push(layer);
+			selectControl.setLayer(layers);
+		}
 	}
 	
 	/**
@@ -1020,12 +1022,14 @@ return function(idDiv, options) {
 	this.removeLayer = function(layer) {
 		try {
 			map.removeLayer(layer);
+			
 			var layers = highlightControl.layers;
 			layers.removeObject(layer);
 			highlightControl.setLayer(layers);
 			layers = selectControl.layers;
 			layers.removeObject(layer);
 			selectControl.setLayer(layers);
+			
 			layer.destroy();
 		} catch(e) {
 			usig.debug(e);
