@@ -963,6 +963,7 @@ return function(idDiv, options) {
 	            "featureselected": function(e) {
 	                if (opts.debug) usig.debug("selected feature "+e.feature.id+" on Layer "+layerName);
 	            	var feature=e.feature;
+	            	e.layerName = layerName;
 	        		if (opts.popup) {
 	        			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
 		    			var popup = new OpenLayers.Popup.FramedCloud(
