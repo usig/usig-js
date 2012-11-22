@@ -129,6 +129,11 @@ return function(idDiv, options) {
 			    		}
 		    		}
 		    	}).createDelegate(this),
+		    	markersToggleHandler: (function () {
+		    		if (myMarkers) {
+		    			this.toggleLayer(myMarkers);
+		    		}
+		    	}).createDelegate(this),
 		    	clickHandler: opts.onMapClick,
 		    	handleRightClicks: true,
 		    	rightClickHandler: opts.onMapClick
