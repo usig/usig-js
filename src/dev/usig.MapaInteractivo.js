@@ -1139,7 +1139,7 @@ usig.MapaInteractivo.defaults = {
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
-	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png'],
+	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png', 'img/markers_off.png'],
 	overviewOptions: {
 		layer:'referencia',
 		resolutions: [130,70,30,15,7.5,4],

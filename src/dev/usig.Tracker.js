@@ -6,10 +6,14 @@ if (typeof (usig) == "undefined")
 usig.Tracker = function(type, data) {
 	
 	
-	this.trackAction = function(target, data) {
-
-		if(piwikTracker != undefined)
+	this.trackAction = function(target, data, category) {
+        // usig.debug('track: '+target);
+		if(piwikTracker != undefined) {
 			piwikTracker.trackLink( target, 'link', data );
+		}
+		if (_gaq != undefined) {
+			_gaq.push(['_trackEvent', category, target]);
+		}
 	}
 	
 }
