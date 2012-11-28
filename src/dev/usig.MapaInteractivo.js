@@ -120,10 +120,8 @@ return function(idDiv, options) {
 		    	mapSelectorText: opts.texts.mapSelectorDefault,
 		    	mapSelectorTrigger: (function(map, config) {
 		    		if (typeof(opts.onMapSelect) == "function") {
-		    			usig.debug('onMapSelect');
 		    			opts.onMapSelect(map, config);
 		    		} else {
-		    			usig.debug('loadMap');
 		    			this.loadMap(config);
 		    			/*
 			    		if (map != 'none') {
@@ -349,8 +347,10 @@ return function(idDiv, options) {
 				//zoomToInitialBounds();
 			}
 		}
+		/*
 		if (navBar)
 			navBar.selectMap(layerName);
+		*/
 	}
 	
 	function getMarkerFromPlace(place) {
@@ -1067,16 +1067,20 @@ return function(idDiv, options) {
 		if (mapConfig.baseLayer) {
 			this.setBaseLayer(mapConfig.baseLayer);
 		}
-		var myself = this;
-		$.each(mapConfig.layers, function(i, layerConfig) {
-			if (layerConfig.options.popup==undefined) {
-				layerConfig.options.popup = mapConfig.popup;
-			}
-			if (layerConfig.options.onClick==undefined) {
-				layerConfig.options.onClick = mapConfig.onClick;
-			}
-			vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
-		});
+		if (mapConfig.layers) {
+			var myself = this;
+			$.each(mapConfig.layers, function(i, layerConfig) {
+				if (layerConfig.options.popup==undefined) {
+					layerConfig.options.popup = mapConfig.popup;
+				}
+				if (layerConfig.options.onClick==undefined) {
+					layerConfig.options.onClick = mapConfig.onClick;
+				}
+				vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
+			});
+		}
+		if (navBar)
+			navBar.selectMap(mapConfig.name);
 	};
 	
 	this.removeVectorLayers = function() {
@@ -1136,10 +1140,10 @@ usig.MapaInteractivo.defaults = {
 	
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	// OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-1/theme/mapabsas2/style.css',
-	OpenLayersCSS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/theme/mapabsas2/style.css',
-	OpenLayersJS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/OpenLayers.js',
-	// OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-1/OpenLayers.js',
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/theme/mapabsas2/style.css',
+	// OpenLayersCSS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/theme/mapabsas2/style.css',
+	// OpenLayersJS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/OpenLayers.js',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
@@ -1210,23 +1214,23 @@ usig.MapaInteractivo.defaults = {
 	    	desc: 'Mapa que contiene Establecimientos Educativos Públicos y Distritos Escolares.'
 		   },
 	       {
-		       	name:'mapabsas_cines',
-		       	display: 'Cines',
-		       	baseLayer: 'mapabsas_informacion_basica',
-		       	layers: [
-		       	         {
-		       	        	 name: 'cines',
-		       	        	 options: {
-		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=4",
-		       	        		symbolizer: {
-			                		externalGraphic: 'images/markers/cine.png',
-						            backgroundGraphic: 'images/markers/fondos/cua_naranja.png',
-			                		pointRadius: 18
-			                	},
-			                	minPointRadius: 9
-		       	        	 }
-		       	         }
-		       	]
+	       	name:'mapabsas_cines',
+	       	display: 'Cines',
+	       	baseLayer: 'mapabsas_informacion_basica',
+	       	layers: [
+	       	         {
+	       	        	 name: 'cines',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=4",
+	       	        		symbolizer: {
+		                		externalGraphic: 'http://mapa.buenosaires.gob.ar/images/markers/cine.png',
+					            backgroundGraphic: 'http://mapa.buenosaires.gob.ar/images/markers/fondos/cua_naranja.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         }
+	       	]
 		   },
 	       {
 	    	name: 'mapabsas_cines_y_teatros',
