@@ -118,15 +118,20 @@ return function(idDiv, options) {
 		    	mapList: opts.mapList,
 		    	activeMap: opts.baseLayer,
 		    	mapSelectorText: opts.texts.mapSelectorDefault,
-		    	mapSelectorTrigger: (function(map) {
+		    	mapSelectorTrigger: (function(map, config) {
 		    		if (typeof(opts.onMapSelect) == "function") {
-		    			opts.onMapSelect(map);
+		    			usig.debug('onMapSelect');
+		    			opts.onMapSelect(map, config);
 		    		} else {
+		    			usig.debug('loadMap');
+		    			this.loadMap(config);
+		    			/*
 			    		if (map != 'none') {
 			    			this.setBaseLayer(map);
 			    		} else {
 			    			this.setBaseLayer(opts.baseLayer);
 			    		}
+			    		*/
 		    		}
 		    	}).createDelegate(this),
 		    	markersToggleHandler: (function () {
@@ -1131,10 +1136,10 @@ usig.MapaInteractivo.defaults = {
 	
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-1/theme/mapabsas2/style.css',
-	// OpenLayersCSS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/theme/mapabsas2/style.css',
-	// OpenLayersJS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/OpenLayers.js',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-1/OpenLayers.js',
+	// OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-1/theme/mapabsas2/style.css',
+	OpenLayersCSS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/theme/mapabsas2/style.css',
+	OpenLayersJS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/OpenLayers.js',
+	// OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-1/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
@@ -1149,26 +1154,31 @@ usig.MapaInteractivo.defaults = {
        	   {
 	       	name:'mapabsas_imagen_satelital_2009',
 	       	display:'Vista Satelital 2009',
+	       	baseLayer:'mapabsas_imagen_satelital_2009',	       	
 	       	desc: 'Mapa que incluye imagen satelital QuickBird, año de toma 2009. El mapa presenta la imagen satelital de alta resolución de la Ciudad de Buenos Aires con calles y alturas.'
 	       },
 	       {
 	       	name:'mapabsas_imagen_satelital_2004',
 	       	display:'Vista Satelital 2004',
+	       	baseLayer:'mapabsas_imagen_satelital_2004',
 	       	desc: 'Mapa que incluye imagen satelital QuickBird, año de toma 2004. El mapa presenta la imagen satelital de alta resolución de la Ciudad de Buenos Aires con calles y alturas.'
 	       },
 	       {
 	       	name:'mapabsas_fotografias_aereas_1978',
 	       	display:'Vista Aérea 1978',
+	       	baseLayer:'mapabsas_fotografias_aereas_1978',
 	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1978. El mapa presenta también la información de calles y alturas actuales como referencia.'
 	       },
 	       {
 	       	name:'mapabsas_fotografias_aereas_1965',
 	       	display:'Vista Aérea 1965',
+	       	baseLayer:'mapabsas_fotografias_aereas_1978',
 	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1965. El mapa presenta también la información de calles y alturas actuales como referencia.'
 	       },
 	       {
 	       	name:'mapabsas_fotografias_aereas_1940',
 	       	display:'Vista Aérea 1940',
+	       	baseLayer:'mapabsas_fotografias_aereas_1940',
 	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1940. El mapa presenta también la información de calles y alturas actuales como referencia.'
 	       },
 	       {
@@ -1178,26 +1188,50 @@ usig.MapaInteractivo.defaults = {
 	       {
 	    	name: 'none',
 	    	display: 'Información General',
+	       	baseLayer:'mapabsas_default',
 	    	desc: 'Mapa que incluye información de calles con altura y sentido, veredas, manzanas, parcelas, espacios verdes, trenes, subterráneos y salidas de la Ciudad de Buenos Aires.'
 		   },
 	       {
 	    	name: 'mapabsas_red_de_ciclovias',
 	    	display: 'Red de Ciclovías',
+	    	baseLayer: 'mapabsas_red_de_ciclovias',
 	    	desc: 'Mapa que contiene las ciclovías protegidas (bicisendas) finalizadas, en obra y proyectadas. Contiene además las estaciones de bicicletas (punto de retiro y devolución), bicicleterias y los estacionamientos para bicicletas (bicicleteros).'
 	       },
 	       {
 	    	name: 'mapabsas_salud',
 	    	display: 'Salud',
+	    	baseLayer: 'mapabsas_salud',
 	    	desc: 'Mapa que contiene información de hospitales, centros médicos barriales, centros de salud y acción comunitaria (CESACs) y áreas hospitalarias.'
 	       },
 	       {
 	    	name: 'mapabsas_educacion_publica',
 	    	display: 'Educación',
+	    	baseLayer: 'mapabsas_educacion_publica',
 	    	desc: 'Mapa que contiene Establecimientos Educativos Públicos y Distritos Escolares.'
+		   },
+	       {
+		       	name:'mapabsas_cines',
+		       	display: 'Cines',
+		       	baseLayer: 'mapabsas_informacion_basica',
+		       	layers: [
+		       	         {
+		       	        	 name: 'cines',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=4",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/cine.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_naranja.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         }
+		       	]
 		   },
 	       {
 	    	name: 'mapabsas_cines_y_teatros',
 	    	display: 'Cines y Teatros',
+	    	baseLayer: 'mapabsas_cines_y_teatros',
 	    	desc: 'Mapa que contiene información de salas de cine y teatro de la Ciudad Autónoma de Buenos Aires.'
 		   }
 		],
