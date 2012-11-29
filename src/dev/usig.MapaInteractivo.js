@@ -1231,12 +1231,6 @@ usig.MapaInteractivo.defaults = {
 	       	        	 }
 	       	         }
 	       	]
-		   },
-	       {
-	    	name: 'mapabsas_cines_y_teatros',
-	    	display: 'Cines y Teatros',
-	    	baseLayer: 'mapabsas_cines_y_teatros',
-	    	desc: 'Mapa que contiene información de salas de cine y teatro de la Ciudad Autónoma de Buenos Aires.'
 		   }
 		],
 	texts: {

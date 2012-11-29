@@ -149,7 +149,7 @@ return usig.AjaxComponent.extend({
 		
 		this.lastRequest = this.mkRequest(data, onSuccess, error, this.opts.server + 'buscar/');
 
-		this.lastRequestEpok = this.mkRequest(data, onSuccess, error, this.opts.serverEpok + 'buscar/');
+		// this.lastRequestEpok = this.mkRequest(data, onSuccess, error, this.opts.serverEpok + 'buscar/');
 
 	}, 	
 	
