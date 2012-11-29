@@ -69,8 +69,13 @@ return function(idDiv, options) {
 	    	this.zoomToExtent(opts.OpenLayersOptions.initBounds);
 	    }
 	    
-    	opts.baseLayer = opts.initLocation?'mapabsas_'+opts.initLocation.map:opts.baseLayer;
-		this.setBaseLayer(opts.baseLayer);
+    	//opts.baseLayer = opts.initLocation?'mapabsas_'+opts.initLocation.map:opts.baseLayer;
+	    //this.setBaseLayer(opts.baseLayer);
+	    if (opts.initLocation){
+	    	this.loadMap(opts.initLocation.mapConfig);
+	    }else{
+	    	this.setBaseLayer(opts.baseLayer);
+	    }
 		
 		map.zoomToExtent(opts.OpenLayersOptions.initBounds);
 		if (opts.initLocation) {
@@ -777,7 +782,7 @@ return function(idDiv, options) {
 	}
 	
 	this.raiseMarkers =function(index){
-		map.raiseLayer(myMarkers, index);
+		if(myMarkers) map.raiseLayer(myMarkers, index);
 	}
 	
 	this.getMarkersIndex =function(){
