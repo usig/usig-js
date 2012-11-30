@@ -8,13 +8,17 @@ usig.Tracker = function(type, data) {
 	
 	this.trackAction = function(target, data, category, label) {
         // usig.debug('track: '+target);
-		if(piwikTracker != undefined) {
-			piwikTracker.trackLink( target, 'link', data );
-		}
-		if (_gaq != undefined) {
-			// usig.debug(category+', '+target+','+label);
-			_gaq.push(['_trackEvent', category, target, label]);
-		}
+		try {
+			if (piwikTracker) {
+				piwikTracker.trackLink( target, 'link', data );
+			}
+		} catch(e) {};
+		try {
+			if (_gaq) {
+				// usig.debug(category+', '+target+','+label);
+				_gaq.push(['_trackEvent', category, target, label]);
+			}
+		} catch(e) {};
 	}
 	
 }
