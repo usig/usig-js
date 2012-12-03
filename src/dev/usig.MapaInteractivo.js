@@ -1181,7 +1181,7 @@ usig.MapaInteractivo.defaults = {
 	       {
 	       	name:'mapabsas_fotografias_aereas_1965',
 	       	display:'Vista Aérea 1965',
-	       	baseLayer:'mapabsas_fotografias_aereas_1978',
+	       	baseLayer:'mapabsas_fotografias_aereas_1965',
 	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1965. El mapa presenta también la información de calles y alturas actuales como referencia.'
 	       },
 	       {
