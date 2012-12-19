@@ -1222,24 +1222,36 @@ usig.MapaInteractivo.defaults = {
 	    	baseLayer: 'mapabsas_educacion_publica',
 	    	desc: 'Mapa que contiene Establecimientos Educativos Públicos y Distritos Escolares.'
 		   },
-	       {
-	       	name:'mapabsas_cines',
-	       	display: 'Cines',
-	       	baseLayer: 'mapabsas_informacion_basica',
-	       	layers: [
-	       	         {
-	       	        	 name: 'cines',
-	       	        	 options: {
-	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=4",
-	       	        		symbolizer: {
-		                		externalGraphic: 'http://mapa.buenosaires.gob.ar/images/markers/cine.png',
-					            backgroundGraphic: 'http://mapa.buenosaires.gob.ar/images/markers/fondos/cua_naranja.png',
-		                		pointRadius: 18
-		                	},
-		                	minPointRadius: 9
-	       	        	 }
-	       	         }
-	       	]
+	        {
+		       	name:'mapabsas_librerias_y_disquerias',
+		       	display: 'Librerías y disquerías',
+		       	baseLayer: 'mapabsas_informacion_basica',
+		       	layers: [
+		       	         {
+		       	        	 name: 'librerias',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=22",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/biblioteca.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_azul.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         },
+		       	         {
+		       	        	 name: 'disquerias',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=26",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/disqueria.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_rojo.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         }
+		       	]
 		   }
 		],
 	texts: {
