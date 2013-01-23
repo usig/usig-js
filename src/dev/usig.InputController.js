@@ -24,13 +24,19 @@ return function(idField, options) {
 	
 	var onEvent = function(ev) {		
 		var key = ev.keyCode;
+		/*
+		ev.cancelBubble = true;
+		ev.stopPropagation();
+		*/
 		if (window.event && window.event.keyCode > 0) {
 			key = window.event.keyCode;
 		}
 		if (ev.type != "blur" && ev.type != "focus" && typeof(opts.onKeyUp) == "function") {
+			if (opts.debug) usig.debug('usig.InputController: onKeyUp('+field.value+')');
 			opts.onKeyUp(key, field.value);
 		}
 		if (ev.type != "blur" && ev.type != "focus" && field.value != previousValue && typeof(opts.onChange) == "function") {
+			if (opts.debug) usig.debug('usig.InputController: onChange('+field.value+')');
 			previousValue = field.value;
 			opts.onChange(field.value);			
 		}
@@ -41,7 +47,7 @@ return function(idField, options) {
 		if (ev.type == "focus" && typeof(opts.onFocus) == "function") {
 			if (opts.debug) usig.debug('usig.InputController: focus');
 			opts.onFocus();
-		}
+		} 
 	}
 	
 	var eventHandler = onEvent.createDelegate(this);
@@ -98,5 +104,5 @@ return function(idField, options) {
 })(jQuery);
 
 usig.InputController.defaults = {
-	events: 'blur keyup input focus'
+	events: document.all?'blur keyup input focus':'blur keydown input focus'
 }
