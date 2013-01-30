@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://ogr.maptools.org/" xmlns:ogr="http://ogr.maptools.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="1.0">
+<xs:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengeospatial.net/gml/2.1.2/feature.xsd"/><xs:element name="FeatureCollection" type="ogr:FeatureCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+<xs:complexType name="FeatureCollectionType">
+  <xs:complexContent>
+    <xs:extension base="gml:AbstractFeatureCollectionType">
+      <xs:attribute name="lockId" type="xs:string" use="optional"/>
+      <xs:attribute name="scope" type="xs:string" use="optional"/>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+<xs:element name="hospitales_especializados" type="ogr:hospitales_especializados_Type" substitutionGroup="gml:_Feature"/>
+<xs:complexType name="hospitales_especializados_Type">
+  <xs:complexContent>
+    <xs:extension base="gml:AbstractFeatureType">
+      <xs:sequence>
+<xs:element name="geometryProperty" type="gml:GeometryPropertyType" nillable="true" minOccurs="1" maxOccurs="1"/>
+    <xs:element name="gid" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:totalDigits value="10"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="nombre" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="67"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="calle" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="49"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="altura" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="telefono" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="guardia" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="fax" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="web" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="cod_postal" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="director" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="tipo_espec" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="41"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="tipo" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="75"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="mod_at_1" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="22"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="mod_at_2" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="14"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="depend_adm" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="nom_map" nillable="true" minOccurs="0" maxOccurs="1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+      </xs:sequence>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+</xs:schema>
