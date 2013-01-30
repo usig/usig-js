@@ -105,7 +105,9 @@ return function(data, clase) {
 	 */
 	this.toJson = function() {
 		var obj = this.getRawData();
-		obj.clase = this.clase.toJson();
+		if (this.clase && this.clase.toJson) {
+			obj.clase = this.clase.toJson();
+		}
 		return obj;
 	}
 	
