@@ -24,6 +24,7 @@ return function(datos, options) {
 		precargado,
 		descripcion="Sin datos",
 		descripcionHtml="Sin datos",
+		descripcionHtmlV3="Sin datos",
 		detalle=[],
 		traveled_distance=0,
 		opts = $.extend({}, usig.Recorrido.defaults, options);
@@ -91,6 +92,53 @@ return function(datos, options) {
 			}
 		}
 	}	
+	function procesarResumenV3() { //V3
+		var desc=[];
+		descripcionHtmlV3="";
+		if (tipo=="transporte_publico"){
+			$.each(resumen,function(i,action) {
+				if(action.type == 'Board') {
+					if (action.service_type==3){ //colectivo
+						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
+					}else if(action.service_type==1){//subte
+						lineas = action.service.split("-");
+						$.each(lineas,function(i,linea) {
+							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea+'</span></div>';
+						});
+					}else if(action.service_type==2){	//tren
+						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
+					}
+				}
+			});
+			//descripcion=desc.join(', ');
+			
+		}else if (tipo=="walk"){
+			descripcion = opts.texts.descWalk;
+			$.each(resumen,function(i,action) { 
+				if(action.type != undefined && action.type == 'StartWalking') {
+					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
+				}
+			});
+		}else if (tipo=="car"){
+			descripcion = opts.texts.descCar;
+			$.each(resumen,function(i,action) { 
+				if(action.type != undefined && action.type == 'StartDriving') {
+					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
+				}
+			});
+		}else if (tipo=="bike"){
+			descripcion = opts.texts.descBike;
+			$.each(resumen,function(i,action) { 
+				if(action.type != undefined && action.type == 'StartBiking') {
+					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
+					return false;
+				}
+			});
+			if (descripcionHtml==""){
+				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
+			}
+		}
+	}
 	function procesarPlan() {
 		if (tipo =="transporte_publico"){
 			var current_action = null;
@@ -356,6 +404,7 @@ return function(datos, options) {
 			data=$.extend({}, datos);
 			data.options = opts;
 			procesarResumen();
+			procesarResumenV3();
 			cargarPlan(datos);
 		} catch(e) {
 			usig.debug(e);
@@ -401,7 +450,8 @@ return function(datos, options) {
 	 * @return {String} Descripcion corta del recorrido en formato HTML
 	 */	
 	this.toHtmlString = function() {
-		return descripcionHtml;
+		//return descripcionHtml; //v3
+		return descripcionHtmlV3;
 	};
 	
 	/**
