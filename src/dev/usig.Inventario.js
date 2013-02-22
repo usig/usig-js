@@ -149,7 +149,7 @@ return usig.AjaxComponent.extend({
 		
 		this.lastRequest = this.mkRequest(data, onSuccess, error, this.opts.server + 'buscar/');
 
-		// this.lastRequestEpok = this.mkRequest(data, onSuccess, error, this.opts.serverEpok + 'buscar/');
+		this.lastRequestEpok = this.mkRequest(data, onSuccess, error, this.opts.serverEpok + 'buscar/');
 
 	}, 	
 	
@@ -174,7 +174,7 @@ return usig.AjaxComponent.extend({
 		}
 		
 		var id = typeof(obj) == 'object'?obj.id:obj;
-		
+
 		if (typeof(id)=="string") {
 			this.lastRequestEpok = this.mkRequest({ id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.serverEpok + 'getObjectContent/');						
 		} else {

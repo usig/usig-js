@@ -60,6 +60,12 @@ return function(data, clase) {
 				this.direccionAsociada = usig.Direccion.fromObj(data.direccionAsociada);
 				this.rawData.direccionAsociada = data.direccionAsociada;
 			} catch(e) {};
+		} else if (data.direccionNormalizada && usig.NormalizadorDirecciones) {
+			try {
+				this.direccionAsociada = usig.NormalizadorDirecciones.normalizar(data.direccionNormalizada, 1)[0];
+				this.direccionAsociada.setCoordenadas(this.ubicacion.getCentroide());
+				this.rawData.direccionAsociada = this.direccionAsociada.toJson();
+			} catch(e) {};
 		}
 		
 		if (data.contenido) {
