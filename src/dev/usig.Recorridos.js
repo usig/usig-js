@@ -33,16 +33,16 @@ usig.defaults.Recorridos = {
 		opciones_incluir_autopistas: true
 	},
 	colorTemplates: [
-		new usig.TripTemplate(1,'#8F58C7'),
-		new usig.TripTemplate(2,'#E34900'),
-		new usig.TripTemplate(3,'#C3E401'),
-		new usig.TripTemplate(4,'#F9B528'),
-		new usig.TripTemplate(5,'#D71440'),
-		new usig.TripTemplate(6,'#007baf'),
-		new usig.TripTemplate(7,'#495a78'),
-		new usig.TripTemplate(8,'#b56c7d'),
-		new usig.TripTemplate(9,'#669966'),
-		new usig.TripTemplate(10,'#ff3300')
+		new usig.TripTemplate(1, '#0074FF'),
+		new usig.TripTemplate(2, '#DD0083'),
+		new usig.TripTemplate(3, '#009866'),
+		new usig.TripTemplate(4, '#FF9E29'),
+		new usig.TripTemplate(5, '#FF6633'),
+		new usig.TripTemplate(6, '#4B4C9F'),
+		new usig.TripTemplate(7, '#98C93C'),
+		new usig.TripTemplate(8, '#EE3A39'),
+		new usig.TripTemplate(9, '#4ED5F9'),
+		new usig.TripTemplate(10,'#FFCC05')
 	]
 };	
 	
