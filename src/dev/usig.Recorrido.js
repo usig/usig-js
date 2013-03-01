@@ -96,8 +96,12 @@ return function(datos, options) {
 		var desc=[];
 		descripcionHtmlV3="";
 		if (tipo=="transporte_publico"){
+			estadoAnterior = null;	
 			$.each(resumen,function(i,action) {
 				if(action.type == 'Board') {
+					if (estadoAnterior =='Alight'){
+						descripcionHtmlV3 += '<span class="icons-sprite icon-combinacion"></span>';
+					}
 					if (action.service_type==3){ //colectivo
 						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
 					}else if(action.service_type==1){//subte
@@ -109,6 +113,7 @@ return function(datos, options) {
 						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
 					}
 				}
+				estadoAnterior = action.type;
 			});
 			//descripcion=desc.join(', ');
 			
