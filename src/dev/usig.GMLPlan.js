@@ -224,8 +224,8 @@ usig.GMLPlan = (function($) {
 								backgroundGraphic:baseUrl+"images/fondo_hasta.png", graphicXOffset:-10,graphicYOffset:-30,backgroundXOffset:-10,backgroundYOffset:-30,graphicWidth:24, graphicHeight:37,graphicZIndex:zIndexMarker}, "Line": lineOptions  }
 						}	
 					}else if (tipoRecorrido=='bike'){
-						walkColor = '#D71440';
-						bikeColor = '#D71440';
+						walkColor = color; //'#0074FF';
+						bikeColor = color; //'#0074FF';//'#D71440';
 						pointRadius = 4;
 						lineOptionsBike = {strokeWidth: 3, strokeColor: bikeColor,strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
 						lineOptionsWalk = {strokeWidth: 4, strokeColor: walkColor, strokeDashstyle: 'dashdot',strokeOpacity: defaultOpacity,graphicZIndex:zIndexLine};
