@@ -151,11 +151,17 @@ return new (usig.AjaxComponent.extend({
 		var recorridos = [], templates = this.opts.colorTemplates;
 		if (this.opts.debug) usig.debug('usig.Recorridos onBuscarRecorridosSuccess');
 		$.each(data.planning, function(i, plan) {			
-			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: templates[i] }));
+			var trip_plan = JSON.parse(plan);
+			
+			switch (trip_plan.type){
+				case 'car':template = templates[1]; break;//fuccia
+				case 'bike':template = templates[0];break;//azul
+				case 'walk':template = templates[2]; break;//verde
+				case 'transporte_publico': template = templates[i];break;
+			}
+			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: template }));
 			//recorrido.loadPlan
 		});
-		//usig.debug("recorridos en onBuscarRecorridosSuccess");
-		//usig.debug(recorridos);
 		if (typeof(callback) == "function")
 			callback(recorridos);
 	},
