@@ -103,7 +103,8 @@ return function(datos, options) {
 						descripcionHtmlV3 += '<span class="icons-sprite icon-combinacion"></span>';
 					}
 					if (action.service_type==3){ //colectivo
-						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
+						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span><span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span></div>';
+						 //<span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span>
 					}else if(action.service_type==1){//subte
 						lineas = action.service.split("-");
 						$.each(lineas,function(i,linea) {
@@ -491,7 +492,22 @@ return function(datos, options) {
 		}
 		return time;
 	};
-
+	
+	/**
+	 * Devuelve la distancia total del recorrido formateada como cadena
+	 * @return {String} Distancia total del recorrido formateada
+	 */
+	this.getDistanceString = function() {
+		distance = '';
+		//1 Km
+		if(traveled_distance > 999) {
+			distance += traveled_distance/1000 + ' Km'; 
+		} else {
+			distance += traveled_distance + ' m' ;
+		}
+		return distance;
+	};
+	
 	/**
 	 * Permite obtener el trip_plan del recorrido
 	 * @param {Function} success Una funcion que es llamada cuando se obtiene el detalle del recorrido. 
