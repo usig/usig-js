@@ -30,7 +30,8 @@ usig.defaults.Recorridos = {
 		opciones_medios_subte: true,
 		opciones_medios_tren: true,
 		opciones_prioridad: 'avenidas', 
-		opciones_incluir_autopistas: true
+		opciones_incluir_autopistas: true,
+		cortes: true
 	},
 	colorTemplates: [
 		new usig.TripTemplate(1, '#0074FF'),
