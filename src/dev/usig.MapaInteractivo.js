@@ -746,7 +746,7 @@ return function(idDiv, options) {
 	}
 	
 	/**
-	 * Permite prender/apagar un marcador sobre el mapa
+	 * Permite moverse/hacer zoom a un marcador sobre el mapa
 	 * @param {Integer} id Id del marcador
 	 * @param {Boolean} zoomIn Indica si se desea hacer zoom sobre el marcador
 	 */
