@@ -385,7 +385,7 @@ return function(idField, options) {
 	
 	/**
 	 * Cambia el skin actual del control
-	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'usig2', 'usig3', 'usig4', 'mapabsas' o 'dark')
+	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'usig2', 'usig3', 'usig4', 'mapabsas', 'bootstrap' o 'dark')
 	 */
 	this.changeSkin = function(newSkin) {
 		usig.removeCss(opts.rootUrl+'css/usig.AutoCompleterDialog.'+opts.skin+'.css');
