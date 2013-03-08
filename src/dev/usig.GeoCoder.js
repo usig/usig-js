@@ -52,20 +52,6 @@ return usig.AjaxComponent.extend({
 			success(res);
 		}
 	},
-
-	onSuccessSMP: function(res, success) {
-		usig.debug(res);
-		if (res.smp){
-			var parcela = {	
-				smp: res.smp,
-				pm: res.pdamatriz,
-				centroide: '('+res.centroide.x+','+ res.centroide.y+')'
-			}
-			success(new usig.ParcelaCatastral(parcela));
-		}else{
-			success(res);
-		}
-	},
 	
 	/**
 	 * Realiza una geocodificacion a partir de una instancia de usig.Direccion (NormalizadorDireccionesJS)
@@ -206,7 +192,6 @@ return usig.AjaxComponent.extend({
 	 * @param {Integer} cod_calle Código de la calle
 	 * @param {Integer} altura Altura válida correspondiente a dicha calle
      * @param {Function} success Funcion callback que es llamada al concretarse con exito la consulta.
-     * Recibe como parametro una instancia de usig.ParcelaCatastral. 
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio. 
 	 * @return {Object} 
 	 */
@@ -215,7 +200,7 @@ return usig.AjaxComponent.extend({
 				cod_calle: cod_calle,
 				altura: altura
 		};
-		this.mkRequest(data, this.onSuccessSMP.createDelegate(this, [success], 1), error, this.opts.server+'smp/')
+		this.mkRequest(data, success, error, this.opts.server+'smp/')
 	}
 	
 });

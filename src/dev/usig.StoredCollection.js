@@ -82,6 +82,7 @@ return usig.Publisher.extend({
 	 * Permite agregar un item a la coleccion. Dispara un evento 'add' que lleva como parametro
 	 * el item agregado.
 	 * @param {Object} item Objeto a agregar
+	 * @return {Integer} Id del objeto agregado
 	 */
 	add: function(item) {
 		try {
@@ -94,6 +95,7 @@ return usig.Publisher.extend({
 		} catch(e) {
 			throw(e);
 		}
+		return item.id;
 	},
 	
 	/**

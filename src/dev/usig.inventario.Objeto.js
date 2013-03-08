@@ -114,6 +114,9 @@ return function(data, clase) {
 		if (this.clase && this.clase.toJson) {
 			obj.clase = this.clase.toJson();
 		}
+		if (this.direccionAsociada && this.direccionAsociada.toJson) {
+			obj.direccionAsociada = this.direccionAsociada.toJson();
+		}		
 		return obj;
 	}
 	

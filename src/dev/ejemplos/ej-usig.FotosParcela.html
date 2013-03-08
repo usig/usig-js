@@ -64,7 +64,7 @@
 		geoCoder = new usig.GeoCoder();
 
 		function cargarFotoParcela(data) {
-			if (data instanceof usig.ParcelaCatastral) {
+			if (data.smp) {
 				fotosParcela = new usig.FotosParcela(data.smp, {
 					maxHeight : 195, 
 					maxWidth : 243, 

@@ -720,7 +720,7 @@ return function(idDiv, options) {
 	 * @param {Integer} id Id del marcador que se desea eliminar obtenido mediante addMarker
 	 */
 	this.removeMarker = function(id)	{
-		marker = markersMap[''+id];
+		var marker = markersMap[''+id];
 		if (marker) {
 			myMarkers.removeFeatures(marker.feature);
 		}
@@ -735,7 +735,7 @@ return function(idDiv, options) {
 	 * @param {Boolean} display True para prender el marcador y False para apagarlo
 	 */
 	this.toggleMarker = function(id, display) {
-		var marker = markersMap[''+id]
+		var marker = markersMap[''+id];
 		if (display) {
 			myMarkers.getFeatureById(marker.feature.id).style = marker.style;
 		} else {
@@ -743,6 +743,16 @@ return function(idDiv, options) {
 		}
 		if (opts.debug) usig.debug(myMarkers.getFeatureById(marker.feature.id).style);
 		myMarkers.redraw();
+	}
+	
+	/**
+	 * Permite prender/apagar un marcador sobre el mapa
+	 * @param {Integer} id Id del marcador
+	 * @param {Boolean} zoomIn Indica si se desea hacer zoom sobre el marcador
+	 */
+	this.goToMarker = function(id, zoomIn) {
+		var marker = markersMap[''+id];
+		_goTo(marker.lonlat, zoomIn);
 	}
 	
 	/**

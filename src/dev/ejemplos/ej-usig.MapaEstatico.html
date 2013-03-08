@@ -83,17 +83,17 @@
 
 		function cargarMapaEstatico(data) {
 			var radio = $('#radio').val();
-			if (direccion instanceof usig.ParcelaCatastral) {
+			if (data.smp) {
 				optsMapaSMP = {
-					punto: data.getPunto(),
+					punto: new usig.Punto(data.centroide.x, data.centroide.y),
 					smp: data.smp,
 					width: 500,
 					radio: radio
 				};
 				optsMapaDir = {
-					punto: data.getPunto(),
+					punto: new usig.Punto(res.centroide.x, res.centroide.y),
 					marcarPunto: true,
-					desc: data.toString(),
+					desc: data.smp,
 					width: 500,
 					radio: radio 
 				};
