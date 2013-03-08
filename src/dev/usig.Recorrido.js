@@ -103,7 +103,8 @@ return function(datos, options) {
 						descripcionHtmlV3 += '<span class="icons-sprite icon-combinacion"></span>';
 					}
 					if (action.service_type==3){ //colectivo
-						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span><span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span></div>';
+						//descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span><span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span></div>';
+						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
 						 //<span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span>
 					}else if(action.service_type==1){//subte
 						lineas = action.service.split("-");
