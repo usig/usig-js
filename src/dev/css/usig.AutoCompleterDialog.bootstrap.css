@@ -56,7 +56,8 @@
 
 
 .usig_acv li > a:hover em,
-.usig_acv li > a:focus em {
+.usig_acv li > a:focus em,
+.usig_acv li.highlight > a em {
     color:#FFF!important;
 }
 

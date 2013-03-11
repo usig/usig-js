@@ -125,10 +125,12 @@ return function(idField, options) {
 			highlighted = n;
 			$('ul.options li.highlight', $div).removeClass('highlight');
 			if (typeof(n) == "string") {
-				$('ul.options li:has(a[name="'+n+'"])', $div).addClass('highlight');				
+				$('ul.options li:has(a[name="'+n+'"])', $div).addClass('highlight');
+				highlighted = parseInt(n.replace(id, ''));				
 			} else {
 				$('ul.options li:has(a)', $div).slice(n, n+1).addClass('highlight');
 			}
+			if (opts.debug) usig.debug('AutoCompleterDialog. highlighted: '+highlighted);
 		}
 	}
 	
@@ -275,7 +277,13 @@ return function(idField, options) {
 				createHoldingDiv('<ul class="options">'+htmlList+'</ul>');				
 			}
 		}
-		$('ul.options li.acv_op', $div).mouseover((function(ev, highlight) { highlight(ev.target.name); }).createDelegate(this, [highlight], 1));
+		$('ul.options li.acv_op', $div).mouseover((function(ev, highlight) {
+			if (ev.target.name) {
+				highlight(ev.target.name);
+			} else {
+				highlight($(ev.target).parents('a').attr('name'));
+			}
+		}).createDelegate(this, [highlight], 1));
 		$('ul.options li.acv_op', $div).click((function(ev) { 
 			if (opts.debug) usig.debug('AutoCompleterDialog: click');
 			ev.preventDefault();
