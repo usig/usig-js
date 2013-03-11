@@ -61,7 +61,8 @@
 }
 
 .usig_acv li > a:hover,
-.usig_acv li > a:focus {
+.usig_acv li > a:focus,
+.usig_acv li.highlight > a {
   color: #ffffff;
   text-decoration: none;
   background-color: #0088cc;
