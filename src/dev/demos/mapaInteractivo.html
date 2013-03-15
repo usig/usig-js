@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
   <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>USIG - Mapa Interactivo de Buenos Aires</title>
@@ -55,7 +55,7 @@
 		var ac = new usig.AutoCompleter('b', {
        		debug: true,
        		rootUrl: '../',
-       		skin: 'usig2',
+       		skin: 'bootstrap',
        		onReady: function() {
        			$('#b').val('').removeAttr('disabled').focus();	        			
        		},
@@ -75,6 +75,29 @@
 		
 		miMapa = new usig.MapaInteractivo('mapa', {
 			rootUrl: '../',
+			zoomBar: false,
+			/*
+			includeMapSwitcher: true,
+			mapSwitcher: {
+				opcionales: [
+					{id: 'markers-toggle', name: 'Mostrar Mis Lugares', checked: true},
+					{id: 'transporte-toggle', name: 'Mostrar Transporte Público', checked: true},
+					{id: 'cortes-toggle', name: 'Mostrar Cortes de Calle', checked: false}
+	            ],
+				mapas: [
+				    {id: 'mapabsas_red_de_ciclovias', name: 'Red de ciclovías'}, 
+				    {id: 'mapabsas_codigo_de_planeamiento_urbano', name: 'Código de planeamiento urbano'} 
+				],	
+				onOptionToggle: function(optionId, toggle) {
+					alert(optionId+(toggle?': on':': off'));					
+				},				
+				onMapSelection: function(mapId) {
+					miMapa.setBaseLayer(mapId);
+				}
+				
+			},*/
+			// includeToolbar: false,
+			// includePanZoomBar: false,
 			// OpenLayersCSS: 'http://ameba.usig.gcba.gov.ar/wk/OpenLayers/theme/default/style.css',
 			onReady: function() {
 				/* Ejemplo de marcador personalizado */
@@ -104,7 +127,7 @@
        </form>
       </div>
       <div id="footer">
-        <p>&copy; 2011-2012 USIG - Unidad de Sistemas de Información Geográfica</p>
+        <p>&copy; 2011-2013 USIG - Unidad de Sistemas de Información Geográfica</p>
       </div>
     </div>
   </body>

@@ -75,11 +75,6 @@ body {
 	width: 300px;
 }
 
-#buscador label {
-	display: block;
-	margin-top: 1em;
-}
-
 #page #authors,
 #page #info {
   width: 48%;

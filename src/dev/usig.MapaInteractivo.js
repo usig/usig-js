@@ -86,71 +86,44 @@ return function(idDiv, options) {
 		
 		//Control de escala
 		scalebar = new OpenLayers.Control.ScaleBar({
-	            // div: document.getElementById("scalebar"),
 	            minWidth: 141,
 	            maxWidth: 142
 	           });
 	    map.addControl(scalebar);
 	 	
 	    if (opts.includePanZoomBar) {
-			panZoomBar = new OpenLayers.Control.PanZoomBar({
-			      panner: true, 
-			      zoomWorldIcon:true, 
-			      textAcercar: opts.texts.panZoomBar.textAcercar,
-			      textAlejar: opts.texts.panZoomBar.textAlejar,
-			      verMapaCompleto: opts.texts.panZoomBar.verMapaCompleto
-			  });
+			panZoomBar = new OpenLayers.Control.PanZoomBarUSIG({ zoomBar: opts.zoomBar });
 			  
-			map.addControl(panZoomBar);
-	    
-		    overviewMap = new OpenLayers.Control.OverviewMap({
-			    layers: [new OpenLayers.Layer.WMS("Referencia",getLayerURLs('referencia'), {layers: opts.overviewOptions.layer})],			
-			    size: new OpenLayers.Size(opts.overviewOptions.size[0], opts.overviewOptions.size[1]),
-			    minRatio: 12, 
-			    maxRatio: 24,
-		       	mapOptions: {
-	        		projection: opts.OpenLayersOptions.projection, 
-	        		units: opts.OpenLayersOptions.units, 
-	        		maxExtent: opts.OpenLayersOptions.maxExtent, 
-		       		resolutions: opts.overviewOptions.resolutions
-		       	}});
-		       	
-		    map.addControl(overviewMap);	
+			map.addControl(panZoomBar);	    
 	    }
 		
 	    if (opts.includeToolbar) {
-		    navBar = new OpenLayers.Control.NavToolbar($.extend({}, opts.texts.navBar, {
-		    	mapList: opts.mapList,
-		    	activeMap: opts.baseLayer,
-		    	mapSelectorText: opts.texts.mapSelectorDefault,
-		    	mapSelectorTrigger: (function(map, config) {
-		    		if (typeof(opts.onMapSelect) == "function") {
-		    			opts.onMapSelect(map, config);
-		    		} else {
-		    			this.loadMap(config);
-		    			/*
-			    		if (map != 'none') {
-			    			this.setBaseLayer(map);
-			    		} else {
-			    			this.setBaseLayer(opts.baseLayer);
-			    		}
-			    		*/
-		    		}
-		    	}).createDelegate(this),
-		    	markersToggleHandler: (function () {
-		    		if (myMarkers) {
-		    			this.toggleLayer(myMarkers);
-		    		}
-		    	}).createDelegate(this),
-		    	clickHandler: opts.onMapClick,
-		    	handleRightClicks: true,
-		    	rightClickHandler: opts.onMapClick
-		    }));
+	    	var optsNavBar = $.extend({}, opts.texts.navBar, {
+		    	clickHandler: opts.onMapClick
+		    });
+		    if (!opts.zoomBar) {
+		    	optsNavBar.top = 90;
+		    }
+		    navBar = new OpenLayers.Control.NavToolbarUSIG(optsNavBar);
 		    
 		    map.addControl(navBar); // Si ponemos el navBar no hace falta el Navigation
 		    this.toolbar = navBar;
 	    } else {
 		 	map.addControl(new OpenLayers.Control.Navigation()); 	    	
+	    }
+	    
+	    if (opts.includeMapSwitcher) {
+	    	var optsMapSwitcher = $.extend({}, opts.MapSwitcherOptions, {
+				onOptionToggle: (function(optionId, toggle) {
+		    		if (optionId == 'markers-toggle' && myMarkers) {
+		    			this.toggleLayer(myMarkers);
+		    		}
+				}).createDelegate(this),
+				onMapSelection: (function(mapId) {
+					this.setBaseLayer(mapId);
+				}).createDelegate(this)	    		
+	    	}, opts.mapSwitcher);
+			map.addControl(new OpenLayers.Control.MapSelector(optsMapSwitcher));	    	
 	    }
 	    
 	    statusBar = new OpenLayers.Control.StatusBar();
@@ -1147,7 +1120,9 @@ usig.MapaInteractivo.defaults = {
 	debug: false,
 	trackVisits: true,
 	includePanZoomBar: true,
+	zoomBar: true,
 	includeToolbar: true,
+	includeMapSwitcher: false,
 	bounds: [54340,54090,172855,140146],
 	initBounds: [93500,96750,112000,106750],
 	OpenLayersOptions: {
@@ -1156,114 +1131,27 @@ usig.MapaInteractivo.defaults = {
 		projection: "EPSG:221951",
 		units: 'm'
 	},
-	
-	baseLayer:'mapabsas_default',
+	MapSwitcherOptions: {
+		layers: [
+		    {name: 'satellite', title: 'vista satelital 2009', id: 'mapabsas_imagen_satelital_2009' }, 
+		    {name: 'default', title: 'vista del mapa', id: 'mapabsas_default3'}
+		],
+		opcionales: [
+			{id: 'markers-toggle', name: 'Mostrar Mis Marcadores', checked: true}
+		], 
+		mapas: []		
+	},
+	baseLayer:'mapabsas_default3',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/theme/mapabsas2/style.css',
-	// OpenLayersCSS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/theme/mapabsas2/style.css',
-	// OpenLayersJS: 'http://pulpo.usig.gcba.gov.ar/wk8/OpenLayers/OpenLayers.js',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/OpenLayers.js',
+	// OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/theme/mapabsas2/style.css',
+	OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
+	OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
+	// OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
-	preloadImages: ['img/panZoomBar/arriba.png', 'img/panZoomBar/izquierda.png', 'img/panZoomBar/abajo.png', 'img/panZoomBar/derecha.png', 'img/panZoomBar/centro.png', 'img/panZoomBar/bt_zoomin.gif', 'img/panZoomBar/bt_zoomout.gif', 'img/panZoomBar/bt_zoomworld.gif', 'img/panZoomBar/marcador_azul.gif', 'img/panZoomBar/zoomBar.png', 'img/markers_off.png'],
-	overviewOptions: {
-		layer:'referencia',
-		resolutions: [130,70,30,15,7.5,4],
-		size: [195, 130]
-	},
-	mapList: [
-       	   {
-	       	name:'mapabsas_imagen_satelital_2009',
-	       	display:'Vista Satelital 2009',
-	       	baseLayer:'mapabsas_imagen_satelital_2009',	       	
-	       	desc: 'Mapa que incluye imagen satelital QuickBird, año de toma 2009. El mapa presenta la imagen satelital de alta resolución de la Ciudad de Buenos Aires con calles y alturas.'
-	       },
-	       {
-	       	name:'mapabsas_imagen_satelital_2004',
-	       	display:'Vista Satelital 2004',
-	       	baseLayer:'mapabsas_imagen_satelital_2004',
-	       	desc: 'Mapa que incluye imagen satelital QuickBird, año de toma 2004. El mapa presenta la imagen satelital de alta resolución de la Ciudad de Buenos Aires con calles y alturas.'
-	       },
-	       {
-	       	name:'mapabsas_fotografias_aereas_1978',
-	       	display:'Vista Aérea 1978',
-	       	baseLayer:'mapabsas_fotografias_aereas_1978',
-	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1978. El mapa presenta también la información de calles y alturas actuales como referencia.'
-	       },
-	       {
-	       	name:'mapabsas_fotografias_aereas_1965',
-	       	display:'Vista Aérea 1965',
-	       	baseLayer:'mapabsas_fotografias_aereas_1965',
-	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1965. El mapa presenta también la información de calles y alturas actuales como referencia.'
-	       },
-	       {
-	       	name:'mapabsas_fotografias_aereas_1940',
-	       	display:'Vista Aérea 1940',
-	       	baseLayer:'mapabsas_fotografias_aereas_1940',
-	       	desc: 'Mapa que incluye una imagen de la ciudad restituida a partir de fotografías aéreas tomadas en el año 1940. El mapa presenta también la información de calles y alturas actuales como referencia.'
-	       },
-	       {
-	    	name: 'separator',
-	    	display: 'Mapas temáticos:'
-	       },
-	       {
-	    	name: 'none',
-	    	display: 'Información General',
-	       	baseLayer:'mapabsas_default',
-	    	desc: 'Mapa que incluye información de calles con altura y sentido, veredas, manzanas, parcelas, espacios verdes, trenes, subterráneos y salidas de la Ciudad de Buenos Aires.'
-		   },
-	       {
-	    	name: 'mapabsas_red_de_ciclovias',
-	    	display: 'Red de Ciclovías',
-	    	baseLayer: 'mapabsas_red_de_ciclovias',
-	    	desc: 'Mapa que contiene las ciclovías protegidas (bicisendas) finalizadas, en obra y proyectadas. Contiene además las estaciones de bicicletas (punto de retiro y devolución), bicicleterias y los estacionamientos para bicicletas (bicicleteros).'
-	       },
-	       {
-	    	name: 'mapabsas_salud',
-	    	display: 'Salud',
-	    	baseLayer: 'mapabsas_salud',
-	    	desc: 'Mapa que contiene información de hospitales, centros médicos barriales, centros de salud y acción comunitaria (CESACs) y áreas hospitalarias.'
-	       },
-	       {
-	    	name: 'mapabsas_educacion_publica',
-	    	display: 'Educación',
-	    	baseLayer: 'mapabsas_educacion_publica',
-	    	desc: 'Mapa que contiene Establecimientos Educativos Públicos y Distritos Escolares.'
-		   },
-	        {
-		       	name:'mapabsas_librerias_y_disquerias',
-		       	display: 'Librerías y disquerías',
-		       	baseLayer: 'mapabsas_informacion_basica',
-		       	layers: [
-		       	         {
-		       	        	 name: 'librerias',
-		       	        	 options: {
-		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=22",
-		       	        		symbolizer: {
-			                		externalGraphic: 'images/markers/biblioteca.png',
-						            backgroundGraphic: 'images/markers/fondos/cua_azul.png',
-			                		pointRadius: 18
-			                	},
-			                	minPointRadius: 9
-		       	        	 }
-		       	         },
-		       	         {
-		       	        	 name: 'disquerias',
-		       	        	 options: {
-		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=26",
-		       	        		symbolizer: {
-			                		externalGraphic: 'images/markers/disqueria.png',
-						            backgroundGraphic: 'images/markers/fondos/cua_rojo.png',
-			                		pointRadius: 18
-			                	},
-			                	minPointRadius: 9
-		       	        	 }
-		       	         }
-		       	]
-		   }
-		],
+	preloadImages: [],
 	texts: {
 		processing: 'Procesando...',
 		loading: 'Cargando...',
