@@ -5,7 +5,7 @@ HOST_DIR=/d/usig/www/servicios/Usig-JS
 HOSTS=10.20.1.43 10.20.1.46 10.20.1.91 10.20.1.96 10.20.2.79 10.20.2.80
 APPDIR=/usr/local/usig/servicios/Usig-JS
 
-VERSION=dev
+VERSION=2.4
 USER=usig
 SRC=src/dev
 REL=src/release
@@ -212,6 +212,7 @@ prepare: docs debug
 	rsync -avz --exclude '.svn' --delete $(SRC)/css $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
+	rsync -avz --exclude '.svn' $(SRC)/lib $(REL)
 	rm -f $(REL)/ejemplos.tar.gz
 	for f in $(SRC)/demos/*.html; do \
 		sed -e '/<!-- DEV -->/	 d' < $$f | sed -e 's/<!-- RELEASE \(.*\)-->/\1/g' - | sed -e "s/VERSION/$(VERSION)/g" - > $(REL)/demos/`basename $$f`; \
