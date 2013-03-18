@@ -1071,8 +1071,9 @@ return function(idDiv, options) {
 				vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
 			});
 		}
-		if (navBar)
+		/*if (navBar)
 			navBar.selectMap(mapConfig.name);
+		*/
 	};
 	
 	this.removeVectorLayers = function() {
