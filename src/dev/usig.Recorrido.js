@@ -24,7 +24,6 @@ return function(datos, options) {
 		precargado,
 		descripcion="Sin datos",
 		descripcionHtml="Sin datos",
-		descripcionHtmlV3="Sin datos",
 		detalle=[],
 		traveled_distance=0,
 		opts = $.extend({}, usig.Recorrido.defaults, options);
@@ -92,60 +91,6 @@ return function(datos, options) {
 			}
 		}
 	}	
-	function procesarResumenV3() { //V3
-		var desc=[];
-		descripcionHtmlV3="";
-		if (tipo=="transporte_publico"){
-			estadoAnterior = null;	
-			$.each(resumen,function(i,action) {
-				if(action.type == 'Board') {
-					if (estadoAnterior =='Alight'){
-						descripcionHtmlV3 += '<span class="icons-sprite icon-combinacion"></span>';
-					}
-					if (action.service_type==3){ //colectivo
-						//descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span><span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span></div>';
-						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
-						 //<span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span>
-					}else if(action.service_type==1){//subte
-						lineas = action.service.split("-");
-						$.each(lineas,function(i,linea) {
-							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea+'</span></div>';
-						});
-					}else if(action.service_type==2){	//tren
-						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
-					}
-				}
-				estadoAnterior = action.type;
-			});
-			//descripcion=desc.join(', ');
-			
-		}else if (tipo=="walk"){
-			descripcion = opts.texts.descWalk;
-			$.each(resumen,function(i,action) { 
-				if(action.type != undefined && action.type == 'StartWalking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
-				}
-			});
-		}else if (tipo=="car"){
-			descripcion = opts.texts.descCar;
-			$.each(resumen,function(i,action) { 
-				if(action.type != undefined && action.type == 'StartDriving') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
-				}
-			});
-		}else if (tipo=="bike"){
-			descripcion = opts.texts.descBike;
-			$.each(resumen,function(i,action) { 
-				if(action.type != undefined && action.type == 'StartBiking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
-					return false;
-				}
-			});
-			if (descripcionHtml==""){
-				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
-			}
-		}
-	}
 	function procesarPlan() {
 		if (tipo =="transporte_publico"){
 			var current_action = null;
@@ -411,7 +356,6 @@ return function(datos, options) {
 			data=$.extend({}, datos);
 			data.options = opts;
 			procesarResumen();
-			procesarResumenV3();
 			cargarPlan(datos);
 		} catch(e) {
 			usig.debug(e);
@@ -457,8 +401,7 @@ return function(datos, options) {
 	 * @return {String} Descripcion corta del recorrido en formato HTML
 	 */	
 	this.toHtmlString = function() {
-		//return descripcionHtml; //v3
-		return descripcionHtmlV3;
+		return descripcionHtml;
 	};
 	
 	/**
@@ -493,22 +436,7 @@ return function(datos, options) {
 		}
 		return time;
 	};
-	
-	/**
-	 * Devuelve la distancia total del recorrido formateada como cadena
-	 * @return {String} Distancia total del recorrido formateada
-	 */
-	this.getDistanceString = function() {
-		distance = '';
-		//1 Km
-		if(traveled_distance > 999) {
-			distance += traveled_distance/1000 + ' Km'; 
-		} else {
-			distance += traveled_distance + ' m' ;
-		}
-		return distance;
-	};
-	
+
 	/**
 	 * Permite obtener el trip_plan del recorrido
 	 * @param {Function} success Una funcion que es llamada cuando se obtiene el detalle del recorrido. 

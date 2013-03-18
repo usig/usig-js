@@ -30,20 +30,19 @@ usig.defaults.Recorridos = {
 		opciones_medios_subte: true,
 		opciones_medios_tren: true,
 		opciones_prioridad: 'avenidas', 
-		opciones_incluir_autopistas: true,
-		cortes: true
+		opciones_incluir_autopistas: true
 	},
 	colorTemplates: [
-		new usig.TripTemplate(1, '#0074FF'),
-		new usig.TripTemplate(2, '#DD0083'),
-		new usig.TripTemplate(3, '#009866'),
-		new usig.TripTemplate(4, '#FF9E29'),
-		new usig.TripTemplate(5, '#FF6633'),
-		new usig.TripTemplate(6, '#4B4C9F'),
-		new usig.TripTemplate(7, '#98C93C'),
-		new usig.TripTemplate(8, '#EE3A39'),
-		new usig.TripTemplate(9, '#4ED5F9'),
-		new usig.TripTemplate(10,'#FFCC05')
+		new usig.TripTemplate(1,'#8F58C7'),
+		new usig.TripTemplate(2,'#E34900'),
+		new usig.TripTemplate(3,'#C3E401'),
+		new usig.TripTemplate(4,'#F9B528'),
+		new usig.TripTemplate(5,'#D71440'),
+		new usig.TripTemplate(6,'#007baf'),
+		new usig.TripTemplate(7,'#495a78'),
+		new usig.TripTemplate(8,'#b56c7d'),
+		new usig.TripTemplate(9,'#669966'),
+		new usig.TripTemplate(10,'#ff3300')
 	]
 };	
 	
@@ -152,17 +151,11 @@ return new (usig.AjaxComponent.extend({
 		var recorridos = [], templates = this.opts.colorTemplates;
 		if (this.opts.debug) usig.debug('usig.Recorridos onBuscarRecorridosSuccess');
 		$.each(data.planning, function(i, plan) {			
-			var trip_plan = JSON.parse(plan);
-			
-			switch (trip_plan.type){
-				case 'car':template = templates[1]; break;//fuccia
-				case 'bike':template = templates[0];break;//azul
-				case 'walk':template = templates[2]; break;//verde
-				case 'transporte_publico': template = templates[i];break;
-			}
-			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: template }));
+			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: templates[i] }));
 			//recorrido.loadPlan
 		});
+		//usig.debug("recorridos en onBuscarRecorridosSuccess");
+		//usig.debug(recorridos);
 		if (typeof(callback) == "function")
 			callback(recorridos);
 	},
