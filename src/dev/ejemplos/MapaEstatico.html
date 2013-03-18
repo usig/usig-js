@@ -84,14 +84,15 @@
 		function cargarMapaEstatico(data) {
 			var radio = $('#radio').val();
 			if (data.smp) {
+				var pt = data.centroide?data.centroide:data.punto;
 				optsMapaSMP = {
-					punto: new usig.Punto(data.centroide.x, data.centroide.y),
+					punto: new usig.Punto(pt.x, pt.y),
 					smp: data.smp,
 					width: 500,
 					radio: radio
 				};
 				optsMapaDir = {
-					punto: new usig.Punto(res.centroide.x, res.centroide.y),
+					punto: new usig.Punto(pt.x, pt.y),
 					marcarPunto: true,
 					desc: data.smp,
 					width: 500,
