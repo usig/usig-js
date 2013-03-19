@@ -31,7 +31,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         simulateType : function(id, str, callback) {
         	for (var i=0; i<str.length; i++) {
         		document.getElementById(id).value = document.getElementById(id).value + str.charAt(i); 
-        		Y.one('#'+id).simulate("keyup", { keyCode: str.charCodeAt(i) });
+        		Y.one('#'+id).simulate("keydown", { keyCode: str.charCodeAt(i) });
         	}
         	if (typeof(callback) == "function") {
         		callback();
@@ -89,10 +89,10 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             			numChanges++;
             		}
             	});
-  			Y.one('#inputText').simulate("keyup", { keyCode: 27 });
-  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
-  			Y.one('#inputText').simulate("keyup", { keyCode: 38 });
-  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 27 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 38 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
      	 	Y.Assert.areEqual(4, numKeyUps);
      	 	Y.Assert.areEqual(0, numChanges);
         },
@@ -109,8 +109,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
             		}
             	});
             this.simulateType('inputText', 'san');
-  			Y.one('#inputText').simulate("keyup", { keyCode: 38 });
-  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 38 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });
      	 	Y.Assert.areEqual(5, numKeyUps);
      	 	Y.Assert.areEqual(3, numChanges);
         },

@@ -1,0 +1,24 @@
+CHANGELOG USIG-JS
+
+v2.4:
+- 0001807: Soporte para recorridos en bici (ldodero) - resolved.
+- 0001829: Actualización del MapaInteractivo a OpenLayers 2.12 (pc) - resolved.
+- 0001809: Nueva API simplificada para manejo de layers vectoriales en el MapaInteractivo (pc) - resolved.
+- 0001793: Posibilidad de crear un MapaEstatico a partir de usig.Punto (ldodero) - resolved.
+- 0001800: Posibilidad de detectar en el Autocompleter si un suggester determinado está listo (ldodero) - resolved.
+- 0001797: El evento onReady del Autocompleter no se dispara si no se incluye el suggerter de Direcciones (ldodero) - resolved.
+- 0001808: Cambio en el manejo de markers en el MapaInteractivo (pc) - resolved.
+- 0001806: Ejemplo de uso mapa GML y demo para Cultura (ldodero) - resolved.
+- 0001798: Ejemplo de uso de Suggester personalizado (con Mapa) (ldodero) - resolved.
+- 0001799: Ejemplo de uso de Suggester personalizado (ldodero) - resolved.
+- 0001791: Ejemplo de uso del componente MapaEstatico (ldodero) - resolved.
+- 0001790: Ejemplo de uso de Ciclovias Cercanas (ldodero) - resolved.
+- 0001792: Ejemplo de uso de componente StoredCollection (ldodero) - resolved.
+- 0001775: Opciones de transporte en el ejemplo de uso de componente Recorridos.js (ldodero) - resolved.
+- 0001774: Ejemplo de uso de componente Recorridos.js (opcion Auto - con Mapa) (ldodero) - resolved.
+- 0001773: Ejemplo de uso de componente Recorridos.js (opcion Auto) (ldodero) - resolved.
+- 0001766: Opción en MapaInteractivo para "instantPopup" en los markers agregados (ldodero) - resolved.
+- 0001757: Mejora en la documentación del GeoCoder (ldodero) - resolved.
+- 0001758: Método para obtener SMP dada una dirección con el GeoCoder (ldodero) - resolved.
+- 0001765: Ejemplo de uso de componente FotosParcela.js Con MAPA (ldodero) - resolved.
+- 0001745: Ejemplo de uso de componente FotosParcela.js (ldodero) - resolved.

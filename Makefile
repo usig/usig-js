@@ -213,6 +213,7 @@ prepare: docs debug
 	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
 	rsync -avz --exclude '.svn' $(SRC)/lib $(REL)
+	rsync -avz --exclude '.svn' $(SRC)/CHANGELOG.txt $(REL)
 	rm -f $(REL)/ejemplos.tar.gz
 	for f in $(SRC)/demos/*.html; do \
 		sed -e '/<!-- DEV -->/	 d' < $$f | sed -e 's/<!-- RELEASE \(.*\)-->/\1/g' - | sed -e "s/VERSION/$(VERSION)/g" - > $(REL)/demos/`basename $$f`; \
