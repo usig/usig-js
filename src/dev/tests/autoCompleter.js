@@ -33,7 +33,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         simulateType : function(id, str, callback) {
         	for (var i=0; i<str.length; i++) {
         		document.getElementById(id).value = document.getElementById(id).value + str.charAt(i); 
-        		Y.one('#'+id).simulate("keyup", { keyCode: str.charCodeAt(i) });
+        		Y.one('#'+id).simulate("keydown", { keyCode: str.charCodeAt(i) });
         	}
         	if (typeof(callback) == "function") {
         		callback();
@@ -329,8 +329,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	});
         	
         	this.simulateType('inputText', 'ciudad');
-            Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-            Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+            Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+            Y.one('#inputText').simulate("keydown", { keyCode: 13 });
             test.resume.defer(500, this, [(function() {
                     mockSugDir.verify();
                 })]);
@@ -431,8 +431,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	mockView.expect({ method: 'setOptions' });
         	this.ac.setViewControl(mockView);
         	this.simulateType('inputText', 'ciudad');
-  			Y.one('#inputText').simulate("keyup", { keyCode: 38 });
-  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 38 });
+  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });
 			mockView.verify();
     	},
         
@@ -537,8 +537,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		inputPause: 200
         	});
         	this.simulateType('inputText', 'corrientes 3174');
-            Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-            Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+            Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+            Y.one('#inputText').simulate("keydown", { keyCode: 13 });
             test.resume.defer(1000, this, [(function() {
                     mockSugDir.verify();
                 })]);
@@ -584,7 +584,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         simulateType : function(id, str, callback) {
         	for (var i=0; i<str.length; i++) {
         		document.getElementById(id).value = document.getElementById(id).value + str.charAt(i); 
-        		Y.one('#'+id).simulate("keyup", { keyCode: str.charCodeAt(i) });
+        		Y.one('#'+id).simulate("keydown", { keyCode: str.charCodeAt(i) });
         	}
         	if (typeof(callback) == "function") {
         		callback();
@@ -618,8 +618,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
@@ -638,8 +638,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
@@ -726,8 +726,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });
         		},
         		afterGeoCoding: function(obj) {
 	        		test.resume(function() {
@@ -785,7 +785,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         simulateType : function(id, str, callback) {
         	for (var i=0; i<str.length; i++) {
         		document.getElementById(id).value = document.getElementById(id).value + str.charAt(i); 
-        		Y.one('#'+id).simulate("keyup", { keyCode: str.charCodeAt(i) });
+        		Y.one('#'+id).simulate("keydown", { keyCode: str.charCodeAt(i) });
         	}
         	if (typeof(callback) == "function") {
         		callback();
@@ -802,7 +802,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		afterSuggest: function() {
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
-	        			Y.Assert.areEqual(7, $('ul.options').children().length);
+	        			Y.Assert.areEqual(1, $('ul.options').children().length);
 	        			usig.debug($('ul.options').children().children());
 	        		});        			
         		},
@@ -817,13 +817,13 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });        			
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
 	        			Y.Assert.isInstanceOf(usig.inventario.Objeto, obj);
-	        			Y.Assert.areEqual('MALBA', $('#inputText').val());
+	        			Y.Assert.areEqual('Libreria del MALBA', $('#inputText').val());
 	        		});        			
         		},
         		inputPause: 200,
@@ -837,14 +837,14 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });        			
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
 	        			Y.Assert.isInstanceOf(usig.inventario.Objeto, obj);
-	        			Y.Assert.areEqual('Museo de Arte Latinoamericano de Buenos Aires - Colección Costantini (MALBA)', $('#inputText').val());
+	        			Y.Assert.areEqual('Museo de Arte Latinoamericano de Buenos Aires (MALBA)', $('#inputText').val());
 	        			usig.debug($('#inputText').val());
 	        		});        			
         		},
@@ -877,16 +877,16 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });        			
         		},
 
         		afterGeoCoding: function(obj) {
 	        		test.resume(function() {
 	        			Y.Assert.isInstanceOf(usig.Punto, obj);
-	        			Y.Assert.areEqual('MALBA', $('#inputText').val());
-	        			Y.Assert.areEqual('105463.9127909999951953', obj.getX());
-	        			Y.Assert.areEqual('105768.5586849999963306', obj.getY());
+	        			Y.Assert.areEqual('Libreria del MALBA', $('#inputText').val());
+	        			Y.Assert.areEqual('105462.5745440000027884', obj.getX());
+	        			Y.Assert.areEqual('105769.7618450000009034', obj.getY());
 	        			usig.debug($('#inputText').val());
 	        			usig.debug(obj);
 	        		});
@@ -937,7 +937,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         simulateType : function(id, str, callback) {
         	for (var i=0; i<str.length; i++) {
         		document.getElementById(id).value = document.getElementById(id).value + str.charAt(i); 
-        		Y.one('#'+id).simulate("keyup", { keyCode: str.charCodeAt(i) });
+        		Y.one('#'+id).simulate("keydown", { keyCode: str.charCodeAt(i) });
         	}
         	if (typeof(callback) == "function") {
         		callback();
@@ -971,8 +971,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });        			
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
@@ -991,8 +991,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });        			
         		},
         		afterSelection: function(obj) {
 	        		test.resume(function() {
@@ -1030,8 +1030,8 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.ac.setOptions({
         		afterSuggest: function() {
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 40 });
-		  			Y.one('#inputText').simulate("keyup", { keyCode: 13 });        			
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 40 });
+		  			Y.one('#inputText').simulate("keydown", { keyCode: 13 });        			
         		},
 
         		afterGeoCoding: function(obj) {
