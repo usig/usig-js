@@ -50,7 +50,7 @@ return function(idDiv, options) {
 		preloadedImages = [],
 		vectorLayers = [],
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;"></div>'),
-		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = myMarkers = selectControl = highlightControl = null;
+		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = myMarkers = selectControl = highlightControl = Popup = null;
 
 	function init() {
 		$divIndicator.remove();
@@ -200,22 +200,28 @@ return function(idDiv, options) {
             }
         );
 		
-        
+		Popup = OpenLayers.Class(OpenLayers.Popover.Anchored, {
+            autoSize: true,
+            panMapIfOutOfView: true,
+            minSize: new OpenLayers.Size(100, 50),
+            displayClass: 'popover'
+		});
+		
         myMarkers.events.on({
             "featureselected": function(e) {
                 if (opts.debug) usig.debug("selected feature "+e.feature.id+" on Markers Layer");
-            	var feature=e.feature;
         		var marker = markersMap[e.feature.attributes['fid']];
+            	var feature=marker.feature;
         		var popup = null;
         		if (marker.place.options.popup) {
         			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
-	    			popup = new OpenLayers.Popup.FramedCloud(
+	    			popup = new Popup(
 						e.feature.id,
 						new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
 		                null, //new OpenLayers.Size(10, 10),
 		                marker.popupContent,
 		                null,
-						true,
+						false,
 						function() {
 		                	selectControl.unselect(feature);
 		                }
@@ -223,11 +229,13 @@ return function(idDiv, options) {
 	    			e.feature.popup = popup;
 	    			popup.hide();
 	    			map.addPopup(popup, true);
+	    			usig.debug(popup.relativePosition);
         		}
     			if (typeof(marker.onClick) == "function") {
     				marker.onClick(e, marker.place, popup, selectControl);
     			} else if (popup) {
-    				popup.show();
+                    popup.show();
+                    popup.updateSize();
     			}
     			if (!popup)    				
     				selectControl.unselect(feature);
@@ -500,6 +508,14 @@ return function(idDiv, options) {
 	            new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat),
 	            { fid: id }
 	    );
+		/*
+        marker.feature.closeBox = false;
+        marker.feature.popupClass = OpenLayers.Class(OpenLayers.Popup.Anchored, {
+            'autoSize': true
+        });
+        marker.feature.data.popupContentHTML = contentHTML;
+        marker.feature.data.overflow = "hidden";
+        */
 		marker.feature.style = marker.style;
 		marker.popupContent = contentHTML;
 		marker.onClick = typeof(onClick)=="function"?onClick:null;
@@ -968,13 +984,13 @@ return function(idDiv, options) {
 	            	e.layerName = layerName;
 	        		if (opts.popup) {
 	        			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
-		    			var popup = new OpenLayers.Popup.FramedCloud(
+		    			var popup = new Popup(
 							e.feature.id,
 							new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
 			                null,
 			                '<div id="contenido_'+e.feature.id+'"></div>',
 			                null,
-							true,
+							false,
 							function(ev) {
 			                	selectControl.unselect(feature);
 			            		ev.cancelBubble = true;
