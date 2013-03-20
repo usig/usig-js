@@ -229,7 +229,6 @@ return function(idDiv, options) {
 	    			e.feature.popup = popup;
 	    			popup.hide();
 	    			map.addPopup(popup, true);
-	    			usig.debug(popup.relativePosition);
         		}
     			if (typeof(marker.onClick) == "function") {
     				marker.onClick(e, marker.place, popup, selectControl);
