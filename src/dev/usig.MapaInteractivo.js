@@ -136,7 +136,7 @@ return function(idDiv, options) {
                     styleMap: new OpenLayers.StyleMap({
                     	'default' : {
 	                        // Set the external graphic and background graphic images.
-	                        externalGraphic: opts.rootUrl+"images/marker-2.2.png", // marcador.png",
+	                        externalGraphic: opts.rootUrl+"images/marker-3.0.png", // marcador.png",
 	                        // backgroundGraphic: opts.rootUrl+"images/pincho_inclinado_shadow.png",
 	                        
 	                        // Makes sure the background graphic is placed correctly relative
@@ -204,6 +204,7 @@ return function(idDiv, options) {
             autoSize: true,
             panMapIfOutOfView: true,
             minSize: new OpenLayers.Size(100, 70),
+            maxSize: new OpenLayers.Size(400, 550),
             displayClass: 'popover'
 		});
 		
@@ -1158,7 +1159,7 @@ usig.MapaInteractivo.defaults = {
 		mapas: []		
 	},
 	baseLayer:'mapabsas_default3',
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
+	rootUrl: 'http://10.75.0.125/wk/Usig-JS/src/dev/',	
 	// OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.12.0-2/theme/mapabsas2/style.css',
 	OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
 	OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',

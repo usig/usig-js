@@ -77,6 +77,9 @@ return function(data, clase) {
 					pos: dato.posicion
 				}
 			});
+			if (this.datos['nombre']) {
+				this.nombre = this.datos['nombre'].valor;
+			}
 		}
 	}
 	
