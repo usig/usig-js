@@ -203,7 +203,7 @@ return function(idDiv, options) {
 		Popup = OpenLayers.Class(OpenLayers.Popover.Anchored, {
             autoSize: true,
             panMapIfOutOfView: true,
-            minSize: new OpenLayers.Size(100, 50),
+            minSize: new OpenLayers.Size(100, 70),
             displayClass: 'popover'
 		});
 		
