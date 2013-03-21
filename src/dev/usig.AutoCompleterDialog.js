@@ -288,7 +288,7 @@ return function(idField, options) {
 			if (opts.debug) usig.debug('AutoCompleterDialog: click');
 			ev.preventDefault();
 			var target = ev.target?ev.target:ev.srcElement;
-			var name = $(target).parents('a.acv_op').attr('name') || $('a.acv_op', $(target)).attr('name');
+			var name = $(target).parents('a.acv_op').attr('name') || $('a.acv_op', $(target)).attr('name') || $(target).attr('name');
 			selectionHandler(itemsRef[name]); 
 		}).createDelegate(this));
 		if (opts.autoSelect && numOptions == 1) {
