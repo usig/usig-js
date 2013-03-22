@@ -68,8 +68,7 @@ usig.MapaEstatico = function(opts) {
 		if (regExpSMP.test(opts.smp)) {
 			params.push('smp='+opts.smp);
 		} else {
-			if (opts.debug)
-				usig.debug('SMP inválido: '+opts.smp);
+			if (opts.debug)	usig.debug('SMP inválido: '+opts.smp);
 		}
 	}
 	if (typeof(usig.DataManager) != "undefined") {

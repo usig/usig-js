@@ -204,7 +204,7 @@ return function(idDiv, options) {
             autoSize: true,
             panMapIfOutOfView: true,
             minSize: new OpenLayers.Size(100, 70),
-            maxSize: new OpenLayers.Size(400, 550),
+            maxSize: new OpenLayers.Size(340, 550),
             displayClass: 'popover'
 		});
 		
