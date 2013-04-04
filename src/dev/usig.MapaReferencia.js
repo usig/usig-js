@@ -18,7 +18,7 @@ if (typeof (usig.isExtent) == "undefined") {
 usig.MapaReferencia = function(imagenMapa, pos, opts) {
 	if (typeof(imagenMapa.img) != "undefined" && !isNaN(parseInt(imagenMapa.w)) && !isNaN(parseInt(imagenMapa.h)) && typeof(imagenMapa.extent) != "undefined" && usig.isExtent(imagenMapa.extent)) {
 		var divMapa = document.createElement('div');
-		divMapa.style.position = 'static';
+		divMapa.style.position = 'relative';
 		divMapa.style.width = imagenMapa.w+'px';
 		divMapa.style.height = imagenMapa.h+'px';
 		divMapa.style.background = 'white url('+imagenMapa.img+') no-repeat 50% 50%';

@@ -126,6 +126,10 @@ return function(data, clase) {
 	this.isEqual = function(obj) {
 		return obj instanceof usig.inventario.Objeto && obj.id == this.id;
 	}
+
+	this.getSmp = function () {
+		return this.rawData.smp || (this.direccionAsociada?this.direccionAsociada.getSmp():"");
+	}
 	
 	this.fill(data);
 	this.rawData = $.extend(this.rawData, data);
