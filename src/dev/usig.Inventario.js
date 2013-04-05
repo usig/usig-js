@@ -110,6 +110,9 @@ return usig.AjaxComponent.extend({
 	 *    {Object} bbox: Extent que permite realizar busqueda restringidas geograficamente
 	 */
 	buscar: function(text, success, error, options) {
+		
+		var ops = $.extend({}, usig.Inventario.defaults.searchOptions, options),
+			data = { start:ops.start, limit: ops.limit, texto: text, tipo:ops.tipoBusqueda };
 
 		function buscarResultsHandler (results, callback) {
 			var clases = {}, objetos = [];
@@ -126,9 +129,6 @@ return usig.AjaxComponent.extend({
 				callback(objetos);
 			}
 		}
-		
-		var ops = $.extend({}, usig.Inventario.defaults.searchOptions, options),
-			data = { start:ops.start, limit: ops.limit, texto: text, tipo:ops.tipoBusqueda };
 		
 		if(ops.categoria != undefined)
 			data['categoria'] = ops.categoria;
@@ -147,9 +147,13 @@ return usig.AjaxComponent.extend({
 			onSuccess = success;
 		}
 		
-		this.lastRequest = this.mkRequest(data, onSuccess, error, this.opts.server + 'buscar/');
+		if (ops.searchInventario) {
+			this.lastRequest = this.mkRequest(data, onSuccess, error, this.opts.server + 'buscar/');
+		}
 
-		this.lastRequestEpok = this.mkRequest(data, onSuccess, error, this.opts.serverEpok + 'buscar/');
+		if (ops.searchEpok) {
+			this.lastRequestEpok = this.mkRequest(data, onSuccess, error, this.opts.serverEpok + 'buscar/');
+		}
 
 	}, 	
 	
@@ -251,6 +255,8 @@ usig.Inventario.defaults = {
 		clase: undefined,
 		bbox: false,
 		extent: undefined,
-		returnRawData: false
+		returnRawData: false,
+		searchInventario: true,
+		searchEpok: true
 	}
 }
