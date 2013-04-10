@@ -613,6 +613,7 @@ return function(idDiv, options) {
 			}
 		} else {
 			var layer = recorrido.gmlLayer;
+			layer.setVisibility(true);
 			map.addLayer(layer);
 		}
 
@@ -822,6 +823,14 @@ return function(idDiv, options) {
 		}
 	}
 	
+	this.existeLayer = function (recorrido) {
+		if (recorrido.gmlLayer){
+			var layers = map.getLayersByName(recorrido.gmlLayer.name);
+			return (layers.length > 0);
+		}
+		return false;
+	}
+
 	/**
 	 * Borra un recorridio del mapa
 	 * @param {usig.Recorrido} recorrido Recorrido a borrar
