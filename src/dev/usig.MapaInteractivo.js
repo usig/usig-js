@@ -259,10 +259,6 @@ return function(idDiv, options) {
         if (typeof(opts.onReady) == "function") {
 			opts.onReady(this);
 		}
-
-		if (opts.initLocation){
-        	 navBar.setSelectorText(opts.initLocation.mapConfig.display);
-        }
 		
 		if (opts.trackVisits) {
 			var trackVisits = function(idSite) {

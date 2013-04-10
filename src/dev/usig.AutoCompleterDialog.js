@@ -55,7 +55,9 @@ return function(idField, options) {
 	};
 	
 	function hideSuggestions() {
- 		$div.fadeOut('slow');
+		if ($div) {
+ 			$div.fadeOut('slow');
+ 		}
 	};
 	
 	function createHoldingDiv(content) {		
