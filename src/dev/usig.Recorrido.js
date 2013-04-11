@@ -112,7 +112,7 @@ return function(datos, options) {
 							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea+'</span></div>';
 						});
 					}else if(action.service_type==2){	//tren
-						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
+						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service.replace(/\./g, '')+'</span></div>';
 					}
 				}
 				estadoAnterior = action.type;
