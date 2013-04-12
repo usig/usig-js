@@ -112,7 +112,7 @@ return function(datos, options) {
 							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea+'</span></div>';
 						});
 					}else if(action.service_type==2){	//tren
-						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service.replace(/\./g, '')+'</span></div>';
+						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+  action.service.replace(/\./g, '')+'</span></div>';
 					}
 				}
 				estadoAnterior = action.type;
@@ -153,6 +153,8 @@ return function(datos, options) {
 	 		var changes = 0;
 	 		var ramal = null; 	
 	 		var type_action = null;	
+	 		var features = new Array();
+	 		var detail = new Array();
 	 		
 			for(i=0;i<plan.length;i++) {
 			
@@ -173,9 +175,10 @@ return function(datos, options) {
 						if (current_action) {
 	    					current_action += ' hasta destino.';
 	    					//detalle.push(current_action);
-	    					detalle.push({text: current_action, type:type_action});
+	    					detalle.push({text: current_action, type:type_action, features: features});
 	    					current_action = null;
 	    					type_action = null;
+	    					features = [];
 						}
 						walking = false;
 					}else if(item.type == 'Board') {
@@ -191,10 +194,11 @@ return function(datos, options) {
 								current_action += '.';
 							//features.push(item.gml);
 							//detalle.push(current_action);
-							detalle.push({text: current_action, type:type_action});
+							detalle.push({text: current_action, type:type_action, features:features});
 							walking = false;
 							current_action = null;
 							type_action = null;
+							features = [];
 						}
 	
 						if(item.service_type == '1') { //subte
@@ -242,18 +246,32 @@ return function(datos, options) {
 							current_action += '.';
 						
 						//detalle.push(current_action);
-						detalle.push({text: current_action, type:type_action});
+						detalle.push({text: current_action, type:type_action, features: features});
 						current_action = null;
 						type_action = null;
+						features = [];
 					
 					} else if (item.type == 'Bus') {
+						features.push(item.gml);
 					} else if (item.type == 'SubWay') {
+						if (features.length == 0){  
+							features.push(item.gml);
+						}else {
+							var anterior = features[features.length-1];
+							if (anterior.search("gml:LineString") >= 0 && anterior.search("subway")>= 0)
+								var nextFeature = item.gml; 
+							else
+								features.push(item.gml);
+						}
 					} else if(item.type == 'SubWayConnection') {					
 						//detalle.push(current_action);
-						detalle.push({text: current_action, type:type_action});
+						detalle.push({text: current_action, type:type_action, features: features});
 						current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estación ' + item.stop;
 						type_action = 'subte';	
+						features = [];
+						features.push(nextFeature); 
 					} else if(item.type == 'Street') { 
+						features.push(item.gml);
 					}
 					
 				}
