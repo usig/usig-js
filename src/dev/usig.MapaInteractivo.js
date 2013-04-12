@@ -145,12 +145,7 @@ return function(idDiv, options) {
 	                        graphicHeight: 42,
 	                        graphicXOffset: -16,
 	                        graphicYOffset: -36,
-	                        /*
-	                        backgroundWidth: 28,
-	                        backgroundHeight: 8,
-	                        backgroundXOffset: 1,
-	                        backgroundYOffset: -8,
-	                        */
+
 	                        // Set the z-indexes of both graphics to make sure the background
 	                        // graphics stay in the background (shadows on top of markers looks
 	                        // odd; let's not do that).
@@ -165,12 +160,6 @@ return function(idDiv, options) {
 	                        graphicHeight: 50,
 	                        graphicXOffset: -19,
 	                        graphicYOffset: -43
-	                        /*
-	                        backgroundWidth: 33,
-	                        backgroundHeight: 10,
-	                        backgroundXOffset: 1,
-	                        backgroundYOffset: -11
-	                        */
                     	}
                     }),
                     rendererOptions: {yOrdering: true}
@@ -242,7 +231,7 @@ return function(idDiv, options) {
             },
             "featureunselected": function(e) {
                 if (opts.debug) usig.debug("unselected feature "+e.feature.id+" on Markers Layer");
-                if (e.feature.popup) {
+                if (e.feature && e.feature.popup) {
 	                map.removePopup(e.feature.popup);
 	                e.feature.popup.destroy();
 	                e.feature.popup = null;
@@ -316,6 +305,10 @@ return function(idDiv, options) {
 	
 	this.unselectFeature = function(feature) {
 		selectControl.unselect(feature);		
+	}
+	
+	this.selectFeature = function(feature) {
+		selectControl.select(feature);		
 	}
 	
 	this.setBaseLayer = function(layerName) {
@@ -493,7 +486,7 @@ return function(idDiv, options) {
 		if (opts.debug) usig.debug(marker);
 		
 		// muestra el place por default
-		var contentHTML = place;
+		var contentHTML = (place.toString()!="[object Object]" || typeof(place) == "string")?place:'Lon: '+marker.lonlat.lon+', Lat: '+marker.lonlat.lat;
 		
 		if (onClick && typeof(onClick) != "function"  && typeof(onClick) != "object") {
 			contentHTML = onClick;
@@ -713,6 +706,7 @@ return function(idDiv, options) {
 		// marker.destroy();
 		marker = undefined;
 		markersMap[id] = undefined;
+		delete markersMap[id];
 	}
 	
 	/**
@@ -791,6 +785,10 @@ return function(idDiv, options) {
 	
 	this.getMarkersZIndex =function(){
 		return myMarkers.getZIndex();
+	}
+
+	this.getMarker = function(id) {
+		return markersMap[''+id];
 	}
 	
 	/**
