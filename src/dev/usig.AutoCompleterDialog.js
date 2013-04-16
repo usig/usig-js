@@ -332,7 +332,7 @@ return function(idField, options) {
 			}
 		}
 		if (keyCodes.enter == keyCode) { 
-			if ($div.css('display') != 'block') {
+			if ($div && $div.css('display') != 'block') {
 				if (typeof(opts.onEnterWithoutSelection) == "function") {
 					opts.onEnterWithoutSelection(fieldValue);					
 				}

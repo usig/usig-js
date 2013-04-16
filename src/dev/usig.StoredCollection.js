@@ -135,7 +135,7 @@ return usig.Publisher.extend({
 	 * Permite buscar un elemento dentro de la coleccion
 	 * @param {Object} needle Objeto a buscar
 	 * @param {Function} comparator Funcion de comparacion que recibe de parametro los elementos a comparar
-	 * @return {Boolean} Verdadero si el elemento esta en la coleccion
+	 * @return {Object/False} Devuelve el elemento en caso de que exista o False en caso contrario
 	 */
 	exists: function(needle, comparator) {
 		var found = false,
@@ -143,7 +143,7 @@ return usig.Publisher.extend({
 		
 		for (var i=0; i<l; i++) {
 			if (comparator(needle, this.collection[i])) {
-				found = true;
+				found = this.collection[i];
 				break;
 			}
 		}

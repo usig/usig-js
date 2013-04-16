@@ -701,6 +701,9 @@ return function(idDiv, options) {
 	this.removeMarker = function(id)	{
 		var marker = markersMap[''+id];
 		if (marker) {
+			try {
+				selectControl.unselect(marker.feature);
+			} catch(e) {};
 			myMarkers.removeFeatures(marker.feature);
 		}
 		// marker.destroy();
