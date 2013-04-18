@@ -165,10 +165,10 @@ return function(datos, options) {
 						walking = true;
 						if(i==0){
 							//Comienzo
-							current_action = 'Caminar desde ' + plan[i+1].name + ' ' + plan[i+1].from;
+							current_action = 'Caminar desde <span class="plan-calle">' + plan[i+1].name + ' ' + plan[i+1].from+'</span>';
 						} else {
 							//Venimos de un Aligh
-							current_action = 'Caminar desde ' + plan[i-1].stop_description;	
+							current_action = 'Caminar desde <span class="plan-calle">' + plan[i-1].stop_description+'</span>';	
 						}
 						type_action = 'pie';
 					}else if(item.type == 'FinishWalking') { 
@@ -186,9 +186,9 @@ return function(datos, options) {
 						
 						if(walking) {
 							if(item.service_type == '3') 
-								current_action += ' hasta ' + item.stop_description;
+								current_action += ' hasta <span class="plan-calle">' + item.stop_description+'</span>';
 							else
-								current_action += ' hasta la estación ' + item.stop_name + ' en ' + item.stop_description; //FIXME falta poner donde está la estacion
+								current_action += ' hasta la estación <span class="plan-estacion">' + item.stop_name + '</span> en <span class="plan-calle">' + item.stop_description+'</span>'; //FIXME falta poner donde está la estacion
 							//Ponemos un punto al final
 							if(!(current_action.charAt(current_action.length -1) == '.'))
 								current_action += '.';
@@ -204,7 +204,7 @@ return function(datos, options) {
 						if(item.service_type == '1') { //subte
 							current_action = 'Tomar el <span class="transport">SUBTE ' + item.service.toUpperCase() + '</span> ';
 							if(changes > 0) 
-								current_action += ' en la estación ' + item.stop_name;
+								current_action += ' en la estación <span class="plan-estacion">' + item.stop_name+'</span> ';
 								type_action = 'subte';
 						
 						} else if(item.service_type == '3') { //colectivo
@@ -226,19 +226,19 @@ return function(datos, options) {
 							current_action = 'Tomar el <span class="transport">TREN ' + item.service.toUpperCase() +ramal+'</span> ';
 							type_action = 'tren';
 							if(changes > 0) 
-								current_action += ' en la estación ' + item.stop_name;
+								current_action += ' en la estación <span class="plan-estacion">' + item.stop_name+' </span> ';
 						}
 						
 						if(!walking_state) {
-							current_action += ' en ' + item.stop_description;
+							current_action += ' en <span class="plan-calle">' + item.stop_description+'</span>';
 						}
 						changes +=1;
 						
 					} else if(item.type == 'Alight') {
 						if(item.service_type != undefined && (item.service_type == '2' || item.service_type == '1'))  
-							current_action += ' y bajar en la estación ' + item.stop_name;
+							current_action += ' y bajar en la estación <span class="plan-estacion">' + item.stop_name+' </span> ';
 						else {
-							current_action += ' y bajar en ' + item.stop_description;
+							current_action += ' y bajar en <span class="plan-calle">' + item.stop_description+'</span>';
 						}
 	
 						//Ponemos un punto al final
@@ -266,7 +266,7 @@ return function(datos, options) {
 					} else if(item.type == 'SubWayConnection') {					
 						//detalle.push(current_action);
 						detalle.push({text: current_action, type:type_action, features: features});
-						current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estación ' + item.stop;
+						current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estación <span class="plan-estacion">' + item.stop+'</span>';
 						type_action = 'subte';	
 						features = [];
 						features.push(nextFeature); 
