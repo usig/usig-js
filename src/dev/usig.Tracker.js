@@ -7,7 +7,7 @@ usig.Tracker = function(type, data) {
 	
 	
 	this.trackAction = function(target, data, category, label) {
-        // usig.debug('track: '+target);
+        // usig.debug(category+' track: '+target+' label: '+label);
 		try {
 			if (piwikTracker) {
 				piwikTracker.trackLink( target, 'link', data );

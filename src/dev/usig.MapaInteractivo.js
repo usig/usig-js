@@ -1070,6 +1070,13 @@ return function(idDiv, options) {
 	this.toggleLayer = function(layer) {
 		layer.setVisibility(!layer.visibility);
 	};
+
+	/**
+	 * Cambia la visibilidad de la capa de markers
+	 */
+	this.toggleMarkers = function() {
+		this.toggleLayer(myMarkers);
+	};
 	
 	/**
 	 * Permite cambiar la capa de base y cargar automaticamente una serie de capas vectoriales definidas
