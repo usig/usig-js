@@ -41,58 +41,7 @@ return function(datos, options) {
 	    return '<img src="' + opts.icons[src] + '" width="20" height="20">';
 	}
 	
-	function procesarResumen() {
-		
-		var desc=[];
-		descripcionHtml="";
-		if (tipo=="transporte_publico"){
-			$.each(resumen,function(i,action) {
-				if(action.type == 'Board') { 
-					if (!action.any_trip && action.service_type!=1){
-						if (action.trip_description != ""){	//mostrar las descripciones en el asterisco
-							var ramales = 'Ramales: ' + action.trip_description.replace('$',', ');
-							descripcionHtml += getServiceIcon(action.service_type) + ' ' + action.service + '  <span class="ramales" title="'+ramales+'">(*)</span>';
-							desc.push(action.service+' ('+ramales+')');
-						}else{ // mostrar cartel de que hay mas ramales en el asterisco
-							descripcionHtml += getServiceIcon(action.service_type) + ' ' + action.service + ' <span class="ramales" title="'+opts.texts.hayRamales+'">(*)  </span>';
-							desc.push(action.service+' ('+opts.texts.hayRamales+')');
-						}
-					} else {
-						descripcionHtml += getServiceIcon(action.service_type) + ' ' + action.service + '  ';
-						desc.push(action.service); 
-					}
-				}
-			});
-			descripcion=desc.join(', ');
-			
-		}else if (tipo=="walk"){
-			descripcion = opts.texts.descWalk;
-			$.each(resumen,function(i,action) { 
-				if(action.type != undefined && action.type == 'StartWalking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
-				}
-			});
-		}else if (tipo=="car"){
-			descripcion = opts.texts.descCar;
-			$.each(resumen,function(i,action) { 
-				if(action.type != undefined && action.type == 'StartDriving') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
-				}
-			});
-		}else if (tipo=="bike"){
-			descripcion = opts.texts.descBike;
-			$.each(resumen,function(i,action) { 
-				if(action.type != undefined && action.type == 'StartBiking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
-					return false;
-				}
-			});
-			if (descripcionHtml==""){
-				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
-			}
-		}
-	}	
-	function procesarResumenV3() { //V3
+	function procesarResumen() { //V3
 		var desc=[];
 		descripcionHtmlV3="";
 		if (tipo=="transporte_publico"){
@@ -429,7 +378,6 @@ return function(datos, options) {
 			data=$.extend({}, datos);
 			data.options = opts;
 			procesarResumen();
-			procesarResumenV3();
 			cargarPlan(datos);
 		} catch(e) {
 			usig.debug(e);
