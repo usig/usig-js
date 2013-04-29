@@ -58,10 +58,10 @@ return function(datos, options) {
 					}else if(action.service_type==1){//subte
 						lineas = action.service.split("-");
 						$.each(lineas,function(i,linea) {
-							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea+'</span></div>';
+							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea.replace('Premetro','P')+'</span></div>';
 						});
 					}else if(action.service_type==2){	//tren
-						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+  action.service.replace(/\./g, '')+'</span></div>';
+						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+action.service+'">'+  action.service.replace(/\./g, '')+'</span></div>';
 					}
 				}
 				estadoAnterior = action.type;
@@ -165,6 +165,9 @@ return function(datos, options) {
 							}
 							
 							current_action = 'Tomar el <span class="transport">COLECTIVO ' + item.service +ramal+' </span> ';
+							/*if (true){ //Es METROBUS ???? cuando se sube
+								current_action += ' en la estacion Metrobus1 ';
+							}*/
 							type_action = 'colectivo';
 						} else if(item.service_type == '2') { //tren
 							if (item.trip_description != "" && !item.any_trip){ //hay ramales y no son todos los que te llevan
@@ -186,6 +189,13 @@ return function(datos, options) {
 					} else if(item.type == 'Alight') {
 						if(item.service_type != undefined && (item.service_type == '2' || item.service_type == '1'))  
 							current_action += ' y bajar en la estación <span class="plan-estacion">' + item.stop_name+' </span> ';
+						/*else { //item.service_type == '3' // colectivo 
+							current_action += ' y bajar en ';
+							if (true){ // Es METROBUS ??? cuando se baja
+								current_action += ' la estacion Metrobus2 en ';
+							}
+							current_action += ' <span class="plan-calle">' + item.stop_description+'</span>';
+						}*/
 						else {
 							current_action += ' y bajar en <span class="plan-calle">' + item.stop_description+'</span>';
 						}
