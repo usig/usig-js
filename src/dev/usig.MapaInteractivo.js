@@ -1205,17 +1205,328 @@ usig.MapaInteractivo.defaults = {
 	    	desc: 'Mapa que incluye información de calles con altura y sentido, veredas, manzanas, parcelas, espacios verdes, trenes, subterráneos y salidas de la Ciudad de Buenos Aires.'
 		   },
 	       {
-	    	name: 'mapabsas_red_de_ciclovias',
-	    	display: 'Red de Ciclovías',
-	    	baseLayer: 'mapabsas_red_de_ciclovias',
-	    	desc: 'Mapa que contiene las ciclovías protegidas (bicisendas) finalizadas, en obra y proyectadas. Contiene además las estaciones de bicicletas (punto de retiro y devolución), bicicleterias y los estacionamientos para bicicletas (bicicleteros).'
+		       	name:'mapabsas_red_de_ciclovias',
+		       	display:'Red de Ciclovías',
+		       	baseLayer: 'mapabsas_red_de_ciclovias_basico',
+		       	layers: [
+	       	        {
+	       	        	name: 'comercios_con_beneficios',
+	       	        	options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=comercios_con_beneficios",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/comercios_con_beneficios.png',
+		                		pointRadius: 18
+		                	},
+							escalas: [
+										{
+											minScaleDenominator: 20000,
+											maxScaleDenominator: 80000,
+											symbolizer: {size: 0.5}
+										},
+										{
+											maxScaleDenominator: 20000,
+											symbolizer: {size: 0.7}
+										}
+							],
+						   	minPointRadius: 9
+	       	        	}
+	       	        },
+	       	        {
+	       	        	name: 'bicicleterias',
+	       	        	options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=bicicleterias",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/bicicleterias.png',
+		                		pointRadius: 18
+		                	},
+							escalas: [
+								{
+									minScaleDenominator: 20000,
+									maxScaleDenominator: 80000,
+									symbolizer: {size: 0.5}
+								},
+								{
+									maxScaleDenominator: 20000,
+									symbolizer: {size: 0.7}
+								}
+							],
+		                	minPointRadius: 9
+	       	        	}
+	       	        },
+	       	        {
+	       	        	name: 'bicicleteros',
+	       	        	options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=bicicleteros",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/bicicleteros.png',
+		                		pointRadius: 18
+		                	},
+							escalas: [
+								{
+									minScaleDenominator: 20000,
+									maxScaleDenominator: 80000,
+									symbolizer: {size: 0.5}
+								},
+								{
+									maxScaleDenominator: 20000,
+									symbolizer: {size: 0.7}
+								}
+							],
+		                	minPointRadius: 9
+	       	        	}
+	       	        },
+	       	        {
+	       	        	name: 'estacionamientos_de_bicicletas',
+	       	        	options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=estacionamiento_de_bicicletas",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/estacionamiento_de_bicicletas.png',
+		                		pointRadius: 18
+		                	},
+							escalas: [
+								{
+									minScaleDenominator: 20000,
+									maxScaleDenominator: 80000,
+									symbolizer: {size: 0.5}
+								},
+								{
+									maxScaleDenominator: 20000,
+									symbolizer: {size: 0.7}
+								}
+							],
+		                	minPointRadius: 9
+	       	        	}
+	       	        },
+	       	        {
+	       	        	name: 'estaciones_de_bicicletas',
+	       	        	options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=estaciones_de_bicicletas",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/estaciones_de_bicicletas.png',
+		                		pointRadius: 18
+		                	},
+							escalas: [
+								{
+									minScaleDenominator: 20000,
+									maxScaleDenominator: 80000,
+									symbolizer: {size: 0.5}
+								},
+								{
+									maxScaleDenominator: 20000,
+									symbolizer: {size: 0.7}
+								}
+							],
+		                	minPointRadius: 9
+	       	        	}
+	       	        }
+		       	]
 	       },
 	       {
-	    	name: 'mapabsas_salud',
-	    	display: 'Salud',
-	    	baseLayer: 'mapabsas_salud',
-	    	desc: 'Mapa que contiene información de hospitales, centros médicos barriales, centros de salud y acción comunitaria (CESACs) y áreas hospitalarias.'
+	       	name:'mapabsas_cortes_de_transito',
+	       	display:'Cortes de Tránsito',
+	       	baseLayer: 'mapabsas_informacion_basica',
+	       	layers: [
+	       	         {
+	       	        	 name: 'cortes_de_transito_0',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Corte por Obra",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/obras.png',
+					            backgroundGraphic: 'images/markers/fondos/cua_azul.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_1',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Manifestación",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/manifestacion.png',
+					            backgroundGraphic: 'images/markers/fondos/cua_naranja.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_2',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Evento Cultural",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/evento_cultural.png',
+					            backgroundGraphic: 'images/markers/fondos/cua_verde.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_3',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Cordón policial",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/cordon_policial.png',
+					            backgroundGraphic: 'images/markers/fondos/cir_azul.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_4',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Filmación",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/filmacion.png',
+					            backgroundGraphic: 'images/markers/fondos/cua_violeta.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_5',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Choque",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/choque.png',
+					            backgroundGraphic: 'images/markers/fondos/cir_rojo.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_6',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Semáforo Roto",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/semaforo_roto.png',
+					            backgroundGraphic: 'images/markers/fondos/cir_naranja.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_7',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Evento Deportivo",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/evento_deportivo.png',
+					            backgroundGraphic: 'images/markers/fondos/cir_verde.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_8',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Incendio",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/incendio.png',
+					            backgroundGraphic: 'images/markers/fondos/cua_rojo.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         },
+	       	         {
+	       	        	 name: 'cortes_de_transito_9',
+	       	        	 options: {
+	       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&tipo=Corte",
+	       	        		symbolizer: {
+		                		externalGraphic: 'images/markers/otros_cortes.png',
+					            backgroundGraphic: 'images/markers/fondos/cir_violeta.png',
+		                		pointRadius: 18
+		                	},
+		                	minPointRadius: 9
+	       	        	 }
+	       	         }
+	       	]
 	       },
+	       {
+		       	name:'mapabsas_salud',
+		       	display: 'Salud',
+		       	baseLayer: 'mapabsas_regiones_sanitarias',
+		       	layers: [
+		       	         {
+		       	        	 name: 'centros_de_salud_y_accion_comunitaria',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=centros_de_salud_y_accion_comunitaria",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/centros_de_salud_y_accion_comunitaria.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_azul.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         },
+		       	         {
+		       	        	 name: 'centros_medicos_barriales',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=centros_medicos_barriales",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/centros_medicos_barriales.png',
+						            backgroundGraphic: 'images/markers/fondos/cir_amarillo.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         },
+		       	         {
+		       	        	 name: 'hospitales_de_ninos',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=hospitales_de_ninos",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/hospitales_de_ninos.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_naranja.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         },
+		       	         {
+		       	        	 name: 'hospitales_especializados',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=hospitales_especializados",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/hospitales_especializados.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_violeta.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         },
+		       	         {
+		       	        	 name: 'hospitales_generales_de_agudos',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=hospitales_generales_de_agudos",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/hospitales_generales_de_agudos.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_rojo.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         },
+		       	         {
+		       	        	 name: 'centros_de_salud_no_dependientes_del_gcba',
+		       	        	 options: {
+		       	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=centros_de_salud_no_dependientes_del_gcba",
+		       	        		symbolizer: {
+			                		externalGraphic: 'images/markers/centros_de_salud_no_dependientes_del_gcba.png',
+						            backgroundGraphic: 'images/markers/fondos/cua_verde.png',
+			                		pointRadius: 18
+			                	},
+			                	minPointRadius: 9
+		       	        	 }
+		       	         }
+		       	]
+		   },
 	       {
 	    	name: 'mapabsas_educacion_publica',
 	    	display: 'Educación',
