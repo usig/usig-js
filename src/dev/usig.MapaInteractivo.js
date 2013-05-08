@@ -906,6 +906,10 @@ return function(idDiv, options) {
 	 * 		<div class="sub-desc">Url de donde obtener los features para esta capa</div>
 	 * </li>
 	 * <li>
+	 * 		<code>format</code>: String
+	 * 		<div class="sub-desc">Indica el formato de los datos (GML o GeoJSON)</div>
+	 * </li>
+	 * <li>
 	 * 		<code>highlightable</code>: Boolean
 	 * 		<div class="sub-desc">Indica si la capa debe ser sensible al evento highlight</div>
 	 * </li>
@@ -965,8 +969,13 @@ return function(idDiv, options) {
 				url: opts.url,
 				dataType: 'jsonp',
 				success: (function(data) {
-					var gml = new OpenLayers.Format.GML();
-					layer.addFeatures(gml.read(data));
+					if (opts.format == 'GML') {
+						var gml = new OpenLayers.Format.GML();
+						layer.addFeatures(gml.read(data));
+					} else if (opts.format == 'GeoJSON') {						
+						var geojson = new OpenLayers.Format.GeoJSON();
+						layer.addFeatures(geojson.read(data));
+					}
 					this.hideIndicator();
 				}).createDelegate(this),
 				error: function(e) {
@@ -1208,6 +1217,7 @@ usig.MapaInteractivo.defaults = {
 		}
 	},
 	vectorLayer: {
+		format: 'GML',
 		highlightable: true,
 		popup: false,
 		visible: true,
