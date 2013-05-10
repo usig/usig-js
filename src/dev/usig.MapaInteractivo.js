@@ -126,10 +126,10 @@ return function(idDiv, options) {
 			map.addControl(new OpenLayers.Control.MapSelector(optsMapSwitcher));	    	
 	    }
 	    
-	    /*
+	    
 	    statusBar = new OpenLayers.Control.StatusBar();
 	    map.addControl(statusBar);
-	    */ 
+	     
 	    
 	    map.addControl(new OpenLayers.Control.MousePosition({formatOutput: function(lonLat) { return ''; }}));
 	    
@@ -1223,10 +1223,10 @@ usig.MapaInteractivo.defaults = {
 	},
 	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	// OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-0/theme/default/style.css',
-	OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
-	OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
-	// OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-0/OpenLayers.js',
+	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/theme/default/style.css',
+	// OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
+	// OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
+	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
