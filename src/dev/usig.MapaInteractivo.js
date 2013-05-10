@@ -126,8 +126,12 @@ return function(idDiv, options) {
 			map.addControl(new OpenLayers.Control.MapSelector(optsMapSwitcher));	    	
 	    }
 	    
+	    /*
 	    statusBar = new OpenLayers.Control.StatusBar();
 	    map.addControl(statusBar);
+	    */ 
+	    
+	    map.addControl(new OpenLayers.Control.MousePosition({formatOutput: function(lonLat) { return ''; }}));
 	    
 		//Direcciones
         myMarkers = new OpenLayers.Layer.Vector(
@@ -314,22 +318,15 @@ return function(idDiv, options) {
 	this.setBaseLayer = function(layerName) {
 		var currentLayer = map.baseLayer;
 		if(currentLayer == undefined) {
-			var layerUrls = getLayerURLs(layerName) ;
-			map.addLayer(new OpenLayers.Layer.WMS(layerName, layerUrls , {layers: layerName, format: 'image/png'}, {transitionEffect: "resize", buffer: 0}));
+			this.addWMSLayer(layerName, {isBaseLayer: true});
 		} else {
 			if(currentLayer.name != layerName) {
-				var layerUrls = getLayerURLs(layerName) ;
 				try {
 					map.removeLayer(currentLayer);
 				} catch(e) {}
-				map.addLayer(new OpenLayers.Layer.WMS(layerName, layerUrls, {layers: layerName, format: 'image/png'}, {transitionEffect: "resize", buffer: 0}));					
-				//zoomToInitialBounds();
+				this.addWMSLayer(layerName, {isBaseLayer: true});
 			}
 		}
-		/*
-		if (navBar)
-			navBar.selectMap(layerName);
-		*/
 	}
 	
 	function getMarkerFromPlace(place) {
@@ -907,7 +904,7 @@ return function(idDiv, options) {
 	 * </li>
 	 * <li>
 	 * 		<code>format</code>: String
-	 * 		<div class="sub-desc">Indica el formato de los datos (GML o GeoJSON)</div>
+	 * 		<div class="sub-desc">Indica el formato de los datos (GML o GeoJSON) (Por defecto: GML)</div>
 	 * </li>
 	 * <li>
 	 * 		<code>highlightable</code>: Boolean
@@ -965,21 +962,22 @@ return function(idDiv, options) {
 		this.raiseMarkers(map.layers.length);
 		if (opts.url && opts.url != "") {
 			this.showIndicator();
+			var dt = opts.format.toUpperCase() == 'GML'?'xml':'json';
 			$.ajax({
 				url: opts.url,
-				dataType: 'jsonp',
+				dataType: (window.location.host == usig.parseUri(opts.url).authority) || (usig.parseUri(opts.url).authority == opts.url)?dt:'jsonp',
 				success: (function(data) {
-					if (opts.format == 'GML') {
+					if (opts.format.toUpperCase() == 'GML') {
 						var gml = new OpenLayers.Format.GML();
 						layer.addFeatures(gml.read(data));
-					} else if (opts.format == 'GeoJSON') {						
+					} else if (opts.format.toUpperCase() == 'GEOJSON') {
 						var geojson = new OpenLayers.Format.GeoJSON();
 						layer.addFeatures(geojson.read(data));
 					}
 					this.hideIndicator();
 				}).createDelegate(this),
 				error: function(e) {
-					usig.debug(e);
+					if (opts.debug) usig.debug(e);
 				}
 			});
 		}
@@ -1001,7 +999,7 @@ return function(idDiv, options) {
 	        			if (opts.debug) usig.debug("Creating popup for feature "+e.feature.id);
 		    			var popup = new Popup(
 							e.feature.id,
-							new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
+							map.getLonLatFromPixel(map.getControlsByClass("OpenLayers.Control.MousePosition")[0].lastXy), // new OpenLayers.LonLat(e.feature.geometry.x, e.feature.geometry.y),
 			                null,
 			                '<div id="contenido_'+e.feature.id+'"></div>',
 			                null,
@@ -1034,6 +1032,49 @@ return function(idDiv, options) {
 	            }
 	        });			
 		}
+		return layer;
+	}
+	
+	/**
+	 * Permite agregar al mapa un nuevo layer wms. Las opciones disponibles son:
+	 * <div class="mdetail-params">
+	 * <strong>Options:</strong>
+	 * <ul>
+	 * <li>
+	 * 		<code>layerUrls</code>: String
+	 * 		<div class="sub-desc">Urls del servicio WMS para esta capa</div>
+	 * </li>
+	 * <li>
+	 * 		<code>layers</code>: String
+	 * 		<div class="sub-desc">Parametro 'layers' del servicio WMS. Por defecto es igual a layerName.</div>
+	 * </li>
+	 * <li>
+	 * 		<code>format</code>: String
+	 * 		<div class="sub-desc">Formato de las imagenes. Por defecto 'image/png'.</div>
+	 * </li>
+	 * <li>
+	 * 		<code>transitionEffect</code>: String
+	 * 		<div class="sub-desc">Efecto para aplicar al hacer zoom. Por defecto 'resize'.</div>
+	 * </li>
+	 * </ul>
+	 * </div>
+	 * <br/>
+	 * Puede encontrar un ejemplo completo de uso de este metodo <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.4/ejemplos/gml/capas-gml.html">aqui</a>.<br/>
+	 * 
+	 * @param {String} layerName Nombre del nuevo layer (no debe coincidir con otra capa preexistente)
+	 * @param {Object} options (optional) Objeto conteniendo overrides para las opciones disponibles
+	 * @return {OpenLayers.Layer.WMS} Capa creada 
+	 */
+	this.addWMSLayer = function(layerName, options) {
+		var opts = $.extend({}, usig.MapaInteractivo.defaults.wmsLayer, options);
+		if (!opts.layerUrls) {
+			opts.layerUrls = getLayerURLs(layerName);
+		}
+		if (!opts.layers) {
+			opts.layers = layerName;
+		}
+		var layer = new OpenLayers.Layer.WMS(layerName, opts.layerUrls, {layers: opts.layers, format: opts.format, transparent: opts.transparent}, {transitionEffect: opts.transitionEffect, buffer: opts.buffer, opacity: opts.opacity, singleTile: opts.singleTile, isBaseLayer: opts.isBaseLayer});
+		map.addLayer(layer);
 		return layer;
 	}
 	
@@ -1109,11 +1150,11 @@ return function(idDiv, options) {
 				vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
 			});
 		}
-		/*if (navBar)
-			navBar.selectMap(mapConfig.name);
-		*/
 	};
 	
+	/**
+	 * Elimina todas las capas vectoriales del mapa
+	 */
 	this.removeVectorLayers = function() {
 		for (var i=0,l=vectorLayers.length;i<l;i++) {
 			this.removeLayer(vectorLayers[i]);
@@ -1180,12 +1221,12 @@ usig.MapaInteractivo.defaults = {
 		], 
 		mapas: []		
 	},
-	baseLayer:'mapabsas_default3',
+	baseLayer:'mapabsas_default',
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-0/theme/default/style.css',
-	// OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
-	// OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-0/OpenLayers.js',
+	// OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-0/theme/default/style.css',
+	OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
+	OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
+	// OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-0/OpenLayers.js',
 	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
@@ -1246,6 +1287,15 @@ usig.MapaInteractivo.defaults = {
 			cursor: "pointer"
 		},
 		colors: ['#8F58C7','#E34900','#C3E401','#F9B528','#D71440','#007baf','#495a78','#b56c7d','#669966','#ff3300']	
+	},
+	wmsLayer: {
+		format: 'image/png',
+		transitionEffect: "resize", 
+		buffer: 0,
+		opacity: 1,
+		singleTile: false,
+		transparent: true,
+		isBaseLayer: false
 	},
 	goToZoomLevel: 7,
     SHADOW_Z_INDEX: 10,
