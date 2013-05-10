@@ -148,6 +148,25 @@ return usig.Publisher.extend({
 			}
 		}
 		return found;
+	},
+	/**
+	 * Permite buscar elementos dentro de la coleccion
+	 * @param {Object} needle Objeto a buscar
+	 * @param {Function} comparator Funcion de comparacion que recibe de parametro los elementos a comparar
+	 * @param {Integer} maxSug Numero maximo de elementos que responde (opcional) 
+	 * @return {Boolean} 
+	 */
+	buscar: function(needle, comparator, maxSug) {
+		var listFound = [];
+			l = this.collection.length;
+		
+		for (var i=0; i<l; i++) {
+			if (comparator(needle, this.collection[i])) {
+				listFound.push(this.collection[i]);
+				if (maxSug && maxSug<=i) break;
+			}
+		}
+		return listFound;
 	}
 	
 });
