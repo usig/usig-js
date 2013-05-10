@@ -109,6 +109,7 @@ return function(idField, options) {
 			
 			// currently no item is highlighted
 			highlighted = -1;			
+			$div.show();
 		}
 		
 		// hide dialog after an interval
