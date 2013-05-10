@@ -173,3 +173,9 @@ jQuery.extendIf(usig, {
 jQuery.expr[':'].Contains = function(a,i,m){
      return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
 };
+
+jQuery.expr[':'].ContainsFilter = function(a,i,m){
+	if (a.innerHTML.indexOf('data-filter') >= 0)
+		var qtipEval = a.innerHTML.match(/data-filter\=\"(.*?)\"/)[1].toUpperCase().indexOf(m[3].toUpperCase())>=0;
+    return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0 || qtipEval;
+};

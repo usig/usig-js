@@ -168,7 +168,7 @@ return function(idField, options, viewCtrl) {
 					showError: opts.showError
 			};
 			
- 			opt = $.extend(opt, options);
+ 			opt = $.extend({}, opt, options);
 			suggesters.push({suggester: sgObj, options: opt, inputTimer: null});
 		} else {
 			if (opts.debug) usig.debug('Se intento agregar dos suggesters con el mismo nombre.');
