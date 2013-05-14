@@ -166,6 +166,23 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
 	        }
         	this.wait();
         },        
+        "test cambio de parcela 89-092-017X -> 89-092-017LL (Ahora tiene que aceptar codigo de parcela de 5 chars)" : function() {
+        	var test = this;
+        	try {
+	        	this.sic.getSuggestions('89-092-017LL', function(suggestions) {
+        			test.sic.getGeoCoding(suggestions[0], function(pt) {
+			        	test.resume(function() {
+			        		Y.Assert.isInstanceOf(usig.Punto, pt);
+			        		Y.Assert.areEqual("95136.4508432633", pt.getX());
+			        		Y.Assert.areEqual("102329.321", pt.getY());
+			        	});
+			        });
+	        	});
+        	} catch(e) {
+	        	Y.Assert.fail(e.toString());
+	        }
+        	this.wait();
+        },
         "test limite de sugerencias a 5" : function () {
         	var test = this;
         	try {
