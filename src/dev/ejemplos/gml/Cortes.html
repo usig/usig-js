@@ -25,7 +25,7 @@
 		
 		var clickHandler = function (e, popup) {
 			if (popup) {
-				popup.contentDiv.innerHTML = "<h3 style=\"margin: 5px 0 10px 0;\">" + e.feature.attributes['ubicacion'] +"</h3><p>"+e.feature.attributes['descripcion']+"</p>";
+				popup.contentDiv.innerHTML = "<h3 style=\"margin: 5px 0 10px 0;\">" + e.feature.attributes['Tipo'] +"</h3><p>"+e.feature.attributes['Nombre']+"</p>";
     			popup.updateSize();
 				popup.show();
 			}
@@ -37,7 +37,7 @@
 			onReady: function() {
 				var layer = mapa.addVectorLayer('Cortes', {
 					format: 'GeoJSON',
-   	        		url: "http://epok.cobra-dev.usig.gcba.gov.ar/getGeoLayer/?categoria=cortes_de_transito&formato=geojsoncasero",
+   	        		url: "http://epok.cobra-dev.usig.gcba.gov.ar/getGeoLayer/?categoria=cortes_de_transito&geometria=lineas&formato=geojson",
    	        		symbolizer: {
    	        			strokeWidth: 3,
    	        			strokeColor: '#0099ee'
@@ -56,6 +56,12 @@
    	        	    }
 					],
 					*/
+                	popup: true,
+                	onClick: clickHandler
+				});
+				var layer = mapa.addVectorLayer('Cortes (puntos)', {
+					format: 'GeoJSON',
+   	        		url: "http://epok.cobra-dev.usig.gcba.gov.ar/getGeoLayer/?categoria=cortes_de_transito&formato=geojson",
                 	popup: true,
                 	onClick: clickHandler
 				});
