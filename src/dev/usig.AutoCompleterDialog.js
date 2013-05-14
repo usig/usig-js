@@ -106,7 +106,8 @@ return function(idField, options) {
 			$div.mouseout(resetTimeout.createDelegate(this));
 			
 			// currently no item is highlighted
-			highlighted = -1;			
+			highlighted = -1;
+			$div.show();			
 		}
 		
 		// hide dialog after an interval

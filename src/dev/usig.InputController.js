@@ -104,5 +104,5 @@ return function(idField, options) {
 })(jQuery);
 
 usig.InputController.defaults = {
-	events: document.all?'blur keyup input focus':'blur keydown input focus'
+	events: document.all?'blur keydown keyup input focus':'blur keydown input focus'
 }
