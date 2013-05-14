@@ -40,7 +40,7 @@ usig.IndiceCatastral = usig.AjaxComponent.extend({
 	 */
 	buscar: function(text, success, error, maxSug) {
 //		var regExpSMP = /^([0-9]{2})-([0-9]{3}[A-Z]?)-([A-Z0-9]{3,4})$/;
-		var regExpSMP = /^([0-9]{2})-([0-9]{3}[A-Z]?)-([A-Z0-9]{0,4})$/;
+		var regExpSMP = /^([0-9]{2})-([0-9]{3}[A-Z]?)-([A-Z0-9]{0,5})$/;
 		var regExpSM  = /^([0-9]{2})-([0-9]{0,3}|[0-9]{3}[A-Z])$/;
 		var regExpSoPM = /^([0-9]{1,6})$/;
 		var regExpS   = /^([0-9]{1,2})$/;
