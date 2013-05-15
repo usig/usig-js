@@ -393,7 +393,29 @@ return function(idField, options) {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Devuelve el número de sugerencias disponibles
+	 * @return {Integer} Numero de sugerencias disponibles
+	 */
+	this.getNumSuggestions = function() {
+		return numOptions;
+	}
+
+	/**
+	 * Devuelve la sugerencia indicada
+	 * @param {Integer} num Numero de sugerencia (entre 0 y el numero de sugerencias visibles)
+	 * @return {Boolean} Devuelve la opcion indicada en caso de exito y <code>false</code> en caso de que 
+	 * no haya opciones disponibles o el numero de opcion indicada sea invalido
+	 */
+	this.getSuggestion = function(num) {
+		var n = num || 0;
+		if (numOptions > n) {
+			return itemsRef[id+n];
+		}
+		return false;
+	}
+
 	/**
 	 * Cambia el skin actual del control
 	 * @param {String} newSkin Nombre del skin a aplicar (las opciones son 'usig', 'usig2', 'usig3', 'usig4', 'mapabsas', 'bootstrap' o 'dark')

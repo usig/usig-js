@@ -246,6 +246,24 @@ return function(idField, options, viewCtrl) {
 	this.selectOption = function(num) {
 		return view.selectOption(num);
 	}
+
+	/**
+	 * Devuelve el número de sugerencias disponibles
+	 * @return {Integer} Numero de sugerencias disponibles
+	 */
+	this.getNumSuggestions = function() {
+		return view.getNumSuggestions();
+	}
+
+	/**
+	 * Devuelve la sugerencia indicada
+	 * @param {Integer} num Numero de sugerencia (entre 0 y el numero de opciones visibles)
+	 * @return {Boolean} Devuelve la opcion indicada en caso de exito y <code>false</code> en caso de que 
+	 * no haya opciones disponibles o el numero de opcion indicada sea invalido
+	 */
+	this.getSuggestion = function(num) {
+		return view.getSuggestion(num);
+	}
 	
 	/**
 	 * Oculta las sugerencias que se esten mostrando
@@ -283,7 +301,7 @@ return function(idField, options, viewCtrl) {
 		
 		callbackSugerir = function callbackSugerir(results, inputStr){
 			if (field.value == inputStr) {
-				if (opts.debug) {usig.debug("Resultados en autocompleter....");usig.debug(results);}
+				if (opts.debug) {usig.debug("Resultados en autocompleter....");}
 	//			if (opts.debug) usig.debug('sugOpts.showError: '+sugOpts.showError);
 				if(results.getErrorMessage!=undefined){
 					try {
@@ -298,7 +316,7 @@ return function(idField, options, viewCtrl) {
 						if (opts.debug) usig.debug('usig.Autocompleter.sugerir.callback(results)');
 						// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
 						results = results.map(function(x){ x.suggesterName = suggester.name; return x });
-						if (opts.debug) usig.debug(results);
+						// if (opts.debug) usig.debug(results);
 						view.show(results, appendResults);
 						appendResults = true;
 						if (!focused)
