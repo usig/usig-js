@@ -37,7 +37,7 @@
 			onReady: function() {
 				var layer = mapa.addVectorLayer('Cortes', {
 					format: 'GeoJSON',
-   	        		url: "http://epok.cobra-dev.usig.gcba.gov.ar/getGeoLayer/?categoria=cortes_de_transito&geometria=lineas&formato=geojson",
+   	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&geometria=lineas&formato=geojson",
    	        		symbolizer: {
    	        			strokeWidth: 3,
    	        			strokeColor: '#0099ee'
@@ -61,7 +61,7 @@
 				});
 				var layer = mapa.addVectorLayer('Cortes (puntos)', {
 					format: 'GeoJSON',
-   	        		url: "http://epok.cobra-dev.usig.gcba.gov.ar/getGeoLayer/?categoria=cortes_de_transito&formato=geojson",
+   	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=cortes_de_transito&formato=geojson",
                 	popup: true,
                 	onClick: clickHandler
 				});
