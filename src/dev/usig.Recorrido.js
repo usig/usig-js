@@ -61,7 +61,8 @@ return function(datos, options) {
 							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea.replace('Premetro','P')+'</span></div>';
 						});
 					}else if(action.service_type==2){	//tren
-						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+action.service+'">'+  action.service.replace(/\./g, '')+'</span></div>';
+						var titleName = action.long_name?action.long_name:action.service;
+						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+titleName+'">'+  action.service.replace(/\./g, '')+'</span></div>';
 					}
 				}
 				estadoAnterior = action.type;
@@ -165,9 +166,9 @@ return function(datos, options) {
 							}
 							
 							current_action = 'Tomar el <span class="transport">COLECTIVO ' + item.service +ramal+' </span> ';
-							/*if (true){ //Es METROBUS ???? cuando se sube
-								current_action += ' en la estacion Metrobus1 ';
-							}*/
+							if (item.metrobus){ //Es METROBUS ? cuando se sube
+								current_action += ' en la estación <span class="plan-estacion">'+ item.stop_name+' </span>';
+							}
 							type_action = 'colectivo';
 						} else if(item.service_type == '2') { //tren
 							if (item.trip_description != "" && !item.any_trip){ //hay ramales y no son todos los que te llevan
@@ -189,15 +190,12 @@ return function(datos, options) {
 					} else if(item.type == 'Alight') {
 						if(item.service_type != undefined && (item.service_type == '2' || item.service_type == '1'))  
 							current_action += ' y bajar en la estación <span class="plan-estacion">' + item.stop_name+' </span> ';
-						/*else { //item.service_type == '3' // colectivo 
+						else { //item.service_type == '3' // colectivo 
 							current_action += ' y bajar en ';
-							if (true){ // Es METROBUS ??? cuando se baja
-								current_action += ' la estacion Metrobus2 en ';
+							if (item.metrobus){ // Es METROBUS ? cuando se baja
+								current_action += ' la estación <span class="plan-estacion">'+item.stop_name+'</span> en ';
 							}
 							current_action += ' <span class="plan-calle">' + item.stop_description+'</span>';
-						}*/
-						else {
-							current_action += ' y bajar en <span class="plan-calle">' + item.stop_description+'</span>';
 						}
 	
 						//Ponemos un punto al final
@@ -289,11 +287,11 @@ return function(datos, options) {
 							turn_indication = 'derecha';
 						}
 							
-						text += item.name  + ' ' ;
+						text += '<span class="plan-calle">'+item.name  + '</span> ' ;
 						if(item.from)
-							text += item.from;
+							text += '<span class="plan-calle">'+item.from + '</span> ';
 						if(item.to)
-							text += ' hasta el ' + item.to;
+							text += ' hasta el <span class="plan-calle">' + item.to + '</span> ';
 							actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'car', id:item.id});
 					}
 				}
@@ -328,7 +326,7 @@ return function(datos, options) {
 						//walking = false;
 					}else if(item.type == 'Street') {
 						
-						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ //hago esta comparacion porque no me toma bien el ==''
+						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ 
 							if (walking){
 								text = 'Caminar $metros desde $calle$desde$hasta';
 							}else{
@@ -351,14 +349,14 @@ return function(datos, options) {
 						} else {
 							text=text.replace('$metros', '');
 						}
-						text=text.replace('$calle', item.name);
+						text=text.replace('$calle', '<span class="plan-calle">'+item.name+'</span>');
 						if(item.from){
-							text=text.replace('$desde',' '+item.from);
+							text=text.replace('$desde',' <span class="plan-calle">'+item.from+'</span>');
 						} else {
 							text=text.replace('$desde','');							
 						}
 						if(item.to){
-							text=text.replace('$hasta',' hasta el ' + item.to);
+							text=text.replace('$hasta',' hasta el <span class="plan-calle">' + item.to+'</span>');
 						} else {
 							text=text.replace('$hasta','');														
 						}
