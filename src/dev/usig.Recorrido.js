@@ -43,26 +43,24 @@ return function(datos, options) {
 	
 	function procesarResumen() { //V3
 		var desc=[];
-		descripcionHtmlV3="";
+		descripcionHtml="";
 		if (tipo=="transporte_publico"){
 			estadoAnterior = null;	
 			$.each(resumen,function(i,action) {
 				if(action.type == 'Board') {
 					if (estadoAnterior =='Alight'){
-						descripcionHtmlV3 += '<span class="icons-sprite icon-combinacion"></span>';
+						descripcionHtml += '<span class="icons-sprite icon-combinacion"></span>';
 					}
 					if (action.service_type==3){ //colectivo
-						//descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span><span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span></div>';
-						descripcionHtmlV3 += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
-						 //<span class="pull-left" style="margin-left: -7px;margin-right: 3px;">(*)</span>
+						descripcionHtml += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
 					}else if(action.service_type==1){//subte
 						lineas = action.service.split("-");
 						$.each(lineas,function(i,linea) {
-							descripcionHtmlV3 += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea.replace('Premetro','P')+'</span></div>';
+							descripcionHtml += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea.replace('Premetro','P')+'</span></div>';
 						});
 					}else if(action.service_type==2){	//tren
 						var titleName = action.long_name?action.long_name:action.service;
-						descripcionHtmlV3 += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+titleName+'">'+  action.service.replace(/\./g, '')+'</span></div>';
+						descripcionHtml += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+titleName+'">'+  action.service.replace(/\./g, '')+'</span></div>';
 					}
 				}
 				estadoAnterior = action.type;
@@ -105,9 +103,7 @@ return function(datos, options) {
 	 		var type_action = null;	
 	 		var features = new Array();
 	 		var detail = new Array();
-	 		
 			for(i=0;i<plan.length;i++) {
-			
 				var item = plan[i];
 				if(item.type != undefined){
 					
@@ -208,26 +204,28 @@ return function(datos, options) {
 						type_action = null;
 						features = [];
 					
-					} else if (item.type == 'Bus') {
+					} else if (item.type == 'Bus' && item.gml) {
 						features.push(item.gml);
-					} else if (item.type == 'SubWay') {
-						if (features.length == 0){  
+					} else if (item.type == 'SubWay' && item.gml) {
+						if (features.length == 0){
 							features.push(item.gml);
 						}else {
 							var anterior = features[features.length-1];
-							if (anterior.search("gml:LineString") >= 0 && anterior.search("subway")>= 0)
+							if (anterior.search("gml:LineString") >= 0 && anterior.search("subway")>= 0){
 								var nextFeature = item.gml; 
-							else
+							}
+							else {
 								features.push(item.gml);
+								}
 						}
-					} else if(item.type == 'SubWayConnection') {					
+					} else if(item.type == 'SubWayConnection') {
 						//detalle.push(current_action);
 						detalle.push({text: current_action, type:type_action, features: features});
 						current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estación <span class="plan-estacion">' + item.stop+'</span>';
 						type_action = 'subte';	
 						features = [];
 						features.push(nextFeature); 
-					} else if(item.type == 'Street') { 
+					} else if(item.type == 'Street' && item.gml) { 
 						features.push(item.gml);
 					}
 					
@@ -431,8 +429,7 @@ return function(datos, options) {
 	 * @return {String} Descripcion corta del recorrido en formato HTML
 	 */	
 	this.toHtmlString = function() {
-		//return descripcionHtml; //v3
-		return descripcionHtmlV3;
+		return descripcionHtml; //v3
 	};
 	
 	/**
