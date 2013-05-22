@@ -50,7 +50,9 @@ return function(idDiv, options) {
 		preloadedImages = [],
 		vectorLayers = [],
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;"></div>'),
-		map = navBar = panZoomBar = scalebar = overviewMap = statusBar = myMarkers = selectControl = highlightControl = Popup = null;
+		map = null, navBar = null, panZoomBar = null, 
+		scalebar = null, overviewMap = null, statusBar = null, 
+		myMarkers = null, selectControl = null, highlightControl = null, Popup = null;
 
 	function init() {
 		$divIndicator.remove();
