@@ -354,9 +354,11 @@ return function(idDiv, options) {
 			marker = {
 				style: {
 					externalGraphic: place.options.iconUrl,
-                    backgroundGraphic: opts.rootUrl+"images/blank.gif",
+                    backgroundGraphic: place.options.backgroundGraphic || opts.rootUrl+"images/blank.gif",
                     graphicWidth: place.options.iconWidth,
                     graphicHeight: place.options.iconHeight,
+                    backgroundWidth: place.options.iconWidth,
+                    backgroundHeight: place.options.iconHeight,
                     graphicXOffset: place.options.offsetX,
                     graphicYOffset: place.options.offsetY					
 				}					

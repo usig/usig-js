@@ -112,7 +112,7 @@ return usig.AjaxComponent.extend({
 	buscar: function(text, success, error, options) {
 		
 		var ops = $.extend({}, usig.Inventario.defaults.searchOptions, options),
-			data = { start:ops.start, limit: ops.limit, texto: text, tipo:ops.tipoBusqueda };
+			data = { start:ops.start, limit: ops.limit, texto: text, tipo:ops.tipoBusqueda, totalFull: ops.totalFull };
 
 		function buscarResultsHandler (results, callback) {
 			var clases = {}, objetos = [];
@@ -245,6 +245,7 @@ usig.Inventario.defaults = {
 	debug: false,
 	server: 'http://inventario.usig.buenosaires.gob.ar/publico/',
 	serverEpok: 'http://epok.buenosaires.gob.ar/',
+	// serverEpok: 'http://10.10.4.55/',
 	// serverEpok: 'http://epok.cobra-dev.usig.gcba.gov.ar/',
 	// server: 'http://inventario.asi.buenosaires.gov.ar/publico/',
 	searchOptions: {
@@ -254,9 +255,10 @@ usig.Inventario.defaults = {
 		categoria: undefined,
 		clase: undefined,
 		bbox: false,
+		totalFull: false,
 		extent: undefined,
 		returnRawData: false,
-		searchInventario: true,
+		searchInventario: false,
 		searchEpok: true
 	}
 }
