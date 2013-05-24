@@ -53,19 +53,22 @@ return function(datos, options) {
 					}
 					if (action.service_type==3){ //colectivo
 						descripcionHtml += '<div class="pill colectivo'+action.service+'"><div class="primero"><span class="segundo"></span></div> <span class="linea">'+ action.service+'</span></div>';
+						desc.push(action.service); 
 					}else if(action.service_type==1){//subte
 						lineas = action.service.split("-");
 						$.each(lineas,function(i,linea) {
 							descripcionHtml += '<div class="circlePill subte'+linea+'"><span class="linea">'+ linea.replace('Premetro','P')+'</span></div>';
 						});
+						desc.push(action.service); 
 					}else if(action.service_type==2){	//tren
 						var titleName = action.long_name?action.long_name:action.service;
 						descripcionHtml += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+titleName+'">'+  action.service.replace(/\./g, '')+'</span></div>';
+						desc.push(action.service); 
 					}
 				}
 				estadoAnterior = action.type;
 			});
-			//descripcion=desc.join(', ');
+			descripcion=desc.join(', ');
 			
 		}else if (tipo=="walk"){
 			descripcion = opts.texts.descWalk;
