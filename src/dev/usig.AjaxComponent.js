@@ -34,6 +34,7 @@ return jQuery.Class.create({
     	};
 		this.opts = $.extend({}, usig.AjaxComponent.defaults, options);
 
+		/*
 		if (!this.opts.jQueryJsonp)	{
 			if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Using jQuery-jsonp plugin');
 			jQuery.jsonp.setup({
@@ -46,7 +47,7 @@ return jQuery.Class.create({
 		} else {
 			if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') Using jQuery.ajax for jsonp');			
 		}
-		
+		*/
 		if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') dataType: '+dataType);
 	},
 	
@@ -125,7 +126,8 @@ return jQuery.Class.create({
        	});
        	if (url) ajaxParams.url = url;
        	
-       	var ajaxReq = (ajaxParams.dataType == 'jsonp' && !this.opts.jQueryJsonp)?$.jsonp(ajaxParams):$.ajax(ajaxParams);
+//       	var ajaxReq = (ajaxParams.dataType == 'jsonp' && !this.opts.jQueryJsonp)?$.jsonp(ajaxParams):$.ajax(ajaxParams);
+       	var ajaxReq = $.ajax(ajaxParams);
        	
        	if (this.opts.debug) usig.debug(ajaxParams.dataType+' request...');
        	
@@ -164,6 +166,5 @@ return jQuery.Class.create({
 usig.AjaxComponent.defaults = {
 	debug: false,
 	serverTimeout: 30000,
-	maxRetries: 1,
-	jQueryJsonp: true
+	maxRetries: 1
 }
