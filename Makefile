@@ -14,8 +14,6 @@ APPD=/d/usig/www/servicios/Usig-JS
 INVENTARIO_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/jquery.jsonp-1.1.0.1.js \
-      $(SRC)/json.js \
       $(SRC)/jquery.class.js \
       $(SRC)/usig.AjaxComponent.js \
       $(SRC)/usig.Inventario.js \
@@ -26,9 +24,7 @@ INVENTARIO_FILES=\
 AUTOCOMPLETER_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/jquery.jsonp-1.1.0.1.js \
       $(SRC)/jquery.class.js \
-      $(SRC)/json.js \
       $(SRC)/usig.InputController.js \
       $(SRC)/usig.AutoCompleter.js \
       $(SRC)/usig.AutoCompleterDialog.js \
@@ -61,8 +57,6 @@ AUTOCOMPLETER_DIRECCIONES_FILES=\
 GEOCODER_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/jquery.jsonp-1.1.0.1.js \
-      $(SRC)/json.js \
       $(SRC)/jquery.class.js \
       $(SRC)/usig.AjaxComponent.js \
       $(SRC)/usig.Punto.js \
@@ -73,8 +67,6 @@ GEOCODER_FILES=\
 SUGGESTER_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/jquery.jsonp-1.1.0.1.js \
-      $(SRC)/json.js \
       $(SRC)/jquery.class.js \
       $(SRC)/usig.Suggester.js
 
@@ -112,8 +104,6 @@ SUGGESTER_CATASTRO_FILES=\
 INDICE_CATASTRAL_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/jquery.jsonp-1.1.0.1.js \
-      $(SRC)/json.js \
       $(SRC)/jquery.class.js \
       $(SRC)/usig.Punto.js \
       $(SRC)/usig.AjaxComponent.js \
@@ -131,8 +121,6 @@ MAPA_INTERACTIVO_FILES=\
 RECORRIDOS_FULL_FILES=\
       $(SRC)/usig.core.js \
       $(SRC)/usig.util.js \
-      $(SRC)/jquery.jsonp-1.1.0.1.js \
-      $(SRC)/json.js \
       $(SRC)/jquery.class.js \
       $(SRC)/usig.AjaxComponent.js \
       $(SRC)/usig.Recorridos.js \
