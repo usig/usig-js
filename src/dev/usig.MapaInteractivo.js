@@ -1120,9 +1120,14 @@ return function(idDiv, options) {
 	/**
 	 * Cambia la visibilidad de la capa
 	 * @param {OpenLayers.Layer} layer Capa cuya visibilidad se desea cambiar
+	 * @param {Boolean} visibility Indica expresamente si se desea prender/apagar la capa
 	 */
-	this.toggleLayer = function(layer) {
-		layer.setVisibility(!layer.visibility);
+	this.toggleLayer = function(layer, visibility) {
+		if (typeof(visibility) == 'undefined') {
+			layer.setVisibility(!layer.visibility);
+		} else {
+			layer.setVisibility(visibility);
+		}
 	};
 
 	/**

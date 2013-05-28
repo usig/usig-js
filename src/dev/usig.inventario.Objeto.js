@@ -64,10 +64,13 @@ return function(data, clase) {
 			try {
 				this.direccionAsociada = usig.NormalizadorDirecciones.normalizar(data.direccionNormalizada, 1)[0];
 				this.direccionAsociada.setCoordenadas(this.ubicacion.getCentroide());
+				if (data.smp) {
+					this.direccionAsociada.setSMP(data.smp);
+				}
 				this.rawData.direccionAsociada = this.direccionAsociada.toJson();
 			} catch(e) {};
 		}
-		
+	
 		if (data.contenido) {
 			var datosPtr = this.datos;
 			$.each(data.contenido, function(i, dato) {
@@ -81,6 +84,8 @@ return function(data, clase) {
 				this.nombre = this.datos['nombre'].valor;
 			}
 		}
+
+		this.rawData = $.extend(this.rawData, data);
 	}
 	
 	/**
