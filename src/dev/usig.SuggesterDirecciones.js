@@ -52,7 +52,6 @@ return usig.Suggester.extend({
 		try {
 			callback(this.opts.normalizadorDirecciones.normalizar(text, maxSug));
 		} catch (error) {
-			usig.debug(this.opts);
 			if (this.opts.ignorarTextoSobrante) {
 				try {
 					var opciones = this.opts.normalizadorDirecciones.buscarDireccion(text);
