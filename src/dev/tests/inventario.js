@@ -15,6 +15,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
          * Sets up data that is needed by each test.
          */
         setUp : function () {
+        	this.normalizador = usig.NormalizadorDirecciones.init();
         	this.inv = new usig.Inventario({ debug: true });
         },
         
@@ -47,14 +48,14 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         	var test = this;
         	this.inv.buscar('san martin', function(result) {
         		test.resume(function() {
-        			Y.assert(result.total > 5);
-        			Y.Assert.areEqual(5, result.instancias.length);
+        			Y.assert(result.total >= 3);
+        			Y.Assert.areEqual(3, result.instancias.length);
         		});        		
         	}, function() {
         		test.resume(function(msg) {
         			Y.fail();
         		});
-        	}, { limit: 5, returnRawData: true });
+        	}, { limit: 3, returnRawData: true });
         	this.wait();
         },
                       
@@ -76,13 +77,11 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         "Calling getObjeto with a result should return a full object" : function () {
         	var test = this;
         	this.inv.buscar('hospital gutierrez', function(result) {
-        		usig.debug(result);
         		test.inv.getObjeto(result[0], function(obj) {
 	        		test.resume(function() {
 	        			Y.Assert.isInstanceOf(usig.inventario.Objeto, obj);
 	        			Y.Assert.isInstanceOf(usig.Direccion, obj.direccionAsociada);
 	        			Y.Assert.isInstanceOf(usig.Punto, obj.direccionAsociada.getCoordenadas());
-	        			usig.debug(obj);
 	        		});
         		});
         	}, function() {

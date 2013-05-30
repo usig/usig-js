@@ -65,10 +65,12 @@ return function(data, clase) {
 				this.direccionAsociada = usig.NormalizadorDirecciones.normalizar(data.direccionNormalizada, 1)[0];
 				this.direccionAsociada.setCoordenadas(this.ubicacion.getCentroide());
 				if (data.smp) {
-					this.direccionAsociada.setSMP(data.smp);
+					this.direccionAsociada.setSmp(data.smp);
 				}
 				this.rawData.direccionAsociada = this.direccionAsociada.toJson();
-			} catch(e) {};
+			} catch(e) {
+				usig.debug(e);				
+			};
 		}
 	
 		if (data.contenido) {

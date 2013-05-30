@@ -802,14 +802,14 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		afterSuggest: function() {
 	        		test.resume(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
-	        			Y.Assert.areEqual(1, $('ul.options').children().length);
+	        			Y.Assert.areEqual(2, $('ul.options').children().length);
 	        			usig.debug($('ul.options').children().children());
 	        		});        			
         		},
         		inputPause: 200,
         		minTextLength: 3
         	});
-        	this.simulateType('inputText', 'club boca');
+        	this.simulateType('inputText', 'malba');
         	this.wait();
         },
 

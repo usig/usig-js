@@ -5,12 +5,14 @@ if (typeof (usig) == "undefined")
 /**
  * @class SuggesterDirecciones
  * Implementa un suggester de direcciones usando el Normalizador de Direcciones.<br/>
- * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, Normalizador de Direcciones 1.0+, GeoCoder<br/>
+ * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, Normalizador de Direcciones 1.4+, GeoCoder<br/>
  * @namespace usig
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a devolver
  * @cfg {Integer} serverTimeout Tiempo maximo de espera (en ms) antes de abortar una busqueda en el servidor
  * @cfg {Integer} maxRetries Maximo numero de reintentos a realizar en caso de timeout 
  * @cfg {Boolean} acceptSN Indica si debe permitir como altura S/N para las calles sin numeracion oficial. Por defecto es <code>True</code>. Ej: de los italianos s/n.
+ * @cfg {Boolean} callesEnMinusculas Indica si se desea que los nombres de las calles normalizados sean en minúsculas (Por defecto: false)
+ * @cfg {Boolean} ignorarTextoSobrante Indica si se desea ignorar el texto sobrante cuando se encuentra una direccion. Por ejemplo: Corrientes 1234 3ro D seria aceptado como Corrientes 1234 (Por defecto: true)
  * @cfg {Function} afterAbort Callback que es llamada cada vez que se aborta un pedido al servidor.
  * @cfg {Function} afterRetry Callback que es llamada cada vez que se reintenta un pedido al servidor.
  * @cfg {Function} afterServerRequest Callback que es llamada cada vez que se hace un pedido al servidor.
@@ -23,11 +25,12 @@ usig.SuggesterDirecciones = (function($) { // Soporte jQuery noConflict
 return usig.Suggester.extend({
 	
 	init: function(options){
-		this._super('Direcciones', options);
+		var opts = $.extend({}, usig.SuggesterDirecciones.defaults, options);
+		this._super('Direcciones', opts);
 		// El normalizador de direcciones y el geocoder pueden ser opciones para 
 		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
 		if (!this.opts.normalizadorDirecciones) {
-			this.opts.normalizadorDirecciones = usig.NormalizadorDirecciones.init({ aceptarCallesSinAlturas: this.opts.acceptSN, onReady: this.opts.onReady });
+			this.opts.normalizadorDirecciones = usig.NormalizadorDirecciones.init({ aceptarCallesSinAlturas: this.opts.acceptSN, callesEnMinusculas: this.opts.callesEnMinusculas, onReady: this.opts.onReady });
 			this.cleanList.push(this.opts.normalizadorDirecciones);
 		}	
 		if (!this.opts.geoCoder) {
@@ -47,10 +50,31 @@ return usig.Suggester.extend({
 		if (this.opts.debug) usig.debug('usig.SuggesterDirecciones.getSuggestions(\'' + text + '\')');
 		var maxSug = maxSuggestions!=undefined?maxSuggestions:this.opts.maxSuggestions;
 		try {
+			callback(this.opts.normalizadorDirecciones.normalizar(text, maxSug));
+		} catch (error) {
+			usig.debug(this.opts);
+			if (this.opts.ignorarTextoSobrante) {
+				try {
+					var opciones = this.opts.normalizadorDirecciones.buscarDireccion(text);
+					if (opciones!==false) {
+						callback([opciones.match]);
+					} else {
+						callback(error);
+					}
+				} catch(error){
+					callback(error);
+				}
+			} else {
+				callback(error);
+			}
+		}
+		/*
+		try {
 		    callback(this.opts.normalizadorDirecciones.normalizar(text, maxSug)); 
 		} catch (error) {
 			callback(error);
 		} 
+		*/
 	},
 
 	/**
@@ -95,7 +119,9 @@ usig.SuggesterDirecciones.defaults = {
 	serverTimeout: 5000,
 	maxRetries: 5,
 	maxSuggestions: 10,
-	acceptSN: true
+	acceptSN: true,
+	callesEnMinusculas: false,
+	ignorarTextoSobrante: true
 };
 
 usig.registerSuggester('Direcciones', usig.SuggesterDirecciones);

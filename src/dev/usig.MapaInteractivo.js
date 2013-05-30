@@ -1236,7 +1236,7 @@ usig.MapaInteractivo.defaults = {
 	// OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
 	// OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
 	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
-	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.3/normalizadorDirecciones.min.js',
+	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js',
 	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/2.3/usig.GeoCoder.min.js',
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
