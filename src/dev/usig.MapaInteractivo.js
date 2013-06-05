@@ -49,6 +49,7 @@ return function(idDiv, options) {
 		$indicatorImage = null,
 		preloadedImages = [],
 		vectorLayers = [],
+		wmsLayers = [],
 		$divIndicator = $('<div class="indicator" style="-moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;"></div>'),
 		map = null, navBar = null, panZoomBar = null, 
 		scalebar = null, overviewMap = null, statusBar = null, 
@@ -1060,6 +1061,14 @@ return function(idDiv, options) {
 	 * 		<code>transitionEffect</code>: String
 	 * 		<div class="sub-desc">Efecto para aplicar al hacer zoom. Por defecto 'resize'.</div>
 	 * </li>
+	 * <li>
+	 * 		<code>maxScale</code>: Integer
+	 * 		<div class="sub-desc">Maxima escala para mostrar la capa.</div>
+	 * </li>
+	 * <li>
+	 * 		<code>minScale</code>: Integer
+	 * 		<div class="sub-desc">Minima escala para mostrar la capa.</div>
+	 * </li>
 	 * </ul>
 	 * </div>
 	 * <br/>
@@ -1077,7 +1086,8 @@ return function(idDiv, options) {
 		if (!opts.layers) {
 			opts.layers = layerName;
 		}
-		var layer = new OpenLayers.Layer.WMS(layerName, opts.layerUrls, {layers: opts.layers, format: opts.format, transparent: opts.transparent}, {transitionEffect: opts.transitionEffect, buffer: opts.buffer, opacity: opts.opacity, singleTile: opts.singleTile, isBaseLayer: opts.isBaseLayer});
+		var isIE8 = $.browser.msie && +$.browser.version === 8;
+		var layer = new OpenLayers.Layer.WMS(layerName, opts.layerUrls, {layers: opts.layers, format: opts.format, transparent: opts.transparent}, {transitionEffect: opts.transitionEffect, buffer: opts.buffer, opacity: isIE8?1:opts.opacity, singleTile: opts.singleTile, isBaseLayer: opts.isBaseLayer, minScale: opts.minScale, maxScale: opts.maxScale});
 		map.addLayer(layer);
 		return layer;
 	}
@@ -1144,19 +1154,24 @@ return function(idDiv, options) {
 	 */
 	this.loadMap = function(mapConfig) {
 		this.removeVectorLayers();
+		this.removeWMSLayers();
 		if (mapConfig.baseLayer) {
 			this.setBaseLayer(mapConfig.baseLayer);
 		}
 		if (mapConfig.layers) {
 			var myself = this;
 			$.each(mapConfig.layers, function(i, layerConfig) {
-				if (layerConfig.options.popup==undefined) {
-					layerConfig.options.popup = mapConfig.popup;
+				if (layerConfig.options.format.toUpperCase() == 'WMS') {
+					wmsLayers.push(myself.addWMSLayer(layerConfig.name, layerConfig.options));
+				} else {
+					if (layerConfig.options.popup==undefined) {
+						layerConfig.options.popup = mapConfig.popup;
+					}
+					if (layerConfig.options.onClick==undefined) {
+						layerConfig.options.onClick = mapConfig.onClick;
+					}
+					vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
 				}
-				if (layerConfig.options.onClick==undefined) {
-					layerConfig.options.onClick = mapConfig.onClick;
-				}
-				vectorLayers.push(myself.addVectorLayer(layerConfig.name, layerConfig.options));
 			});
 		}
 	};
@@ -1169,7 +1184,17 @@ return function(idDiv, options) {
 			this.removeLayer(vectorLayers[i]);
 		}
 		vectorLayers = [];		
-	}
+	};
+	
+	/**
+	 * Elimina todas las capas wms del mapa
+	 */
+	this.removeWMSLayers = function() {
+		for (var i=0,l=wmsLayers.length;i<l;i++) {
+			this.removeLayer(wmsLayers[i]);
+		}
+		wmsLayers = [];		
+	};
 
 	/*
 	 * INICIALIZACION
@@ -1304,7 +1329,9 @@ usig.MapaInteractivo.defaults = {
 		opacity: 1,
 		singleTile: false,
 		transparent: true,
-		isBaseLayer: false
+		isBaseLayer: false,
+		minScale: 100000,
+		maxScale: 0
 	},
 	goToZoomLevel: 7,
     SHADOW_Z_INDEX: 10,
