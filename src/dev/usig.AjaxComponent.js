@@ -26,7 +26,7 @@ return jQuery.Class.create({
 	
 	init: function(name, serverUrl, options){
     	this.name = name;
-    	var dataType = window.location.host == usig.parseUri(serverUrl).authority?'json':'jsonp';
+    	var dataType = options.dataType || (window.location.host == usig.parseUri(serverUrl).authority?'json':'jsonp');
     	this.defaultParams = {
 			type: 'GET',
 			url: serverUrl,

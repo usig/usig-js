@@ -245,6 +245,7 @@ usig.Inventario.defaults = {
 	debug: false,
 	server: 'http://inventario.usig.buenosaires.gob.ar/publico/',
 	serverEpok: 'http://epok.buenosaires.gob.ar/',
+	dataType: 'jsonp',
 	// serverEpok: 'http://10.10.4.55/',
 	// serverEpok: 'http://epok.cobra-dev.usig.gcba.gov.ar/',
 	// server: 'http://inventario.asi.buenosaires.gov.ar/publico/',
