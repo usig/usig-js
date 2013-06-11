@@ -24,7 +24,6 @@ return function(datos, options) {
 		precargado,
 		descripcion="Sin datos",
 		descripcionHtml="Sin datos",
-		descripcionHtmlV3="Sin datos",
 		detalle=[],
 		traveled_distance=0,
 		opts = $.extend({}, usig.Recorrido.defaults, options);
@@ -159,7 +158,7 @@ return function(datos, options) {
 						} else if(item.service_type == '3') { //colectivo
 	
 							if (item.trip_description != "" && !item.any_trip){ //hay ramales y no son todos los que te llevan
-								ramal = ' (Ramales: '+item.trip_description.replace('$',', ')+')'; 
+								ramal = ' (Ramales: '+item.trip_description.replace(/\$/g,", ")+')'; 
 							}else{
 								ramal = (!item.any_trip)? ' ('+opts.texts.hayRamales+')':'';
 							}
