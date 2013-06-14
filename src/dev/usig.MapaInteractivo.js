@@ -74,18 +74,6 @@ return function(idDiv, options) {
 	    
     	//opts.baseLayer = opts.initLocation?'mapabsas_'+opts.initLocation.map:opts.baseLayer;
 	    //this.setBaseLayer(opts.baseLayer);
-	    if (opts.initLocation){
-	    	this.loadMap(opts.initLocation.mapConfig);
-	    }else{
-	    	this.setBaseLayer(opts.baseLayer);
-	    }
-		
-		map.zoomToExtent(opts.OpenLayersOptions.initBounds);
-		if (opts.initLocation) {
-			map.moveTo(new OpenLayers.LonLat(opts.initLocation.lon,opts.initLocation.lat), opts.initLocation.zl);
-		} else {
-			map.zoomToExtent(opts.OpenLayersOptions.initBounds);
-		}
 		
 		//Control de escala
 		scalebar = new OpenLayers.Control.ScaleBar({
@@ -251,6 +239,19 @@ return function(idDiv, options) {
         map.addControl(selectControl);
         highlightControl.activate();
         selectControl.activate();
+
+	    if (opts.initLocation){
+	    	this.loadMap(opts.initLocation.mapConfig);
+	    }else{
+	    	this.setBaseLayer(opts.baseLayer);
+	    }
+		
+		map.zoomToExtent(opts.OpenLayersOptions.initBounds);
+		if (opts.initLocation) {
+			map.moveTo(new OpenLayers.LonLat(opts.initLocation.lon,opts.initLocation.lat), opts.initLocation.zl);
+		} else {
+			map.zoomToExtent(opts.OpenLayersOptions.initBounds);
+		}
         
         if (typeof(opts.onReady) == "function") {
 			opts.onReady(this);
@@ -606,6 +607,7 @@ return function(idDiv, options) {
 			var layer = recorrido.gmlLayer;
 			layer.setVisibility(true);
 			map.addLayer(layer);
+			map.setLayerZIndex(layer, 100); // seteamos un zIndex alto para asegurar que los recorridos queden arriba
 		}
 
 		map.zoomToExtent(recorrido.gmlLayer.getDataExtent());
@@ -870,6 +872,8 @@ return function(idDiv, options) {
 				}
 			} else {
 				escala.symbolizer.pointRadius = Math.max(parseInt(Math.round(opts.selectStyle.pointRadius * escala.symbolizer.size)), opts.minPointRadius);
+				escala.symbolizer.strokeWidth = Math.max(parseInt(Math.round(opts.selectStyle.strokeWidth * escala.symbolizer.size)), opts.minPointRadius);
+				escala.symbolizer.fontSize = Math.max(parseInt(Math.round(parseInt(opts.selectStyle.fontSize) * escala.symbolizer.size)), parseInt(opts.minFontSize))+'px';
 			}
 			if (opts.symbolizer.graphicXOffset && opts.symbolizer.graphicYOffset) {
 				escala.symbolizer.graphicXOffset = parseInt(Math.round(opts.symbolizer.graphicXOffset * escala.symbolizer.size));
@@ -958,13 +962,16 @@ return function(idDiv, options) {
 		if (opts.onClick && !opts.symbolizer.cursor) {
 			opts.symbolizer.cursor = 'pointer';
 		}
+		var isIE8 = $.browser.msie && +$.browser.version === 8;
 		var layer = new OpenLayers.Layer.Vector(layerName, { 
 			styleMap: buildVectorStyleMap(opts),
 			visibility: opts.visible,
-            rendererOptions: {yOrdering: true } 
+			minScale: opts.minScale, maxScale: opts.maxScale,
+            rendererOptions: {yOrdering: false, zIndexing: true }
 		});
 		map.addLayer(layer);
 		this.raiseMarkers(map.layers.length);
+		map.setLayerZIndex(layer, opts.zIndex);
 		if (opts.url && opts.url != "") {
 			this.showIndicator();
 			var dt = opts.format.toUpperCase() == 'GML'?'xml':'json';
@@ -986,7 +993,7 @@ return function(idDiv, options) {
 				}
 			});
 		}
-		if (opts.onClick) {
+		if (opts.onClick && !opts.disableClick) {
 			if (opts.highlightable) {
 				var layers = highlightControl.layers;
 				layers.push(layer);
@@ -1313,6 +1320,7 @@ usig.MapaInteractivo.defaults = {
 		],
 		clases: [],
 		minPointRadius: 3,
+		minFontSize: "10px",
 		symbolizer: {
 			fillColor: '#0000ee',
 			strokeColor: "#666666", 
@@ -1320,6 +1328,7 @@ usig.MapaInteractivo.defaults = {
 			pointRadius: 7,
 			cursor: "pointer"
 		},
+		zIndex: 0,
 		colors: ['#8F58C7','#E34900','#C3E401','#F9B528','#D71440','#007baf','#495a78','#b56c7d','#669966','#ff3300']	
 	},
 	wmsLayer: {
