@@ -607,7 +607,7 @@ return function(idDiv, options) {
 			var layer = recorrido.gmlLayer;
 			layer.setVisibility(true);
 			map.addLayer(layer);
-			map.setLayerZIndex(layer, 100); // seteamos un zIndex alto para asegurar que los recorridos queden arriba
+			map.setLayerZIndex(layer, 80); // seteamos un zIndex alto para asegurar que los recorridos queden arriba
 		}
 
 		map.zoomToExtent(recorrido.gmlLayer.getDataExtent());
