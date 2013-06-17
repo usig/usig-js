@@ -68,9 +68,12 @@ return function(idField, options, viewCtrl) {
 		ic = null,
 		focused = true,
 		cleanList = [],
+		bufferedResults = [],
+		flushTimer = null,
 		pendingRequests = {},
 		numPendingRequests = 0,
-		appendResults = false;
+		appendResults = false,
+		appendBufferedResults = false;
 		
 	field.setAttribute("autocomplete","off");
 		
@@ -289,6 +292,32 @@ return function(idField, options, viewCtrl) {
 		}
 		return retval;
 	}
+
+	function showResults() {
+		if (opts.debug) usig.debug('Flushing buffered results... ('+(appendBufferedResults?'append':'replace')+')');
+		if (field.value != "") {
+			view.show(bufferedResults, appendBufferedResults);
+		}
+		bufferedResults = [];
+		flushTimer = null;
+	}
+
+	function bufferResults(results, appendResults) {
+		if (!appendResults) {
+			if (opts.debug) usig.debug('Resetting buffered results...');
+			bufferedResults = [];
+			appendBufferedResults = false;			
+		}
+		if (opts.debug) usig.debug('Appending to buffered results...');
+		for (var i=0,l=results.length;i<l;i++) {
+			bufferedResults.push(results[i]);
+		}
+		if (!flushTimer) {
+			if (opts.debug) usig.debug('Setting flush timer...')
+			appendBufferedResults = appendResults;
+			flushTimer = showResults.defer(opts.flushTimeout, this);
+		}
+	}
 	
 	/*
 	 * Ejecuta el metodo getSuggestion de sugObj.suggester
@@ -317,7 +346,8 @@ return function(idField, options, viewCtrl) {
 						// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
 						results = results.map(function(x){ x.suggesterName = suggester.name; return x });
 						// if (opts.debug) usig.debug(results);
-						view.show(results, appendResults);
+						// view.show(results, appendResults);
+						bufferResults(results, appendResults);
 						appendResults = true;
 						if (!focused)
 							view.hide();
@@ -538,6 +568,7 @@ usig.AutoCompleter.defaults = {
 	offsetY: -5,
 	zIndex: 10000,
 	autoHideTimeout: 10000,
+	flushTimeout: 50,
 	hideOnBlur: true,
 	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',

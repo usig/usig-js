@@ -31,6 +31,7 @@ return function(idField, options) {
 		id = opts.idDiv || 'usig_acv_'+idField,
 		hideTimeout = null,
 		highlighted = -1,
+		mouseHighlight = false,
 		autoSelected = false,
 		numOptions = 0,
 		$div = null,
@@ -286,7 +287,14 @@ return function(idField, options) {
 			} else {
 				highlight($(ev.target).parents('a').attr('name'));
 			}
+			mouseHighlight = true;
 		}).createDelegate(this, [highlight], 1));
+		$('ul.options li.acv_op', $div).mouseout((function(ev) {
+			if (mouseHighlight) {
+				mouseHighlight = false;
+				clearHighlight();
+			}
+		}).createDelegate(this));
 		$('ul.options li.acv_op', $div).click((function(ev) { 
 			if (opts.debug) usig.debug('AutoCompleterDialog: click');
 			ev.preventDefault();
