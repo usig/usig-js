@@ -27,6 +27,7 @@ if (typeof (usig) == "undefined")
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a buscar. Por defecto: 10
  * @cfg {Integer} serverTimeout Tiempo de maximo de espera antes de reintentar un pedido al servidor. Por defecto: 5000.
+ * @cfg {Integer} flushTimeout Tiempo de buffering de las sugerencias para evitar flickering. Por defecto: 0 (no bufferea).
  * @cfg {Integer} minTextLength Longitud minima que debe tener el texto de entrada antes de buscar sugerencias. Por defecto: 3.
  * @cfg {Integer} maxRetries Maximo numero de reintentos al servidor ante una falla. Por defecto: 10.
  * @cfg {Boolean} showError Mostrar mensajes de error. Por defecto: true
@@ -295,7 +296,7 @@ return function(idField, options, viewCtrl) {
 
 	function showResults() {
 		if (opts.debug) usig.debug('Flushing buffered results... ('+(appendBufferedResults?'append':'replace')+')');
-		if (field.value != "") {
+		if (field.value != "" && bufferedResults.length > 0) {
 			view.show(bufferedResults, appendBufferedResults);
 		}
 		bufferedResults = [];
@@ -346,8 +347,11 @@ return function(idField, options, viewCtrl) {
 						// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
 						results = results.map(function(x){ x.suggesterName = suggester.name; return x });
 						// if (opts.debug) usig.debug(results);
-						// view.show(results, appendResults);
-						bufferResults(results, appendResults);
+						if (opts.flushTimeout > 0) {
+							bufferResults(results, appendResults);
+						} else {
+							view.show(results, appendResults);							
+						}
 						appendResults = true;
 						if (!focused)
 							view.hide();
@@ -568,7 +572,7 @@ usig.AutoCompleter.defaults = {
 	offsetY: -5,
 	zIndex: 10000,
 	autoHideTimeout: 10000,
-	flushTimeout: 50,
+	flushTimeout: 0,
 	hideOnBlur: true,
 	autoSelect: true,
 	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',
