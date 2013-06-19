@@ -150,7 +150,7 @@ return function(datos, options) {
 						}
 	
 						if(item.service_type == '1') { //subte
-							current_action = 'Tomar el <span class="transport">SUBTE ' + item.service.toUpperCase() + '</span> ';
+							current_action = 'Tomar el <span class="transport">SUBTE ' + item.service.toUpperCase()+ ' (en dirección '+item.trip_description + ')</span> ';
 							if(changes > 0) 
 								current_action += ' en la estación <span class="plan-estacion">' + item.stop_name+'</span> ';
 								type_action = 'subte';
@@ -221,9 +221,9 @@ return function(datos, options) {
 								}
 						}
 					} else if(item.type == 'SubWayConnection') {
-						//detalle.push(current_action);
 						detalle.push({text: current_action, type:type_action, features: features});
-						current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estación <span class="plan-estacion">' + item.stop+'</span>';
+						current_action =   'Bajarse en la estación <span class="plan-estacion">'+item.stop_from+'</span> y combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + ' (en dirección '+item.trip_description+')</span> en estación <span class="plan-estacion">' + item.stop+'</span>';
+						//current_action =   'Combinar con el <span class="transport">SUBTE ' +  item.service_to.toUpperCase() + '</span> en estación <span class="plan-estacion">' + item.stop+'</span>';
 						type_action = 'subte';	
 						features = [];
 						features.push(nextFeature); 
