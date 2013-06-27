@@ -114,7 +114,8 @@ return function(idDiv, options) {
 					this.setBaseLayer(mapId);
 				}).createDelegate(this)	    		
 	    	}, opts.mapSwitcher);
-			map.addControl(new OpenLayers.Control.MapSelector(optsMapSwitcher));	    	
+	    	this.mapSwitcher = new OpenLayers.Control.MapSelector(optsMapSwitcher);
+			map.addControl(this.mapSwitcher);	    	
 	    }
 	    
 	    
