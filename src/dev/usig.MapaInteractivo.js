@@ -291,7 +291,7 @@ return function(idDiv, options) {
 		return urls;
 	}
 
-	function idOldIE() {
+	function isOldIE() {
 	    var rv = -1; // Return value assumes failure.
 	    if (navigator.appName == 'Microsoft Internet Explorer') {
 	        var ua = navigator.userAgent;
