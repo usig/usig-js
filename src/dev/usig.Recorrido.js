@@ -169,7 +169,7 @@ return function(datos, options) {
 							}
 							type_action = 'colectivo';
 						} else if(item.service_type == '2') { //tren
-							if (item.trip_description != "" && !item.any_trip){ //hay ramales y no son todos los que te llevan
+							if (item.trip_description != ""){ //hay ramales 
 								ramal = ' ('+item.trip_description.replace('$',' y ')+')'; 
 							}else{
 								ramal = (!item.any_trip)? ' ('+opts.texts.hayRamales+')':'';
