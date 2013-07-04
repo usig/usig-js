@@ -225,9 +225,15 @@
 		
 		miMapa = new usig.MapaInteractivo('mapa', {
 			rootUrl: '../',
-			baseLayer: 'mapabsas_red_de_ciclovias',
-			includeToolbar: false
-		});		
+			// baseLayer: 'mapabsas_informa',
+			includeToolbar: false,
+			onReady: function() {
+				var layerWMS = miMapa.addWMSLayer('ciclovias');
+			}
+			
+		});	
+		
+		miMapa.add
 	});	
 	</script>
   </head>

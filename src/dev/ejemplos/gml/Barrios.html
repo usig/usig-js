@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Barrios</title>
+   
+    <link rel="stylesheet" type="text/css" href="../css/ejemplos.css" />
+    
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+		
+	<!-- DEV --><script src="../../usig.core.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.util.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../../usig.MapaInteractivo.js" type="text/javascript"></script>
+    	
+	<!-- RELEASE <script src="../../usig.MapaInteractivo.min.js" type="text/javascript"></script> -->    
+    
+	<script type="text/javascript">
+
+		
+	$.noConflict();
+	jQuery(document).ready(function($) {
+		
+		$('#mapa').css('width', $('body').width()-40).css('height', 500);
+		
+		var clickHandler = function (e, popup) {
+			if (e && e.feature) {
+				mapa.api.zoomToExtent(e.feature.geometry.getBounds());
+				/*
+				usig.debug(e.feature.geometry.getBounds());
+				popup.contentDiv.innerHTML = "<h3 style=\"margin: 5px 0 10px 0;\">" + e.feature.attributes['Nombre'] +"</h3>";
+    			popup.updateSize();
+				popup.show();
+				*/
+			}
+		};
+		
+		var mapa = new usig.MapaInteractivo('mapa', {
+			includeToolbar: false,
+			includePanZoomBar: true,
+			onReady: function() {
+				var layer = mapa.addVectorLayer('Barrios', {
+   	    			format: 'geojson',
+   	    			url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=barrios&formato=geojson",
+   	    			disableClick: false,
+   	    			minScale: 150000,
+   	    			symbolizer: {
+   	    				fill: false,
+   	    				fillColor: "ee9900",
+   	    				fillOpacity: 0.1,
+   	    				strokeColor: "#999",
+   	    				strokeWidth: 2,
+   	    				strokeDashstyle: 'dashdot',
+   	    			},
+   	    			selectStyle: {
+   	    				fillOpacity: 0.5,
+   	    				fontColor: "#fff",
+   	    				fontSize: "12px",
+   	    				strokeWidth: 2
+   	    			},
+					escalas: [
+						{
+							minScaleDenominator: 100000,
+							maxScaleDenominator: 150000,
+							symbolizer: {
+								fill: true
+							}
+						},
+						{
+							minScaleDenominator: 60000,
+							maxScaleDenominator: 100000,
+							symbolizer: {
+								fill: true,
+		   	    				label: "${Nombre}",
+		   	    				fontWeight: "bold",
+		   	    				fontSize: "24px",
+		   	    				fontColor: "#555"
+							}
+						},
+						{
+							maxScaleDenominator: 60000,
+							symbolizer: {
+								fill: false,
+		   	    				label: "${Nombre}",
+		   	    				fontSize: "20px",
+		   	    				fontColor: "#555"
+							}
+						}
+					],
+   	    			minPointRadius: 2,
+   	    			popup: false,
+   	    			onClick: clickHandler
+   	    		});
+			}
+		});
+		
+					
+	});	
+
+</script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div id="logo"><h1>Mapa de Barrios</h1>
+        	<p>Este ejemplo muestra como agregar una capa vectorial de polígonos a un mapa.</p>
+        </div>
+      </div>
+      
+      <div id="mapa"></div>
+      <div id="footer">
+        <p>&copy; 2013 USIG - Unidad de Sistemas de Información Geográfica</p>
+      </div>
+    </div>
+  </body>
+</html>

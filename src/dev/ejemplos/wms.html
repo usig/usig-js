@@ -14,20 +14,24 @@
 	<!-- DEV --><script src="../usig.MapaInteractivo.js" type="text/javascript"></script>
     	
 	<!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/dev/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
+	<style>
+		body {
+			width: 700px;
+		}		
+	</style>
     
 	<script type="text/javascript">
-
 		
 	$.noConflict();
 	jQuery(document).ready(function($) {
 		
-		$('#mapa').css('width', $('body').width()-40).css('height', 500);
+		$('#mapa').css('width', $('body').width()-40).css('height', 600);
 		
 		var mapa = new usig.MapaInteractivo('mapa', {
 			includeToolbar: true,
 			includePanZoomBar: true,
 			onReady: function() {
-				var layerWMS = mapa.addWMSLayer('mapabsas_comunas');
+				var layerWMS = mapa.addWMSLayer('bancos');
 			}
 		});
 		

@@ -5,7 +5,7 @@ HOST_DIR=/d/usig/www/servicios/Usig-JS
 HOSTS=10.20.1.43 10.20.1.46 10.20.1.91 10.20.1.96 10.20.2.79 10.20.2.80
 APPDIR=/usr/local/usig/servicios/Usig-JS
 
-VERSION=dev
+VERSION=3.0
 USER=usig
 SRC=src/dev
 REL=src/release
@@ -168,8 +168,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaReferencia.js -o $(REL)/usig.MapaReferencia.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaEstatico.js -o $(REL)/usig.MapaEstatico.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.FotosParcela.js -o $(REL)/usig.FotosParcela.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.tabla.js -o $(REL)/usig.tabla.min.js
-	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.tabla.js -o $(REL)/usig.InputController.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.InputController.js -o $(REL)/usig.InputController.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Mock.js -o $(REL)/usig.Mock.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Calle.js -o $(REL)/usig.Calle.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Punto.js -o $(REL)/usig.Punto.min.js
@@ -199,6 +198,7 @@ prepare: docs debug
 	rsync -avz --exclude '.svn' --delete $(SRC)/ejemplos $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/css $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
+	rsync -avz --exclude '.svn' --delete $(SRC)/lib $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/
 	rm -f $(REL)/ejemplos.tar.gz
 	for f in $(SRC)/demos/*.html; do \
