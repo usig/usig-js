@@ -17,8 +17,6 @@ usig.defaults.Recorridos = {
 	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 4, 
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
-	//server: 'http://10.75.0.53:8085/',
-	// server: 'http://10.20.1.41/2.0/',
 	serverTimeout: 30000,
 	maxRetries: 2,
 	consultaRecorridos: {
@@ -31,7 +29,8 @@ usig.defaults.Recorridos = {
 		opciones_medios_tren: true,
 		opciones_prioridad: 'avenidas', 
 		opciones_incluir_autopistas: true,
-		cortes: true
+		opciones_cortes: true,
+		max_results:10
 	},
 	colorTemplates: [
 		new usig.TripTemplate(1, '#0074FF'),
@@ -39,11 +38,21 @@ usig.defaults.Recorridos = {
 		new usig.TripTemplate(3, '#009866'),
 		new usig.TripTemplate(4, '#FF9E29'),
 		new usig.TripTemplate(5, '#FF6633'),
-		new usig.TripTemplate(6, '#4B4C9F'),
+		new usig.TripTemplate(6, '#5B3BA1'),
 		new usig.TripTemplate(7, '#98C93C'),
 		new usig.TripTemplate(8, '#EE3A39'),
 		new usig.TripTemplate(9, '#4ED5F9'),
-		new usig.TripTemplate(10,'#FFCC05')
+		new usig.TripTemplate(10,'#FFCC05'),
+		new usig.TripTemplate(11, '#84004F'),
+		new usig.TripTemplate(12, '#00A5EB'),
+		new usig.TripTemplate(13, '#016406'),
+		new usig.TripTemplate(14, '#AB62D2'),
+		new usig.TripTemplate(15, '#C49F25'),
+		new usig.TripTemplate(16, '#9F2510'),
+		new usig.TripTemplate(17, '#0003CF'),
+		new usig.TripTemplate(18, '#CBA4FA'),
+		new usig.TripTemplate(19, '#00FFC9'),
+		new usig.TripTemplate(20, '#DC6767')
 	]
 };	
 	
