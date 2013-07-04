@@ -290,6 +290,18 @@ return function(idDiv, options) {
 
 		return urls;
 	}
+
+	function isOldIE() {
+	    var rv = -1; // Return value assumes failure.
+	    if (navigator.appName == 'Microsoft Internet Explorer') {
+	        var ua = navigator.userAgent;
+	        var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+	        if (re.exec(ua) != null)
+	            rv = parseFloat(RegExp.$1);
+	    }
+	    return rv <= 8.0;
+	}
+
 	
 	/**
 	 * Setea las opciones del componente
@@ -971,7 +983,7 @@ return function(idDiv, options) {
 	 * </ul>
 	 * </div>
 	 * <br/>
-	 * Puede encontrar un ejemplo completo de uso de este metodo <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/ejemplos/gml/capas-gml.html">aqui</a>.<br/>
+	 * Puede encontrar un ejemplo completo de uso de este metodo <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.3/ejemplos/gml/capas-gml.html">aqui</a>.<br/>
 	 * 
 	 * @param {String} layerName Nombre del nuevo layer (no debe coincidir con otra capa preexistente)
 	 * @param {Object} options (optional) Objeto conteniendo overrides para las opciones disponibles
@@ -982,7 +994,7 @@ return function(idDiv, options) {
 		if (opts.onClick && !opts.symbolizer.cursor) {
 			opts.symbolizer.cursor = 'pointer';
 		}
-		var isIE8 = $.browser.msie && +$.browser.version === 8;
+		// var isIE8 = $.browser.msie && +$.browser.version === 8;
 		var layer = new OpenLayers.Layer.Vector(layerName, { 
 			styleMap: buildVectorStyleMap(opts),
 			visibility: opts.visible,
@@ -1099,7 +1111,7 @@ return function(idDiv, options) {
 	 * </ul>
 	 * </div>
 	 * <br/>
-	 * Puede encontrar un ejemplo completo de uso de este metodo <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/ejemplos/gml/capas-gml.html">aqui</a>.<br/>
+	 * Puede encontrar un ejemplo completo de uso de este metodo <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/2.4/ejemplos/gml/capas-gml.html">aqui</a>.<br/>
 	 * 
 	 * @param {String} layerName Nombre del nuevo layer (no debe coincidir con otra capa preexistente)
 	 * @param {Object} options (optional) Objeto conteniendo overrides para las opciones disponibles
@@ -1113,8 +1125,8 @@ return function(idDiv, options) {
 		if (!opts.layers) {
 			opts.layers = layerName;
 		}
-		var isIE8 = $.browser.msie && +$.browser.version === 8;
-		var layer = new OpenLayers.Layer.WMS(layerName, opts.layerUrls, {layers: opts.layers, format: opts.format, transparent: opts.transparent}, {transitionEffect: opts.transitionEffect, buffer: opts.buffer, opacity: isIE8?1:opts.opacity, singleTile: opts.singleTile, isBaseLayer: opts.isBaseLayer, minScale: opts.minScale, maxScale: opts.maxScale});
+		// var isIE8 = $.browser.msie && +$.browser.version === 8;
+		var layer = new OpenLayers.Layer.WMS(layerName, opts.layerUrls, {layers: opts.layers, format: opts.format, transparent: opts.transparent}, {transitionEffect: opts.transitionEffect, buffer: opts.buffer, opacity: isOldIE()?1:opts.opacity, singleTile: opts.singleTile, isBaseLayer: opts.isBaseLayer, minScale: opts.minScale, maxScale: opts.maxScale});
 		map.addLayer(layer);
 		return layer;
 	}
