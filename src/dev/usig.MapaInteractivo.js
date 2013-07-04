@@ -534,67 +534,69 @@ return function(idDiv, options) {
 	
 	function generarGMLTripPlan(recorrido) {
 		var trip_plan = recorrido.getPlan();
-		var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl, tipoRecorrido: recorrido.getTipo()});
- 		
-		for(i=0;i<trip_plan.length;i++) {
-		
-			var item = trip_plan[i];
+		if (trip_plan instanceof Array) {
+			var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl, tipoRecorrido: recorrido.getTipo()});
+	 		
+			for(i=0;i<trip_plan.length;i++) {
 			
-			if(item.type != undefined){
+				var item = trip_plan[i];
 				
-				if(item.type == 'StartWalking' || item.type == 'FinishWalking'){
-					if(i==0){
-						gml.addMarker(item.gml.replace('walk','beginwalk'));
-					}else{
-						gml.addMarker(item.gml);
-					}
-				} else if(item.type == 'Board') {
-				
-					if(i==0){
-						gml.addMarker(item.gml.replace(/(bus|subway|train)/g,'begin$1'));
-					}else{
-						if (item.service_type == '1'){
-							switch (item.service){
-								case 'Línea A': item.gml = item.gml.replace('subway','subwayA');break;
-								case 'Línea B': item.gml = item.gml.replace('subway','subwayB');break;
-								case 'Línea C': item.gml = item.gml.replace('subway','subwayC');break;
-								case 'Línea D': item.gml = item.gml.replace('subway','subwayD');break;
-								case 'Línea E': item.gml = item.gml.replace('subway','subwayE');break;
-								case 'Línea H': item.gml = item.gml.replace('subway','subwayH');break;
-							}
-						}
-						gml.addMarker(item.gml);
-					}
-				} else if (item.type == 'Bus' || item.type == 'SubWay' || item.type == 'Street') {
-					gml.addEdges([item.gml]);
-				} else if(item.type == 'SubWayConnection') {
+				if(item.type != undefined){
 					
-					switch (item.service_to){
-							case 'Línea A': item.gml[1] = item.gml[1].replace('connection','subwayA');break;
-							case 'Línea B': item.gml[1] = item.gml[1].replace('connection','subwayB');break;
-							case 'Línea C': item.gml[1] = item.gml[1].replace('connection','subwayC');break;
-							case 'Línea D': item.gml[1] = item.gml[1].replace('connection','subwayD');break;
-							case 'Línea E': item.gml[1] = item.gml[1].replace('connection','subwayE');break;
-							case 'Línea H': item.gml[1] = item.gml[1].replace('connection','subwayH');break;
+					if(item.type == 'StartWalking' || item.type == 'FinishWalking'){
+						if(i==0){
+							gml.addMarker(item.gml.replace('walk','beginwalk'));
+						}else{
+							gml.addMarker(item.gml);
 						}
-					gml.addMarker(item.gml[1]); // en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
-					gml.addEdges(item.gml);
-										
-				} else if(item.type == 'StartDriving' || item.type == 'FinishDriving') { 
-					gml.addMarker(item.gml);
-				} else if(item.type == 'StartBiking' || item.type == 'FinishBiking') { 
-					if(i==0){
-						gml.addMarker(item.gml.replace('bike','beginbike'));
-					}else{
+					} else if(item.type == 'Board') {
+					
+						if(i==0){
+							gml.addMarker(item.gml.replace(/(bus|subway|train)/g,'begin$1'));
+						}else{
+							if (item.service_type == '1'){
+								switch (item.service){
+									case 'Línea A': item.gml = item.gml.replace('subway','subwayA');break;
+									case 'Línea B': item.gml = item.gml.replace('subway','subwayB');break;
+									case 'Línea C': item.gml = item.gml.replace('subway','subwayC');break;
+									case 'Línea D': item.gml = item.gml.replace('subway','subwayD');break;
+									case 'Línea E': item.gml = item.gml.replace('subway','subwayE');break;
+									case 'Línea H': item.gml = item.gml.replace('subway','subwayH');break;
+								}
+							}
+							gml.addMarker(item.gml);
+						}
+					} else if (item.type == 'Bus' || item.type == 'SubWay' || item.type == 'Street') {
+						gml.addEdges([item.gml]);
+					} else if(item.type == 'SubWayConnection') {
+						
+						switch (item.service_to){
+								case 'Línea A': item.gml[1] = item.gml[1].replace('connection','subwayA');break;
+								case 'Línea B': item.gml[1] = item.gml[1].replace('connection','subwayB');break;
+								case 'Línea C': item.gml[1] = item.gml[1].replace('connection','subwayC');break;
+								case 'Línea D': item.gml[1] = item.gml[1].replace('connection','subwayD');break;
+								case 'Línea E': item.gml[1] = item.gml[1].replace('connection','subwayE');break;
+								case 'Línea H': item.gml[1] = item.gml[1].replace('connection','subwayH');break;
+							}
+						gml.addMarker(item.gml[1]); // en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
+						gml.addEdges(item.gml);
+											
+					} else if(item.type == 'StartDriving' || item.type == 'FinishDriving') { 
 						gml.addMarker(item.gml);
+					} else if(item.type == 'StartBiking' || item.type == 'FinishBiking') { 
+						if(i==0){
+							gml.addMarker(item.gml.replace('bike','beginbike'));
+						}else{
+							gml.addMarker(item.gml);
+						}
 					}
+					
 				}
-				
 			}
-		}
-		recorrido.gmlLayer = gml;
-		
-		return gml;		
+			recorrido.gmlLayer = gml;
+			return gml;		
+		}		
+		return false;
 	}
 	
 	function _mostrarRecorrido(recorrido) {
@@ -798,6 +800,23 @@ return function(idDiv, options) {
 	this.getMarker = function(id) {
 		return markersMap[''+id];
 	}
+
+	/**
+	 * Permite obtener una referencia a la capa de marcadores
+	 * @return {OpenLayers.Layer.Vector} Capa de marcadores
+	 */
+	this.getMarkersLayer = function() {
+		return myMarkers;
+	}
+
+	/**
+	 * Permite hacer zoom ajustado a los elementos de la capa de marcadores. (Requiere que haya más de 1 marcador agregado)
+	 */
+	this.zoomToMarkers = function() {
+		if (myMarkers.features.length > 1) {
+			map.zoomToExtent(myMarkers.getDataExtent());		
+		}
+	}
 	
 	/**
 	 * Muestra un recorrido en el mapa
@@ -805,10 +824,10 @@ return function(idDiv, options) {
 	 */
 	this.mostrarRecorrido = function(recorrido) {
 		if (!recorrido.gmlLayer) {
-			recorrido.getPlan(function() {
-				
-				generarGMLTripPlan(recorrido);
-				_mostrarRecorrido(recorrido);
+			recorrido.getDetalle(function() {				
+				if (generarGMLTripPlan(recorrido)) {
+					_mostrarRecorrido(recorrido);
+				}
 			});
 		} else {		
 			_mostrarRecorrido(recorrido);
