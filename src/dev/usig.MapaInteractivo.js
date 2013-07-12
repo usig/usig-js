@@ -964,6 +964,10 @@ return function(idDiv, options) {
 	 * 		<div class="sub-desc">Funcion a llamar ante el evento click</div>
 	 * </li>
 	 * <li>
+	 * 		<code>onLoad</code>: Function
+	 * 		<div class="sub-desc">Funcion a llamar ante una vez que se han cargado los datos de la capa</div>
+	 * </li>
+	 * <li>
 	 * 		<code>symbolizer</code>: Object
 	 * 		<div class="sub-desc">Un objeto conteniendo seteos de simbologia definidos de acuerdo a <a href="http://dev.openlayers.org/releases/OpenLayers-2.8/doc/apidocs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style">OpenLayers.Feature.Vector.style</a></div>
 	 * </li>
@@ -1017,6 +1021,9 @@ return function(idDiv, options) {
 					} else if (opts.format.toUpperCase() == 'GEOJSON') {
 						var geojson = new OpenLayers.Format.GeoJSON();
 						layer.addFeatures(geojson.read(data));
+					}
+					if (typeof(opts.onLoad) == "function") {
+						opts.onLoad();
 					}
 					this.hideIndicator();
 				}).createDelegate(this),
