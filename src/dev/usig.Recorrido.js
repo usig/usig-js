@@ -458,7 +458,7 @@ return function(datos, options) {
 		time = '';
 		//Mas de 60 mins
 		if(tiempo > 60) {
-			hs = Math.round(tiempo / 60);
+			hs = Math.floor(tiempo / 60);
 			mins = tiempo % 60;
 			time += hs + (hs >1 ? 'hs ' : 'h ') + mins + ' \''; 
 		} else {
@@ -475,7 +475,7 @@ return function(datos, options) {
 		distance = '';
 		//1 Km
 		if(traveled_distance > 999) {
-			distance += traveled_distance/1000 + ' Km'; 
+			distance += ((traveled_distance/1000).toFixed(2) + ' Km').replace('.',','); 
 		} else {
 			distance += traveled_distance + ' m' ;
 		}
