@@ -152,6 +152,19 @@ table.suggester_options {
 	margin-left: 50px;
 	display: none;
 }
+
+.transport {
+	font-weight: bold;
+}
+.plan-estacion {
+	font-weight: bold;
+}
+.plan-calle {
+	font-weight: bold;
+}
+
+
+
 #mapa {
 	margin-bottom: 20px;
 }
