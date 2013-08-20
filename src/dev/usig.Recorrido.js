@@ -106,26 +106,7 @@ return function(datos, options) {
 	 		var type_action = null;	
 	 		var features = new Array();
 	 		var detail = new Array();
-	 		
-			var currentAction = {
-					'walking': {'startDir':{texto: 'Caminar desde <span class="plan-calle">$calle $desde</span>'},
-								'startCruce':{texto: 'Caminar desde <span class="plan-calle">$esquina</span>'},
-								'finish':{texto: ' hasta destino.'}},
-		            'board':{'walking':{texto: ' hasta <span class="plan-calle">$esquina</span>'},
-		            			'walkingestacion':{texto: ' hasta la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$esquina</span>'},
-		            			'subte':{texto: 'Tomar el <span class="transport">SUBTE $subte (en dirección $sentido)</span>'},
-		            			'estacion':{texto: ' en la estación <span class="plan-estacion">$estacion</span>'},
-		            			'esquina': {texto: ' en <span class="plan-calle">$esquina</span>'},
-		            			'ramales': {texto: '(Ramales: $ramal)'},
-		            			'colectivo':{texto: 'Tomar el <span class="transport">COLECTIVO $colectivo $ramal</span>'},
-		            			'tren':{texto: 'Tomar el <span class="transport">TREN $tren $ramal</span>'}},
-		            'alight':{'subtetren':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span>'},
-			 		        	'cole':{texto: ' y bajar en <span class="plan-calle">$esquina</span>'},
-			 		        	'metrobus':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$esquina</span>'}},
-		            'subwayconnection':{texto: 'Bajarse en la estación <span class="plan-estacion">$estacionorigen</span> y combinar con el <span class="transport">SUBTE $subte (en dirección $sentido)</span> en estación <span class="plan-estacion">$estaciondestino</span>'},
-		 	};
-
-
+	 		var currentAction = usig.Recorrido.defaults.texts.planTransporte;
 			
 			for(i=0;i<plan.length;i++) {
 				var item = plan[i];
@@ -297,14 +278,9 @@ return function(datos, options) {
 	 		actions = new Array();
 	 		index = 0;
 	 		var text;
-	 		var textHasta = ' hasta el ';
-	 		var indicaciones = [{texto:'Seguir por $calle$desde$hasta'},
-	 		                    {texto:'Doblar a la izquierda en $calle$desde$hasta'},
-	 		                    {texto:'Doblar a la derecha en $calle$desde$hasta'},
-	 		                    {texto:'Ir desde $calle$desde$hasta'}];
-	 		
-			for(i=0;i<plan.length;i++) {
-			
+	 		var indicaciones = usig.Recorrido.defaults.texts.planAuto;
+
+	 		for(i=0;i<plan.length;i++) {
 				var item = plan[i];
 				if(item.type != undefined){
 
@@ -312,30 +288,29 @@ return function(datos, options) {
 					if(item.type == 'Street' ) { 
 						index++;
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){
-							text = indicaciones[3].texto;
+							text = indicaciones['irDesde'].texto;
 							turn_indication = 'seguir';
 						}else if (item.indicacion_giro=='0'){
-							text = indicaciones[0].texto;
+							text = indicaciones['seguir'].texto;
 							turn_indication = 'seguir';
 						}else if(item.indicacion_giro=='1'){
-							text = indicaciones[1].texto;
+							text = indicaciones['doblarIzq'].texto;
 							turn_indication = 'izquierda';
 						}else if(item.indicacion_giro=='2'){
-							text = indicaciones[2].texto;
+							text = indicaciones['doblarDer'].texto;
 							turn_indication = 'derecha';
 						}
 							
-						text=text.replace('$calle', '<span class="plan-calle">'+item.name+'</span>');
+						//text=text.replace('$calle', item.name);
 						if(item.from){
-							text=text.replace('$desde',' <span class="plan-calle">'+item.from+'</span>');
+							text=text.replace('$desde',item.from);
 						} else {
 							text=text.replace('$desde','');							
 						}
 						if(item.to){
-							text=text.replace('$hasta', textHasta + '<span class="plan-calle">' + item.to+'</span>');
-						} else {
-							text=text.replace('$hasta','');														
-						}
+							text+= indicaciones['hasta'].texto.replace('$hasta', item.to);
+						} 
+						text=text.replace(/\$calle/g, item.name);
 						
 						actions.push({text:text, turn_indication:turn_indication, index:index, distance:item.distance,type:'car', id:item.id});
 					}
@@ -348,42 +323,9 @@ return function(datos, options) {
 	 		actions = new Array();
 	 		var index = 0;
 	 		var text;
-	 		/*var textHasta = ' hasta el ';
-	 		var textCiclovia = ' ciclovia ';
-	 		var textCarril = ' carril preferencial ';
-	 		
-	 		var inicio = {'walking':{texto: 'Caminar $metros desde $calle$desde$hasta'},
-	                  'biking':{texto: 'Pedalear $metros desde $via$calle$desde$hasta'}
-	 		};
-	 		
-	 		var indicaciones_giro = {'walking':[{texto: 'Caminar $metros por $calle$desde$hasta', turn_indication: 'seguir'},
-		                                    {texto: 'Doblar a la izquierda en $calle$desde y caminar $metros$hasta', turn_indication: 'izquierda'},
-		                                    {texto: 'Doblar a la derecha en $calle$desde y caminar $metros$hasta', turn_indication: 'derecha'}],
-		                         'biking':[{texto: 'Seguir $metros por $via$calle$desde$hasta', turn_indication: 'seguir'},
-			 		                       {texto: 'Doblar a la izquierda en $via$calle$desde y seguir $metros$hasta', turn_indication: 'izquierda'},
-			 		                       {texto: 'Doblar a la derecha en $via$calle$desde y seguir $metros$hasta', turn_indication: 'derecha'}]
-	 		};
-			*/
-	 		var inicio = {'walking':{texto: 'Walk $metros from $desde $calle$hasta'},
-	                  'biking':{texto: 'Go $metros through $via from $desde $calle$hasta'}
-	 		};
-	 		
-	 		var indicaciones_giro = {'walking':[{texto: 'Walk $metros from $desde $calle$hasta', turn_indication: 'seguir'},
-		                                    {texto: 'Turn left onto $desde $calle and walk $metros$hasta', turn_indication: 'izquierda'},
-		                                    {texto: 'Turn right onto $desde $calle and walk $metros$hasta', turn_indication: 'derecha'}],
-		                         'biking':[{texto: 'Continue $metros through$via $desde $calle$hasta', turn_indication: 'seguir'},
-			 		                       {texto: 'Turn left onto$via $desde $calle and continue $metros$hasta', turn_indication: 'izquierda'},
-			 		                       {texto: 'Turn right onto$via $desde $calle and continue $metros$hasta', turn_indication: 'derecha'}]
-			};
-		
-	 		var textHasta = ' up to ';
-	 		var textCiclovia = ' bike lane ';
-	 		var textCarril = ' bike lane ';
+	 		var indicaciones_giro = usig.Recorrido.defaults.texts.planBici;
 
-	 		
-	 		
-			for(i=0;i<plan.length;i++) {
-			
+	 		for(i=0;i<plan.length;i++) {
 				var item = plan[i];
 				if(item.type != undefined){
 					if(item.type == 'StartWalking'){
@@ -393,11 +335,9 @@ return function(datos, options) {
 					}else if(item.type == 'Street') {
 						if (item.indicacion_giro!='0' && item.indicacion_giro!='1' && item.indicacion_giro!='2'){ 
 							if (walking){
-								//text = 'Caminar $metros desde $calle$desde$hasta';
-								text = inicio['walking'].texto;
+								text = indicaciones_giro['inicio']['walking'].texto;
 							}else{
-								//text = 'Pedalear $metros desde $via$calle$desde$hasta';
-								text = inicio['biking'].texto;
+								text = indicaciones_giro['inicio']['biking'].texto;
 							}
 							turn_indication = 'seguir';
 						}else {
@@ -405,11 +345,9 @@ return function(datos, options) {
 							turn_indication = indicaciones_giro[walking?'walking':'biking'][item.indicacion_giro].turn_indication;							
 						}
 						if (item.tipo=='Ciclovía'){
-							//text=text.replace('$via','ciclovia ');
-							text=text.replace('$via',textCiclovia);
+							text=text.replace('$via',indicaciones_giro['ciclovia'].texto);
 						}else if (item.tipo == 'Carril preferencial'){
-							//text=text.replace('$via','carril preferencial ');								
-							text=text.replace('$via',textCarril);
+							text=text.replace('$via',indicaciones_giro['carril'].texto);
 						}else{
 							text=text.replace('$via','');
 						}
@@ -418,17 +356,16 @@ return function(datos, options) {
 						} else {
 							text=text.replace('$metros', '');
 						}
-						text=text.replace('$calle', '<span class="plan-calle">'+item.name+'</span>');
+						//text=text.replace('$calle', item.name);
 						if(item.from){
-							text=text.replace('$desde',' <span class="plan-calle">'+item.from+'</span>');
+							text=text.replace('$desde',item.from);
 						} else {
 							text=text.replace('$desde','');							
 						}
 						if(item.to){
-							text=text.replace('$hasta', textHasta + '<span class="plan-calle">' + item.to+'</span>');
-						} else {
-							text=text.replace('$hasta','');														
+							text+= indicaciones_giro['hasta'].texto.replace('$hasta', item.to);
 						}
+						text=text.replace(/\$calle/g, item.name);
 						modo=walking?'walk':'bike';
 						
 						actions.push({text:text, turn_indication:turn_indication, modo: modo, index:index, distance:item.distance,type:'bike', id:item.id});
@@ -527,7 +464,7 @@ return function(datos, options) {
 		time = '';
 		//Mas de 60 mins
 		if(tiempo > 60) {
-			hs = Math.round(tiempo / 60);
+			hs = Math.floor(tiempo / 60);
 			mins = tiempo % 60;
 			time += hs + (hs >1 ? 'hs ' : 'h ') + mins + ' \''; 
 		} else {
@@ -544,7 +481,7 @@ return function(datos, options) {
 		distance = '';
 		//1 Km
 		if(traveled_distance > 999) {
-			distance += traveled_distance/1000 + ' Km'; 
+			distance += ((traveled_distance/1000).toFixed(2) + ' Km').replace('.',','); 
 		} else {
 			distance += traveled_distance + ' m' ;
 		}
@@ -686,9 +623,45 @@ usig.Recorrido.defaults = {
 		descWalk: 'Recorrido a pie',
 		descCar: 'Recorrido en auto',
 		descBike: 'Recorrido en bici',
-		hayRamales:'No todos los ramales conducen a destino'		
+		hayRamales:'No todos los ramales conducen a destino',
+		planTransporte: {
+			'walking': {'startDir':{texto: 'Caminar desde <span class="plan-calle">$calle $desde</span>'},
+						'startCruce':{texto: 'Caminar desde <span class="plan-calle">$esquina</span>'},
+						'finish':{texto: ' hasta destino.'}},
+            'board':{'walking':{texto: ' hasta <span class="plan-calle">$esquina</span>'},
+            			'walkingestacion':{texto: ' hasta la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$esquina</span>'},
+            			'subte':{texto: 'Tomar el <span class="transport">SUBTE LÍNEA $subte (en dirección a $sentido)</span>'},
+            			'estacion':{texto: ' en la estación <span class="plan-estacion">$estacion</span>'},
+            			'esquina': {texto: ' en <span class="plan-calle">$esquina</span>'},
+            			'ramales': {texto: '(Ramales: $ramal)'},
+            			'colectivo':{texto: 'Tomar el <span class="transport">COLECTIVO $colectivo $ramal</span>'},
+            			'tren':{texto: 'Tomar el <span class="transport">TREN $tren $ramal</span>'}},
+            'alight':{'subtetren':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span>'},
+	 		        	'cole':{texto: ' y bajar en <span class="plan-calle">$esquina</span>'},
+	 		        	'metrobus':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$esquina</span>'}},
+            'subwayconnection':{texto: 'Bajarse en la estación <span class="plan-estacion">$estacionorigen</span> y combinar con el <span class="transport">SUBTE LÍNEA $subte (en dirección a $sentido)</span> en estación <span class="plan-estacion">$estaciondestino</span>'},
+		},
+		planAuto: {
+	 		 	'seguir': {texto:'Seguir por <span class="plan-calle">$calle</span>'},
+				'doblarIzq': {texto:'Doblar a la izquierda en <span class="plan-calle">$calle</span>'},
+				'doblarDer': {texto:'Doblar a la derecha en <span class="plan-calle">$calle</span>'},
+				'irDesde': {texto:'Ir desde <span class="plan-calle">$calle</span>'},
+				'hasta': {texto:' hasta el <span class="plan-calle">$hasta</span>'}
+		},
+		planBici: {
+				'inicio': {'walking':{texto: 'Caminar $metros desde <span class="plan-calle">$calle</span>'},
+							'biking':{texto: 'Pedalear $metros desde $via<span class="plan-calle">$calle</span>'}},
+				'walking':[{texto: 'Caminar $metros por <span class="plan-calle">$calle</span>', turn_indication: 'seguir'},
+                            {texto: 'Doblar a la izquierda en <span class="plan-calle">$calle</span> y caminar $metros', turn_indication: 'izquierda'},
+                            {texto: 'Doblar a la derecha en <span class="plan-calle">$calle</span> y caminar $metros', turn_indication: 'derecha'}],
+                'biking':[{texto: 'Seguir $metros por $via<span class="plan-calle">$calle</span>', turn_indication: 'seguir'},
+		                    {texto: 'Doblar a la izquierda en $via<span class="plan-calle">$calle</span> y seguir $metros', turn_indication: 'izquierda'},
+		                    {texto: 'Doblar a la derecha en $via<span class="plan-calle">$calle</span> y seguir $metros', turn_indication: 'derecha'}],
+		        'hasta':{texto: ' hasta el <span class="plan-calle">$hasta</span>'},
+		        'ciclovia':{texto:' ciclovia '},
+		        'carril':{texto:' carril preferencial '}
+		}
 	}
 };
 
 }
-
