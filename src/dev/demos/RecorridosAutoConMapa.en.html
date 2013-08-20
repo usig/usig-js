@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>USIG - Recorridos en Auto</title>
+    <link rel="stylesheet" type="text/css" href="css/demos.css" />
+    <style>
+        body {
+    		width: 95%;
+    	}
+    	.tiempo {
+			width: 50px; 
+			text-align: right;
+			color: #007baf;
+			font-weight: bold;
+    	}
+    	.opciones {
+			width: 300px; 
+    	}
+    	#recorridos {
+    		width: 45%;
+    		margin-top: 10px;
+    		margin-right: 40px;
+    		float: left;
+    	}
+    	
+    	#mapa {
+    		float: left;
+    	}
+    	
+    </style>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<!-- DEV --><script src="http://servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.core.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.util.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../json.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../jquery.class.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.AjaxComponent.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.Punto.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.Calle.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.Direccion.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.GeoCoder.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.inventario.Clase.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.inventario.Objeto.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.inventario.Ubicacion.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.Inventario.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.InputController.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.AutoCompleter.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.AutoCompleterDialog.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../usig.Suggester.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../usig.SuggesterLugares.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.SuggesterDirecciones.js" type="text/javascript"></script>
+
+	<!-- DEV --><script src="../usig.Recorridos.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.Recorrido.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../i18n/usig.Recorrido.en.js" type="text/javascript"></script>	
+	
+	<!-- DEV --><script src="../usig.MapaInteractivo.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../usig.GMLPlan.js" type="text/javascript"></script>
+	<!-- RELEASE <script src="../usig.AutoCompleterFull.min.js" type="text/javascript"></script> -->
+	<!-- RELEASE <script src="../usig.Recorridos.min.js" type="text/javascript"></script> -->
+	<!-- RELEASE <script src="../usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
+    
+	<script type="text/javascript">
+	$.noConflict();
+	jQuery(document).ready(function($) {
+		var origen, destino, recorrido;
+		var optsRecorridos = {
+				tipo: 'auto',
+				gml: true,
+				opciones_prioridad: 'avenidas', 
+				opciones_incluir_autopistas: false
+			};
+		usig.Recorridos.init(optsRecorridos);
+
+		var ac = new usig.AutoCompleter('o', {
+       		debug: false,
+       		rootUrl: '../',
+       		onReady: function() {
+       			$('#o').val('').removeAttr('disabled').focus();	        			
+       		},
+       		afterSelection: function(option) {
+       			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+       				origen = option;
+       			}
+       		},
+       		afterGeoCoding: function(pt) {
+    			if (pt instanceof usig.Punto) {
+    				if (origen instanceof usig.Direccion) {
+    					origen.setCoordenadas(pt);
+    				}				
+    			}
+       		} 
+       		
+       	});
+		
+		var ac = new usig.AutoCompleter('d', {
+       		debug: false,
+       		rootUrl: '../',
+       		onReady: function() {
+       			$('#d').val('').removeAttr('disabled');	        			
+       		},
+       		afterSelection: function(option) {
+       			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+       				destino = option;
+       			}
+       		},
+       		afterGeoCoding: function(pt) {
+    			if (pt instanceof usig.Punto) {
+    				if (destino instanceof usig.Direccion) {
+    					destino.setCoordenadas(pt);
+    				}				
+    			}		       			
+       		} 
+       	});
+		
+		$('#mainForm').bind("submit", function () {
+			return false;
+		});	
+		
+		function mostrarOpciones(opciones) {
+			recorrido = opciones[0];
+			var html = '<p>Suggested Route:</p><table style="width:500px"><thead>';
+						
+			//html+='<tr><td style="width: 80%;">'+recorrido.toHtmlString()+'</td><td class="tiempo">'+recorrido.getTimeString()+'</td></tr></thead><tbody>';				
+			html+='<tr><td colspan=2>'+recorrido.toHtmlString()+'</td><td class="tiempo">'+recorrido.getTimeString()+'</td></tr></thead><tbody>';
+			
+			recorrido.getDetalle(function(accion) {
+				var index=1;
+				//' <td class="tipo"><div class="giro-'+accion[i].turn_indication+'></div></td> '+
+				for (var i=0,len=accion.length; i<len; i++) {
+					html+=' <tr> ' +
+							' <td style="width:5%;">'+index+'. </td> '+
+							' <td class="desc">'+ accion[i].text+'</td>' +
+							' <td class="tiempo">'+accion[i].distance+' m</td>'+
+							' </tr>';
+					index++;
+				}	   
+				html+='</tbody><tfoot><tr ><td class="tiempo" colspan=3 >Total Distance: '+recorrido.getTraveledDistance()+' m</td></tr></tfoot></table>';
+				$('#recorridos').html(html); 
+			}, function() {alert('Se produjo un error al intentar cargar los detalles del recorrido.');	});
+			miMapa.mostrarRecorrido(recorrido);
+		}
+		
+		$('#buscar').click(function(ev) {
+			ev.preventDefault();
+			var options = {
+					opciones_prioridad: $('.prioridad input:checked').val(), 
+					opciones_incluir_autopistas: $("#op-autopistas").is(':checked')
+				};
+			if (origen && destino) {
+				usig.Recorridos.buscarRecorridos(origen, destino, mostrarOpciones, function() {
+					$('#recorridos').html('Se produjo un error el buscar el recorrido.');
+				}, options);
+				if (recorrido) {
+					miMapa.borrarRecorrido(recorrido);
+				}
+				$('#recorridos').html('Searching...');
+			} else {
+				$('#recorridos').html('Ingrese origen y destino del recorrido.');
+			}
+		});
+
+		$('#mapa').css('width', Math.floor($('body').width()/2)-40).css('height', 450);
+		
+		miMapa = new usig.MapaInteractivo('mapa', {
+			rootUrl: '../'
+		});		
+	});	
+	</script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div id="logo"><h1>USIG - Driving Directions (Demo)</h1></div>
+      </div>
+      <div id="buscador">
+       <form id="mainForm" accept-charset="utf-8">
+      	<label for="o">From</label>
+     	<input type="text" size="30" name="o" id="o" title="Origen del recorrido" class="text"/>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+      	<label for="d">To</label>
+     	<input type="text" size="30" name="d" id="d" title="Destino del recorrido" class="text"/>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+     	<fieldset class="prioridad opciones" >
+	    	<legend>Priority:</legend>
+	       	<input type="radio" name="op-priorizar" id="op-tiempo" value="avenidas" checked="checked" />
+	       	<label style="display: inline;" for="op-tiempo">Time</label>
+	       	<input type="radio" name="op-priorizar" id="op-distancia" value="corto" />
+	       	<label style="display: inline;" for="op-distancia">Distance</label>
+	    </fieldset>
+		    
+	    <fieldset class="autopistas opciones" > 
+			<legend>Highway:</legend> 
+			<input type="checkbox"  name="op-autopistas" id="op-autopistas"/> 
+			<label style="display: inline;" for="op-autopistas" >Include highways</label> 
+	    </fieldset> 
+	    <br/>
+     	<a class="button" id="buscar" href="#">Get Directions</a><br/>
+	    <div id="recorridos">No results to show</div>&nbsp;
+	    <div id="mapa"></div>
+       </form>
+      </div>
+      <div id="footer">
+        <p>&copy; 2011-2012 USIG - Unidad de Sistemas de Información Geográfica</p>
+      </div>
+    </div>
+  </body>
+</html>
