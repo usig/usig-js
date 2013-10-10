@@ -62,7 +62,7 @@ return function(data, clase) {
 			} catch(e) {};
 		} else if (data.direccionNormalizada && usig.NormalizadorDirecciones) {
 			try {
-				this.direccionAsociada = usig.NormalizadorDirecciones.normalizar(data.direccionNormalizada, 1)[0];
+				this.direccionAsociada = usig.NormalizadorDirecciones.normalizar(data.direccionNormalizada, 10, true)[0];
 				this.direccionAsociada.setCoordenadas(this.ubicacion.getCentroide());
 				if (data.smp) {
 					this.direccionAsociada.setSmp(data.smp);

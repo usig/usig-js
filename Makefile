@@ -130,6 +130,10 @@ RECORRIDOS_FILES=\
       $(SRC)/usig.Recorridos.js \
       $(SRC)/usig.Recorrido.js
 
+PUBLISHER_FILES=\
+      $(SRC)/jquery.class.js \
+      $(SRC)/usig.Publisher.js
+
 all: prepare
 
 debug:$(FILES)
@@ -150,6 +154,7 @@ debug:$(FILES)
 	cat $(MAPA_INTERACTIVO_FILES) > $(SRC)/usig.MapaInteractivo-debug.js
 	cat $(RECORRIDOS_FILES) > $(SRC)/usig.Recorridos-debug.js
 	cat $(RECORRIDOS_FULL_FILES) > $(SRC)/usig.RecorridosFull-debug.js
+	cat $(PUBLISHER_FILES) > $(SRC)/usig.Publisher-debug.js
 	cat $(STOREDCOLLECTION_FILES) > $(SRC)/usig.StoredCollection-debug.js
 	sed -e '/usig\.debug(/ d' < $(SRC)/usig.MapaInteractivo-debug.js > $(SRC)/usig.MapaInteractivo-nodebug.js
 	wget -O $(SRC)/normalizadorDirecciones.min.js http://servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js
@@ -165,6 +170,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.ajax.js -o $(REL)/usig.ajax.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/jquery.class.js -o $(REL)/jquery.class.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.DataManager.js -o $(REL)/usig.DataManager.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Events.js -o $(REL)/usig.Events.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaReferencia.js -o $(REL)/usig.MapaReferencia.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.MapaEstatico.js -o $(REL)/usig.MapaEstatico.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.FotosParcela.js -o $(REL)/usig.FotosParcela.min.js
@@ -183,6 +189,7 @@ prepare: docs debug
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.SuggesterLugares-debug.js -o $(REL)/usig.SuggesterLugares.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.SuggesterCatastro-debug.js -o $(REL)/usig.SuggesterCatastro.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.IndiceCatastral-debug.js -o $(REL)/usig.IndiceCatastral.min.js
+	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Publisher-debug.js -o $(REL)/usig.Publisher.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.Recorridos-debug.js -o $(REL)/usig.Recorridos.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.RecorridosFull-debug.js -o $(REL)/usig.RecorridosFull.min.js
 	java -jar bin/yuicompressor.jar --charset utf-8 $(SRC)/usig.StoredCollection-debug.js -o $(REL)/usig.StoredCollection.min.js
