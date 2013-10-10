@@ -2,42 +2,24 @@
 if (typeof (usig) == "undefined")
 	usig = {};
 
-if (typeof (usig.debug) == "undefined") {
-	usig.debug = function(object) {	
-		if (window.console && window.console.log)
-				window.console.log(object);
-	}	
-}
-
-
-
-
-
-usig.Event = function(type, data) {
-	
-	this.type = type;
-	
+usig.Event = function(type, data) {	
+	this.type = type;	
 	this.data = data;
 	
 	this.raise = function() {
 		usig.events.trigger(this);		
 	}
-	
 }
 
-
 usig.EventListener = function(handler) {
-	
 	this.handler = handler;	
 	
 	this.handle = function(event) {
 		this.handler(event);	
 	}
-	
 }
 
-usig.AppEvents = function() {
-	
+usig.AppEvents = function() {	
 	this.listeners = new Array();
 	
 	this.trigger = function(event) {
@@ -58,7 +40,6 @@ usig.AppEvents = function() {
 
 		list.push(listener);
 	}
-	
 }
 
 if (typeof (usig.events) == "undefined")
