@@ -425,7 +425,7 @@ return function(idDiv, options) {
 					
 					var res = usig.NormalizadorDirecciones.normalizar(mStrDir, 10);
 					
-					if (res.length > 0) {
+					if (res.length > 0 && res[0] instanceof usig.Direccion) {
 						params.place = res[0];						
 						paraGeocodificar[id] = { place: params.place, goTo: params.goTo, onClick: params.onClick, options: params.options };
 						numPendientes++;
@@ -611,7 +611,7 @@ return function(idDiv, options) {
 		return false;
 	}
 	
-	function _mostrarRecorrido(recorrido) {
+	function _mostrarRecorrido(recorrido, zoom) {
 		var layers = map.getLayersByName(recorrido.gmlLayer.name);
 		
 		if(layers.length > 0) {
@@ -625,7 +625,9 @@ return function(idDiv, options) {
 			map.setLayerZIndex(layer, 80); // seteamos un zIndex alto para asegurar que los recorridos queden arriba
 		}
 
-		map.zoomToExtent(recorrido.gmlLayer.getDataExtent());
+		if (zoom) {
+			map.zoomToExtent(recorrido.gmlLayer.getDataExtent());
+		}
 	}
 	
 	/**
@@ -833,16 +835,18 @@ return function(idDiv, options) {
 	/**
 	 * Muestra un recorrido en el mapa
 	 * @param {usig.Recorrido} recorrido Recorrido a motrar
+	 * @param {Boolean} zoom Hacer zoom al extent del recorrido (por default True)
 	 */
-	this.mostrarRecorrido = function(recorrido) {
+	this.mostrarRecorrido = function(recorrido, zoom) {
+		var zoomear = (typeof(zoom) == "undefined")?true:zoom; 
 		if (!recorrido.gmlLayer) {
 			recorrido.getDetalle(function() {				
 				if (generarGMLTripPlan(recorrido)) {
-					_mostrarRecorrido(recorrido);
+					_mostrarRecorrido(recorrido, zoomear);
 				}
 			});
 		} else {		
-			_mostrarRecorrido(recorrido);
+			_mostrarRecorrido(recorrido, zoomear);
 		}
 	}
 	
