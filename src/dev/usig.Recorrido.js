@@ -73,26 +73,30 @@ return function(datos, options) {
 			descripcion = opts.texts.descWalk;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartWalking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
+//					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
+					descripcionHtml += '<span class="icon-walk">&nbsp;'+ descripcion+'</span>';
 				}
 			});
 		}else if (tipo=="car"){
 			descripcion = opts.texts.descCar;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartDriving') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
+//					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
+					descripcionHtml += '<span class="icon-car">&nbsp;'+ descripcion+'</span>';
 				}
 			});
 		}else if (tipo=="bike"){
 			descripcion = opts.texts.descBike;
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartBiking') {
-					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
+//					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
+					descripcionHtml += '<span class="icon-bike">&nbsp;'+ descripcion+'</span>';
 					return false;
 				}
 			});
 			if (descripcionHtml==""){
-				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
+//				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
+				descripcionHtml += '<span class="icon-walk">&nbsp;</span>';
 			}
 		}
 	}
@@ -605,12 +609,12 @@ usig.Recorrido.fromObj = function(data) {
 
 usig.Recorrido.defaults = {
 	icons: {
-		recorrido_pie: 'http://mapa.buenosaires.gob.ar/images/recorrido_pie20x20.png', 	
-		recorrido_subte: 'http://mapa.buenosaires.gob.ar/images/recorrido_subte20x20.png', 	
-		recorrido_tren: 'http://mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png', 	
-		recorrido_colectivo: 'http://mapa.buenosaires.gob.ar/images/recorrido_colectivo20x20.png', 	
-		recorrido_auto: 'http://mapa.buenosaires.gob.ar/images/recorrido_auto20x20.png',
-		recorrido_bici: 'http://servicios.usig.buenosaires.gob.ar/usig-js/dev/images/recorrido_bici20x20.png' 	
+		recorrido_pie: '//mapa.buenosaires.gob.ar/images/recorrido_pie20x20.png', 	
+		recorrido_subte: '//mapa.buenosaires.gob.ar/images/recorrido_subte20x20.png', 	
+		recorrido_tren: '//mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png', 	
+		recorrido_colectivo: '//mapa.buenosaires.gob.ar/images/recorrido_colectivo20x20.png', 	
+		recorrido_auto: '//mapa.buenosaires.gob.ar/images/recorrido_auto20x20.png',
+		recorrido_bici: '//servicios.usig.buenosaires.gob.ar/usig-js/dev/images/recorrido_bici20x20.png' 	
 	},
 	template: new usig.TripTemplate(1,'#8F58C7'),
 	texts: {
@@ -622,4 +626,3 @@ usig.Recorrido.defaults = {
 };
 
 }
-
