@@ -9,7 +9,7 @@ if (typeof (usig) == "undefined")
  * usig.Calle, usig.Direccion, usig.AjaxComponent<br/>
  * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/tests/geoCoder.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/tests/geoCoder.html</a>
  * @namespace usig
- * @cfg {String} server Url del servicio de GeoCoding de USIG. Por defecto: 'http://usig.buenosaires.gov.ar/servicios/GeoCoder'.
+ * @cfg {String} server Url del servicio de GeoCoding de USIG. Por defecto: 'http://ws.usig.buenosaires.gob.ar/geocoder/2.2/'.
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.
  * @cfg {Integer} serverTimeout Tiempo maximo de espera (en ms) antes de abortar una busqueda en el servidor
  * @cfg {Integer} maxRetries Maximo numero de reintentos a realizar en caso de timeout 
@@ -20,7 +20,7 @@ if (typeof (usig) == "undefined")
  * @cfg {String} metodo Nombre del metodo de geocodificacion a utilizar si se omite el parametro en los metodos 
  * correspondientes. Si no se setea utiliza el metodo por defecto seteado en el servidor. 
  * <br/>Metodos de geocodificacion disponibles: 'interpolacion', 'puertas' y 'centroide'
- * <br/>Para mas informacion consultar: <a href="http://usig.buenosaires.gov.ar/servicios/GeoCoder">http://usig.buenosaires.gov.ar/servicios/GeoCoder</a>
+ * <br/>Para mas informacion consultar: <a href="http://ws.usig.buenosaires.gob.ar/geocoder/2.2/">http://ws.usig.buenosaires.gob.ar/geocoder/2.2/</a>
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
@@ -210,6 +210,6 @@ return usig.AjaxComponent.extend({
 usig.GeoCoder.defaults = {
 	debug: false,
 	// server: 'http://10.75.0.59/wk/GeoCoderServer/src/www/server.php/',
-	server: 'http://ws.usig.buenosaires.gob.ar/geocoder/2.2/',
+	server: '//ws.usig.buenosaires.gob.ar/geocoder/2.2/',
 	metodo: undefined
 }

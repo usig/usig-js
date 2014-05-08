@@ -69,6 +69,7 @@ usig.GMLPlan = (function($) {
 			    	gml += '</wfs:FeatureCollection>'; 
 			    	
 			    	this.loaded = true;
+			    	usig.debug(gml);
 			    	this.addFeatures(gmlReader.read(gml));
 			    	this.events.triggerEvent("loadend");
 			    },

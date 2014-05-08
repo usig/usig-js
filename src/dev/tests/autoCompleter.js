@@ -601,7 +601,7 @@ YUI({combine: true, timeout: 10000}).use("node", "console", "test", "event", "no
         		afterSuggest: function() {
 	        		test.resume.defer(500, this, [(function() {
 	        			Y.Assert.areEqual(1, $('div.usig_acv').length);
-	        			Y.Assert.areEqual(3, $('ul.options').children().length);
+	        			Y.Assert.areEqual(5, $('ul.options').children().length);
 //	        			Y.Assert.areEqual('CIUDAD DE LA PAZ', $('ul.options').children().children()[0]);
 //	        			Y.Assert.areEqual('CIUDAD DE SABADELL', $('ul.options').children().children()[1].textContent);
 //	        			Y.Assert.areEqual('CIUDADELA', $('ul.options').children().children()[2].textContent);
