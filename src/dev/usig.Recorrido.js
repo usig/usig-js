@@ -74,7 +74,7 @@ return function(datos, options) {
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartWalking') {
 //					descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> '+ descripcion;
-					descripcionHtml += '<span class="icon-walk">&nbsp;'+ descripcion+'</span>';
+					descripcionHtml += '<span class="icon-walk"></span><span class="descripcion">'+ descripcion+'</span>';
 				}
 			});
 		}else if (tipo=="car"){
@@ -82,7 +82,7 @@ return function(datos, options) {
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartDriving') {
 //					descripcionHtml += '<img src="' + opts.icons['recorrido_auto'] + '" width="20" height="20"> '+ descripcion;
-					descripcionHtml += '<span class="icon-car">&nbsp;'+ descripcion+'</span>';
+					descripcionHtml += '<span class="icon-car"></span><span class="descripcion">'+ descripcion+'</span>';
 				}
 			});
 		}else if (tipo=="bike"){
@@ -90,13 +90,13 @@ return function(datos, options) {
 			$.each(resumen,function(i,action) { 
 				if(action.type != undefined && action.type == 'StartBiking') {
 //					descripcionHtml += '<img src="' + opts.icons['recorrido_bici'] + '" width="20" height="20"> '+ descripcion;
-					descripcionHtml += '<span class="icon-bike">&nbsp;'+ descripcion+'</span>';
+					descripcionHtml += '<span class="icon-bike"></span><span class="descripcion">'+ descripcion+'</span>';
 					return false;
 				}
 			});
 			if (descripcionHtml==""){
 //				descripcionHtml += '<img src="' + opts.icons['recorrido_pie'] + '" width="20" height="20"> ';
-				descripcionHtml += '<span class="icon-walk">&nbsp;</span>';
+				descripcionHtml += '<span class="icon-walk"></span>';
 			}
 		}
 	}
@@ -547,6 +547,7 @@ return function(datos, options) {
 	}
 	
 	this.getTipo = function() {
+		// return homologadorTipos[tipo];
 		return tipo;
 	};
 	

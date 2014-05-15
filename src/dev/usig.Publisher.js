@@ -42,13 +42,25 @@ return jQuery.Class.create({
 	 * @param {Function} listener Funcion que manejara el evento cuando se dispare 
 	 */
 	on: function(eventType, listener) {
+		if (typeof(eventType) == 'string') {
+			this.register(eventType, listener);
+		} else {
+			var self = this;
+			$.each(eventType, function(key, val) {
+				self.register(key, val);
+			});
+		}
+
+	},
+
+	register: function(eventType, listener) {
 		if(this.eventListeners[eventType] == undefined) {
 			var list = new Array();
 			this.eventListeners[eventType] = list;	
 		} else {
 			var list = this.eventListeners[eventType];			
 		}			
-		list.push(listener);
+		list.push(listener);		
 	}
 });
 //Fin jQuery noConflict support

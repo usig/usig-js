@@ -78,7 +78,9 @@ return jQuery.Class.create({
 	       	if (numRetries >= this.opts.maxRetries) {
 				if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Max Errors Reached'); }			
 	       		clearTimeout(requestTimeout);
-	       		callback(data);
+	       		if (typeof(callback)=="function") {
+	       			callback(data);
+	       		}
 	       	} else {
 				if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Error. Retrying... ('+numRetries+')'); }			
 	       	}
@@ -94,7 +96,8 @@ return jQuery.Class.create({
 		       	}
 		       	if (this.opts.maxRetries > numRetries) {
 		       		numRetries++;
-			       	var ajaxReq = (params.dataType == 'jsonp')?$.jsonp(params):$.ajax(params);
+//			       	var ajaxReq = (params.dataType == 'jsonp')?$.jsonp(params):$.ajax(params);
+			       	var ajaxReq = $.ajax(params);
 			       	if (typeof(this.opts.afterRetry) == "function") {
 				       	if (this.opts.debug) usig.debug('usig.AjaxComponent('+this.name+') calling afterRetry');
 			       		this.opts.afterRetry();
