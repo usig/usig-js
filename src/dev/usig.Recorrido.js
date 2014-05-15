@@ -97,7 +97,6 @@ return function(datos, options) {
 		}
 	}
 	function procesarPlan() {
-		usig.debug("BRANCH TRDUCCION");
 		if (tipo =="transporte_publico"){
 			var current_action = null;
 	 		var walking = false;
