@@ -120,7 +120,8 @@ return function(datos, options) {
 							current_action = current_action.replace('$desde',plan[i+1].from);
 						} else {
 							//Venimos de un Aligh
-							current_action = currentAction['walking']['startCruce'].texto.replace('$esquina', plan[i-1].stop_description);
+							current_action = currentAction['walking']['startCruce'].texto.replace('$calle1', plan[i-1].calle1);
+							current_action = current_action.replace('$calle2', plan[i-1].calle2);
 						}
 						type_action = 'pie';
 					}else if(item.type == 'FinishWalking') { 
@@ -140,7 +141,9 @@ return function(datos, options) {
 							}else{
 								current_action += currentAction ['board']['walkingestacion'].texto.replace('$estacion',item.stop_name);							
 							}
-							current_action = current_action.replace('$esquina',item.stop_description);
+							//current_action = current_action.replace('$esquina',item.stop_description);
+							current_action = current_action.replace('$calle1',item.calle1);
+							current_action = current_action.replace('$calle2',item.calle2);
 							//Ponemos un punto al final
 							if(!(current_action.charAt(current_action.length -1) == '.'))
 								current_action += '.';
@@ -187,11 +190,13 @@ return function(datos, options) {
 							current_action += currentAction ['board']['esquina'].texto; //.replace('$esquina',item.stop_description);
 						}
 						changes +=1;
-						current_action = current_action.replace('$esquina',item.stop_description);
+						//current_action = current_action.replace('$esquina',item.stop_description);
+						current_action = current_action.replace('$calle1',item.calle1);
+						current_action = current_action.replace('$calle2',item.calle2);
 						current_action = current_action.replace('$estacion',item.stop_name);
 						current_action = current_action.replace('$colectivo',item.service);
 						current_action = current_action.replace('$tren',item.service.toUpperCase());
-						current_action = current_action.replace('$subte',item.service.toUpperCase());
+						current_action = current_action.replace('$subte',item.service.toUpperCase().replace('LÍNEA',''));
 						current_action = current_action.replace('$ramal',ramal);
 						current_action = current_action.replace('$sentido',item.trip_description);
 						
@@ -203,7 +208,9 @@ return function(datos, options) {
 						}else{
 							current_action += currentAction['alight']['cole'].texto;
 						}
-						current_action = current_action.replace('$esquina',item.stop_description);
+						//current_action = current_action.replace('$esquina',item.stop_description);
+						current_action = current_action.replace('$calle1', item.calle1);
+						current_action = current_action.replace('$calle2', item.calle2);
 						current_action = current_action.replace('$estacion',item.stop_name);
 
 						//Ponemos un punto al final
@@ -234,7 +241,7 @@ return function(datos, options) {
 						current_action = currentAction ['subwayconnection'].texto;
 						current_action = current_action.replace('$estacionorigen',item.stop_from);
 						current_action = current_action.replace('$estaciondestino',item.stop);
-						current_action = current_action.replace('$subte',item.service_to.toUpperCase());
+						current_action = current_action.replace('$subte',item.service_to.toUpperCase().replace('LÍNEA',''));
 						current_action = current_action.replace('$sentido',item.trip_description);
 						
 						type_action = 'subte';	
@@ -626,19 +633,20 @@ usig.Recorrido.defaults = {
 		hayRamales:'No todos los ramales conducen a destino',
 		planTransporte: {
 			'walking': {'startDir':{texto: 'Caminar desde <span class="plan-calle">$calle $desde</span>'},
-						'startCruce':{texto: 'Caminar desde <span class="plan-calle">$esquina</span>'},
+						'startCruce':{texto: 'Caminar desde <span class="plan-calle">$calle1 y $calle2</span>'},
 						'finish':{texto: ' hasta destino.'}},
-            'board':{'walking':{texto: ' hasta <span class="plan-calle">$esquina</span>'},
-            			'walkingestacion':{texto: ' hasta la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$esquina</span>'},
+            'board':{'walking':{texto: ' hasta <span class="plan-calle">$calle1 y $calle2</span>'},
+            			'walkingestacion':{texto: ' hasta la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$calle1 y $calle2</span>'},
             			'subte':{texto: 'Tomar el <span class="transport">SUBTE LÍNEA $subte (en dirección a $sentido)</span>'},
             			'estacion':{texto: ' en la estación <span class="plan-estacion">$estacion</span>'},
-            			'esquina': {texto: ' en <span class="plan-calle">$esquina</span>'},
+            			//'esquina': {texto: ' en <span class="plan-calle">$esquina</span>'},
+            			'esquina': {texto: ' en <span class="plan-calle">$calle1 y $calle2</span>'},
             			'ramales': {texto: '(Ramales: $ramal)'},
             			'colectivo':{texto: 'Tomar el <span class="transport">COLECTIVO $colectivo $ramal</span>'},
             			'tren':{texto: 'Tomar el <span class="transport">TREN $tren $ramal</span>'}},
             'alight':{'subtetren':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span>'},
-	 		        	'cole':{texto: ' y bajar en <span class="plan-calle">$esquina</span>'},
-	 		        	'metrobus':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$esquina</span>'}},
+	 		        	'cole':{texto: ' y bajar en <span class="plan-calle">$calle1 y $calle2</span>'},
+	 		        	'metrobus':{texto: ' y bajar en la estación <span class="plan-estacion">$estacion</span> en <span class="plan-calle">$calle1 y $calle2</span>'}},
             'subwayconnection':{texto: 'Bajarse en la estación <span class="plan-estacion">$estacionorigen</span> y combinar con el <span class="transport">SUBTE LÍNEA $subte (en dirección a $sentido)</span> en estación <span class="plan-estacion">$estaciondestino</span>'},
 		},
 		planAuto: {
