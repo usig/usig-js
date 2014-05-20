@@ -105,7 +105,8 @@
 
 	<!-- DEV --><script src="../usig.Recorridos.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.Recorrido.js" type="text/javascript"></script>
-	<!-- DEV --><script src="../i18n/usig.Recorrido.es.js" type="text/javascript"></script>
+	<!-- DEV --><script src="../i18n/usig.Recorrido.en.js" type="text/javascript"></script>
+	
 	<!-- DEV --><script src="../usig.MapaInteractivo.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.GMLPlan.js" type="text/javascript"></script>
 	<!-- RELEASE <script src="../usig.AutoCompleterFull.min.js" type="text/javascript"></script> -->
@@ -164,7 +165,7 @@
 		
 		function mostrarOpciones(opciones) {
 			recorridos = opciones;
-			var html = '<p>Se hallaron las siguientes opciones:</p><table style="width:100%"><tbody>';
+			var html = '<p>Options found:</p><table style="width:100%"><tbody>';
 			for (var i=0,len=opciones.length; i<len; i++) {
 				html+='<tr class="'+(i%2?'impar':'par')+'"><td style="width: 20px;text-align: center;"><input type="checkbox" class="ver_detalle" id="recorrido_'+i+'"/></td><td style="width: 80%;">'+opciones[i].toHtmlString()+'</td><td class="tiempo">'+opciones[i].getTime()+'\'</td><td style="width: 20px;"><div class="ref" id="ref_'+i+'">&nbsp;</div></td></tr>';
 				html+='<tr class="detalle_recorrido"><td class="detalle" colspan="4" id="detalle_recorrido_'+i+'"></td>'
@@ -200,9 +201,7 @@
 					opciones_medios_colectivo: $('#op-colectivo').is(':checked'),
 					opciones_medios_subte: $('#op-subte').is(':checked'),
 					opciones_medios_tren: $('#op-tren').is(':checked'),
-					opciones_caminata: $('#input-caminata').val(),
-					srid_from: 97433,
-					srid_to: 3857
+					opciones_caminata: $('#input-caminata').val() 
 			};
 			
 			if (origen && destino) {
@@ -214,7 +213,7 @@
 						miMapa.borrarRecorrido(recorridos[i]);
 					}
 				}
-				$('#recorridos').html('Buscando recorrido...');
+				$('#recorridos').html('Searching...');
 			} else {
 				$('#recorridos').html('Ingrese origen y destino del recorrido.');
 			}
@@ -223,15 +222,7 @@
 		$('#mapa').css('width', Math.floor($('body').width()/2)-40).css('height', 450);
 		
 		miMapa = new usig.MapaInteractivo('mapa', {
-			baseLayer: 'mapabsas_default_3857',
-			bounds: [-6586111.0983854, -4163569.2579354, -6423147.3540814, -4060073.5216372],
-			initBounds: [-6517826.22446, -4125200.57343, -6491737.97612, -4098977.26534],
-			OpenLayersOptions: {
-				controls: [],
-				resolutions: [152.8740565703525, 76.43702828517624, 38.21851414258813, 19.10925707129406, 9.554628535647032, 4.777314267823516, 2.388657133911758, 1.194328566955879, 0.5971642834779395], 
-				projection: "EPSG:3857",
-				units: 'm'
-			},
+			rootUrl: '../'
 		});		
 	});	
 	</script>
@@ -239,36 +230,36 @@
   <body>
     <div id="page">
       <div id="header">
-        <div id="logo"><h1>USIG - Recorridos (Demo)</h1></div>
+        <div id="logo"><h1>USIG - Public Transit Directions (Demo)</h1></div>
       </div>
       <div id="buscador">
        <form id="mainForm" accept-charset="utf-8">
-      	<label for="o">Origen</label>
+      	<label for="o">From</label>
      	<input type="text" size="30" name="o" id="o" title="Origen del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
-      	<label for="d">Destino</label>
+      	<label for="d">To</label>
      	<input type="text" size="30" name="d" id="d" title="Destino del recorrido" class="text"/>
      	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
      	<fieldset class="opciones" > 
-			<legend>Tipo de transporte:</legend> 
+			<legend>Transportation Mode:</legend> 
 			<input type="checkbox"  name="op-colectivo" id="op-colectivo" checked="checked"/> 
-			<label style="display: inline;" for="op-colectivo" >Colectivo</label> 
+			<label style="display: inline;" for="op-colectivo" >Bus</label> 
 
 			<input type="checkbox" name="op-subte" id="op-subte" checked="checked"/> 
-			<label style="display: inline;" for="op-subte">Subte</label> 
+			<label style="display: inline;" for="op-subte">Subway</label> 
 			
 			<input type="checkbox" name="op-tren" id="op-tren" checked="checked"/> 
-			<label style="display: inline;" for="op-tren">Tren</label> 		
+			<label style="display: inline;" for="op-tren">Train</label> 		
 	   	</fieldset>  
 	   	<br/>
 	   	<div>
-	    	<label style="display: inline;" for="input-caminata" style="font-weight:normal;">Caminata máxima:</label>	
+	    	<label style="display: inline;" for="input-caminata" style="font-weight:normal;">Max Walking Distance:</label>	
 			<input  type="text" name="input-caminata"  id="input-caminata" style="width:40px;" value="800"/>
 		</div>
 	   	<br/>
      	
-     	<a class="button" id="buscar" href="#">Buscar Recorrido</a><br/>
-	    <div id="recorridos">No hay recorridos para mostrar</div>&nbsp;
+     	<a class="button" id="buscar" href="#">Get Directions</a><br/>
+	    <div id="recorridos">No results to show</div>&nbsp;
 	    <div id="mapa"></div>
        </form>
       </div>

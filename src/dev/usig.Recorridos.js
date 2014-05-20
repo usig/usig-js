@@ -19,6 +19,7 @@ usig.defaults.Recorridos = {
 	server: 'http://recorridos.usig.buenosaires.gob.ar/2.0/',
 	serverTimeout: 30000,
 	maxRetries: 2,
+	lang: 'es',
 	consultaRecorridos: {
 		tipo: 'transporte',
 		gml: true,
@@ -158,7 +159,7 @@ return new (usig.AjaxComponent.extend({
 	},
 	
 	onBuscarRecorridosSuccess: function(data, callback) {
-		var recorridos = [], templates = this.opts.colorTemplates;
+		var recorridos = [], templates = this.opts.colorTemplates, lang = this.opts.lang;
 		if (this.opts.debug) usig.debug('usig.Recorridos onBuscarRecorridosSuccess');
 		$.each(data.planning, function(i, plan) {			
 			var trip_plan = JSON.parse(plan);
@@ -169,7 +170,7 @@ return new (usig.AjaxComponent.extend({
 				case 'walk':template = templates[2]; break;//verde
 				case 'transporte_publico': template = templates[i];break;
 			}
-			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: template }));
+			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: template, lang: lang }));
 			//recorrido.loadPlan
 		});
 		if (typeof(callback) == "function")
