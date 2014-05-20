@@ -137,6 +137,14 @@ return function(data, clase) {
 	this.getSmp = function () {
 		return this.rawData.smp || (this.direccionAsociada?this.direccionAsociada.getSmp():"");
 	}
+
+	this.getCoordenadas = function() {
+		if (this.ubicacion) {
+			return this.ubicacion.getCentroide();
+		} else if (this.direccionAsociada) {
+			return this.direccionAsociada.getCoordenadas();
+		}
+	}
 	
 	this.fill(data);
 	this.rawData = $.extend(this.rawData, data);
