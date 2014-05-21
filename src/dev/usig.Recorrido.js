@@ -419,6 +419,191 @@ return function(datos, options) {
 		if (typeof(callback) == "function")
 			callback(detalle, plan);		
 	}
+
+	function getLineStringCoords(gml) {
+		return $(gml).find('gml-coordinates').text().split(' ').map(function(it) { return it.split(',').map(function(c) { return parseFloat(c)})});
+	}
+
+	function getMultiLineStringCoords(gml) {
+		var coords = [];
+		$(gml).find('gml-lineStringMember').each(function(k, v) {
+			coords.push(getLineStringCoords(v));
+		});
+		return coords;
+	}
+
+	function addGeoJsonMultiLineStrings(geoJson, ls) {
+		$.each(ls, function(k, v) {
+			geoJson.features.push({
+	            "type": "Feature",
+	            "properties": {
+	                "gml_id": null,
+	                "type": $(this).find('gml-type').text(),
+	                "fid": null
+	            },
+	            "geometry": {
+	                "type": "MultiLineString",
+	                "coordinates": getMultiLineStringCoords(v)
+	            }
+	        });
+		});
+	}
+
+	function addGeoJsonLineStrings(geoJson, ls) {
+		$.each(ls, function(k, v) {
+			geoJson.features.push({
+	            "type": "Feature",
+	            "properties": {
+	                "gml_id": null,
+	                "type": $(this).find('gml-type').text(),
+	                "fid": null
+	            },
+	            "geometry": {
+	                "type": "LineString",
+	                "coordinates": getLineStringCoords(v)
+	            }
+	        });
+		});
+	}
+
+	function addGeoJsonEdges(geoJson, edges) {
+		if (edges instanceof Array) {
+			edges = edges[0];
+		}
+		var $gml = $.parseXML(edges.replace(/:/g, '-'));
+		if ($($gml).find('gml-feature:has(gml-MultiLineString)').length > 0) {
+			addGeoJsonMultiLineStrings(geoJson, $($gml).find('gml-feature:has(gml-MultiLineString)'));
+		} else {
+			addGeoJsonLineStrings(geoJson, $($gml).find('gml-feature:has(gml-LineString)'));
+		}
+	}
+
+	function addGeoJsonMarker(geoJson, gml) {
+		var $gml = $($.parseXML(gml.replace(/:/g, '-')));
+		if ($gml.find('gml-Point')) {
+			var coords = $gml.find('gml-coordinates').text().split(',');
+			geoJson.features.push(
+				{
+		            "type": "Feature",
+		            "properties": {
+		                "gml_id": null,
+		                "type": $gml.find('gml-type').text(),
+		                "fid": null
+		            },
+		            "geometry": {
+		                "type": "Point",
+		                "coordinates": [parseFloat(coords[0]), parseFloat(coords[1])]
+		            }
+		        }
+			);
+		} else {
+			usig.debug($gml);
+		}
+	}
+
+	/**
+ 	 * Devuelve el recorrido en formato GeoJson
+ 	 * @return {GeoJson} GeoJson conteniendo la informacion geografica del recorrido
+	 */
+	this.getGeoJson = function() {
+		if (this.geoJson) {
+			return this.geoJson;
+		}
+		var trip_plan = this.getPlan();
+		if (trip_plan instanceof Array) {
+// 			var gml = usig.GMLPlan.create('trip_plan_' + recorrido.getId(), {template:recorrido.getTemplate(), baseUrl: opts.rootUrl, tipoRecorrido: recorrido.getTipo()});
+			var g = { type: 'FeatureCollection', features: [] };
+	 		
+			for(i=0;i<trip_plan.length;i++) {
+			
+				var item = trip_plan[i];
+				
+				if(item.type != undefined){
+					
+					if(item.type == 'StartWalking' || item.type == 'FinishWalking'){
+						if(i==0){
+							addGeoJsonMarker(g, item.gml.replace('walk','beginwalk'));
+						}else{
+							addGeoJsonMarker(g, item.gml);
+						}
+					} else if(item.type == 'Board') {
+					
+						if(i==0){
+							addGeoJsonMarker(g, item.gml.replace(/(bus|subway|train)/g,'begin$1'));
+						}else{
+							
+							if (item.service_type == '1'){
+								switch (item.service){
+									case 'Línea A': 
+										if (item.gml.indexOf('subwayA') < 0) {
+											item.gml = item.gml.replace('subway','subwayA');
+										}
+										break;
+									case 'Línea B': 
+										if (item.gml.indexOf('subwayB') < 0) {
+											item.gml = item.gml.replace('subway','subwayB');
+										}
+										break;
+									case 'Línea C': 
+										if (item.gml.indexOf('subwayC') < 0) {
+											item.gml = item.gml.replace('subway','subwayC');
+										}
+										break;
+									case 'Línea D': 
+										if (item.gml.indexOf('subwayD') < 0) {
+											item.gml = item.gml.replace('subway','subwayD');
+										}
+										break;
+									case 'Línea E': 
+										if (item.gml.indexOf('subwayE') < 0) {
+											item.gml = item.gml.replace('subway','subwayE');
+										}
+										break;
+									case 'Línea H': 
+										if (item.gml.indexOf('subwayH') < 0) {
+											item.gml = item.gml.replace('subway','subwayH');
+										}
+										break;
+								}
+							}
+							addGeoJsonMarker(g, item.gml);
+						}
+					} else if (item.type == 'Bus' || item.type == 'SubWay' || item.type == 'Street') {
+						addGeoJsonEdges(g, item.gml);
+						// gml.addEdges([item.gml]);
+					} else if(item.type == 'SubWayConnection') {
+						
+						switch (item.service_to){
+								case 'Línea A': item.gml[1] = item.gml[1].replace('connection','subwayA');break;
+								case 'Línea B': item.gml[1] = item.gml[1].replace('connection','subwayB');break;
+								case 'Línea C': item.gml[1] = item.gml[1].replace('connection','subwayC');break;
+								case 'Línea D': item.gml[1] = item.gml[1].replace('connection','subwayD');break;
+								case 'Línea E': item.gml[1] = item.gml[1].replace('connection','subwayE');break;
+								case 'Línea H': item.gml[1] = item.gml[1].replace('connection','subwayH');break;
+							}
+						
+						addGeoJsonMarker(g, item.gml[1]);// en el caso de SubWayConnection el gml es un array de 3 elementos: punto inicial, punto final, linea que los une. Nos quedamos con el punto final
+						addGeoJsonEdges(g, item.gml);
+											
+					} else if(item.type == 'StartDriving' || item.type == 'FinishDriving') { 
+						addGeoJsonMarker(g, item.gml);
+					} else if(item.type == 'StartBiking' || item.type == 'FinishBiking') { 
+						if(i==0){
+							addGeoJsonMarker(g, item.gml.replace('bike','beginbike'));
+						}else{
+							addGeoJsonMarker(g, item.gml);
+						}
+					}
+					
+				}
+			}
+			// recorrido.gmlLayer = gml;
+			// return JSON.stringify(g);
+			this.geoJson = g;
+			return g;
+		}		
+		return false;
+	}
 	
 	/**
 	 * Permite cargar datos de un recorrido obtenidos del servicio de recorridos de USIG
