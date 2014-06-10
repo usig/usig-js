@@ -2,7 +2,7 @@ usig.Recorrido.texts['en'] = {
 		descWalk: 'Walking directions',
 		descCar: 'Driving directions',
 		descBike: 'Bicycle directions',
-		hayRamales:'No todos los ramales conducen a destino',
+		hayRamales:'Beware that not all routes go to destination',
 		planTransporte: {
 				'walking': {'startDir':{texto: 'Walk from <span class="plan-calle">$desde $calle</span>'},
 							'startCruce':{texto: 'Walk from intersection of <span class="plan-calle">$calle1 and $calle2</span>'},
