@@ -25,6 +25,7 @@ return function(datos, options) {
 		descripcion="Sin datos",
 		descripcionHtml="Sin datos",
 		detalle=[],
+		textAlertas=[],
 		traveled_distance=0,
 		opts = $.extend({}, usig.Recorrido.defaults, options);
 	
@@ -63,6 +64,14 @@ return function(datos, options) {
 						var titleName = action.long_name?action.long_name:action.service;
 						descripcionHtml += '<div class="pill trenpill"><div class="primero"><span class="segundo"></span></div> <span class="linea" title="'+titleName+'">'+  action.service.replace(/\./g, '')+'</span></div>';
 						desc.push(action.service); 
+					}
+					if (action.alertas){
+						$.each(action.alertas,function(i,alerta) {
+							if (alerta.idioma.toLowerCase()==opts.lang.toLowerCase()) {
+								//textAlertas.push ([alerta.mensaje, alerta.service]);
+								textAlertas.push ({mensaje: alerta.mensaje, service:alerta.service});
+							}
+						});
 					}
 				}
 				estadoAnterior = action.type;
@@ -123,8 +132,13 @@ return function(datos, options) {
 							current_action = current_action.replace('$desde',plan[i+1].from);
 						} else {
 							//Venimos de un Aligh
-							current_action = currentAction['walking']['startCruce'].texto.replace('$calle1', plan[i-1].calle1);
-							current_action = current_action.replace('$calle2', plan[i-1].calle2);
+							if (plan[i-1].calle2 != null){
+								current_action = currentAction['walking']['startCruce'].texto.replace('$calle1', plan[i-1].calle1);
+								current_action = current_action.replace('$calle2', plan[i-1].calle2);
+							}else{ //calle2 puede ser null si el nodo no es una interseccion
+								current_action = currentAction['walking']['startDir'].texto.replace('$calle', plan[i-1].calle1);
+								current_action = current_action.replace('$desde',"");
+							}
 						}
 						type_action = 'pie';
 					}else if(item.type == 'FinishWalking') { 
@@ -790,6 +804,14 @@ return function(datos, options) {
 				origen == r.getCoordenadaOrigen() && destino == r.getCoordenadaDestino();
 	}
 		
+	/**
+	 * Devuelve un array con las alertas del recorrido
+	 * @return {Array} array de pares {mensaje: string, service: string} 
+	 */
+	this.getAlertas = function() {
+		return textAlertas;
+	};
+	
 	/**
 	 * Permite setear el idioma con que se devuelven las descripciones de los recorridos
 	 * @param {string} lang
