@@ -35,7 +35,7 @@ if (typeof (usig.debug) == "undefined") {
  * @param {Object} opts (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
 usig.MapaEstatico = function(opts) {
-	var mapServer = 'http://servicios.usig.buenosaires.gov.ar/LocDir/mapa.phtml',
+	var mapServer = '//servicios.usig.buenosaires.gov.ar/LocDir/mapa.phtml',
 		params = new Array(),
 		regExpSMP = /[0-9][0-9]-[0-9]{3,3}[A-Z]?-[A-Z0-9]{3,4}/;
 	if (typeof(opts.x) != "undefined" && typeof(opts.y) != "undefined" && !isNaN(parseFloat(opts.x)) && !isNaN(parseFloat(opts.y))) {

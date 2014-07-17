@@ -210,6 +210,6 @@ return usig.AjaxComponent.extend({
 usig.GeoCoder.defaults = {
 	debug: false,
 	// server: 'http://10.75.0.59/wk/GeoCoderServer/src/www/server.php/',
-	server: 'http://ws.usig.buenosaires.gob.ar/geocoder/2.2/',
+	server: '//ws.usig.buenosaires.gob.ar/geocoder/2.2/',
 	metodo: undefined
 }

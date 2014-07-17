@@ -243,8 +243,8 @@ return usig.AjaxComponent.extend({
 	
 usig.Inventario.defaults = {
 	debug: false,
-	server: 'http://inventario.usig.buenosaires.gob.ar/publico/',
-	serverEpok: 'http://epok.buenosaires.gob.ar/',
+	server: '//inventario.usig.buenosaires.gob.ar/publico/',
+	serverEpok: '//epok.buenosaires.gob.ar/',
 	dataType: 'jsonp',
 	// serverEpok: 'http://10.10.4.55/',
 	// serverEpok: 'http://epok.cobra-dev.usig.gcba.gov.ar/',

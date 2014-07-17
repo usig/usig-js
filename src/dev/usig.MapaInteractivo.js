@@ -1302,14 +1302,14 @@ usig.MapaInteractivo.defaults = {
 		mapas: []		
 	},
 	baseLayer:'mapabsas_informacion_basica',
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/theme/default/style.css',
+	rootUrl: '//servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
+	OpenLayersCSS: '//servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/theme/default/style.css',
 	// OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
 	// OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
-	OpenLayersJS: 'http://servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
-	NormalizadorDireccionesJS: 'http://servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js',
-	GeoCoderJS: 'http://servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.GeoCoder.min.js',
-	piwikBaseUrl: 'http://usig.buenosaires.gov.ar/piwik/',
+	OpenLayersJS: '//servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
+	NormalizadorDireccionesJS: '//servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js',
+	GeoCoderJS: '//servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.GeoCoder.min.js',
+	piwikBaseUrl: '//usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
 	preloadImages: [],
 	texts: {
@@ -1384,5 +1384,5 @@ usig.MapaInteractivo.defaults = {
 	goToZoomLevel: 7,
     SHADOW_Z_INDEX: 10,
     MARKER_Z_INDEX: 11,
-	servers: ["http://tiles1.mapa.buenosaires.gob.ar/tilecache/", "http://tiles2.mapa.buenosaires.gob.ar/tilecache/", "http://tiles3.mapa.buenosaires.gob.ar/tilecache/", "http://tiles4.mapa.buenosaires.gob.ar/tilecache/", "http://tiles5.mapa.buenosaires.gob.ar/tilecache/", "http://tiles6.mapa.buenosaires.gob.ar/tilecache/", "http://tiles7.mapa.buenosaires.gob.ar/tilecache/"]
+	servers: ["//tiles1.mapa.buenosaires.gob.ar/tilecache/", "//tiles2.mapa.buenosaires.gob.ar/tilecache/", "//tiles3.mapa.buenosaires.gob.ar/tilecache/", "//tiles4.mapa.buenosaires.gob.ar/tilecache/", "//tiles5.mapa.buenosaires.gob.ar/tilecache/", "//tiles6.mapa.buenosaires.gob.ar/tilecache/", "//tiles7.mapa.buenosaires.gob.ar/tilecache/"]
 };

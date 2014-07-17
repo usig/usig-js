@@ -348,7 +348,7 @@ return function(smp, opts) {
 })(jQuery);
 
 usig.FotosParcela.defaults = {
-	server: 'http://fotos.usig.buenosaires.gob.ar/',
+	server: '//fotos.usig.buenosaires.gob.ar/',
 	maxWidth: 200,
 	maxHeight: 200,
 	texts: {
