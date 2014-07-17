@@ -13,7 +13,7 @@
 	<!-- DEV --><script src="../../usig.util.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.MapaInteractivo.js" type="text/javascript"></script>
     	
-	<!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
+	<!-- RELEASE <script src="//servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
     
 	<script type="text/javascript">
 
@@ -30,7 +30,7 @@
     			popup.updateSize();
 				popup.show();
 				$.ajax({
-					url: "http://epok.buenosaires.gob.ar/getObjectContent/",
+					url: "//epok.buenosaires.gob.ar/getObjectContent/",
 					data: {
 						id: e.feature.attributes['Id']
 					},
@@ -62,7 +62,7 @@
 			includePanZoomBar: true,
 			onReady: function() {
 				var layer = mapa.addVectorLayer('Bibliotecas', { 
-   	        		url: "http://epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=22",
+   	        		url: "//epok.buenosaires.gob.ar/getGeoLayer/?categoria=dependencias_culturales&actividades=22",
    	        		symbolizer: {
                 		externalGraphic: 'images/biblioteca.png',
 			            backgroundGraphic: 'images/fondos/cua_azul.png',

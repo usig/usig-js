@@ -6,7 +6,7 @@
     <title>USIG - Mapa Interactivo de Buenos Aires</title>
     <link rel="stylesheet" type="text/css" href="../css/ejemplos.css" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
-	<!-- DEV --><script src="http://servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js" type="text/javascript"></script>
+	<!-- DEV --><script src="//servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.core.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.util.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../json.js" type="text/javascript"></script>
@@ -76,7 +76,7 @@
 		miMapa = new usig.MapaInteractivo('mapa', {
 			onReady: function() {
 				
- 				var iconUrl = 'http://servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
+ 				var iconUrl = '//servicios.usig.buenosaires.gov.ar/symbols/mapabsas/bancos.png',
  					iconSize = new OpenLayers.Size(41, 41),
  					customMarker = new OpenLayers.Marker(new OpenLayers.LonLat(102224.9040681,103284.11371559),new OpenLayers.Icon(iconUrl, iconSize));
 							

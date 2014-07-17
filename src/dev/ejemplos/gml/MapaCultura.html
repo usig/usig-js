@@ -21,7 +21,7 @@
     
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 	
-	<!-- DEV --><script src="http://servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js" type="text/javascript"></script>
+	<!-- DEV --><script src="//servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.core.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.util.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../json.js" type="text/javascript"></script>
@@ -42,8 +42,8 @@
     <!-- DEV --><script src="../../usig.Suggester.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../../usig.SuggesterDirecciones.js" type="text/javascript"></script>
     	
-	<!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
-    <!-- RELEASE <script src="http://servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.AutoCompleterDireccionesFull.min.js" type="text/javascript"></script> -->
+	<!-- RELEASE <script src="//servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.MapaInteractivo.min.js" type="text/javascript"></script> -->
+    <!-- RELEASE <script src="//servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.AutoCompleterDireccionesFull.min.js" type="text/javascript"></script> -->
     
 	<script type="text/javascript">
 
@@ -84,7 +84,7 @@
 			$('.menu').html(optionDefault);
 			
 			$.ajax({
-				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/actividades/",
+				url: "//epok.buenosaires.gob.ar/dependenciasculturales/actividades/",
 				dataType: 'jsonp',
 				success: function(actividades) {
 					var options = '<option value=99>Ministerio de Cultura</option>';
@@ -105,7 +105,7 @@
 		function loadDetalle(idDetalle, popup) {
 			
 			$.ajax({
-				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/detalle/"+idDetalle+"/",
+				url: "//epok.buenosaires.gob.ar/dependenciasculturales/detalle/"+idDetalle+"/",
 				dataType: 'jsonp',
 				success: function(detalle) {
 					$('div.popup p.indicator').remove();
@@ -442,7 +442,7 @@
             });
 
 			$.ajax({
-				url: "http://epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
+				url: "//epok.buenosaires.gob.ar/dependenciasculturales/buscar?actividades="+data.actividades+"&sector="+data.sector,
 				dataType: 'jsonp',
 				success: function(gmlData) {
 					var gml = new OpenLayers.Format.GML();
