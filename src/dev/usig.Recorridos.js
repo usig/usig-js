@@ -61,7 +61,7 @@ usig.defaults.Recorridos = {
  * @class Recorridos
  * Esta clase implementa una interfaz Javascript con los servicios de recorridos de la USIG<br/>
  * Requiere: jQuery-1.3.2+, jQuery-jsonp-1.1.0.1+, usig.core, usig.AjaxComponent, usig.Recorrido<br/>
- * Demo: <a href="http://servicios.usig.buenosaires.gob.ar/usig-js/3.0/demos/recorridos.html">http://servicios.usig.buenosaires.gob.ar/usig-js/3.0/demo/recorridos.html</a><br/>
+ * Demo: <a href="http://servicios.usig.buenosaires.gob.ar/usig-js/3.1/demos/recorridos.html">http://servicios.usig.buenosaires.gob.ar/usig-js/3.1/demo/recorridos.html</a><br/>
  * @namespace usig
  * @cfg {String} server Url del servidor de recorridos. Por defecto: 'http://recorridos.usig.buenosaires.gob.ar/'
  * @cfg {Boolean} debug Mostrar informacion de debugging en la consola. Requiere soporte para window.console.log.

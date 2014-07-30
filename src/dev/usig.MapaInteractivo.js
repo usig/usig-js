@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * // El usig.MapaInteractivo.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/3.0/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/3.1/usig.MapaInteractivo.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.MapaInteractivo('id-div-mapa', {
  *              onReady: function() {
@@ -20,10 +20,10 @@ if (typeof (usig) == "undefined")
  *          });
  * 
  * </code></pre> 
- * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/demo/mapaInteractivo.html</a><br/>
- * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/ejemplos/</a><br/>
- * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/ejemplos.rar</a><br/>
- * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/doc/</a><br/>
+ * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/demos/mapaInteractivo.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/demo/mapaInteractivo.html</a><br/>
+ * Ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/ejemplos/">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/ejemplos/</a><br/>
+ * Descargar ejemplos: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/ejemplos.rar">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/ejemplos.rar</a><br/>
+ * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/doc/</a><br/>
  * @namespace usig
  * @cfg {Boolean} includeToolbar Incluir el toolbar en el mapa (por default es True)  
  * @cfg {Boolean} includePanZoomBar Incluir el pan-zoom-bar en el mapa (por default es True)  
@@ -1308,7 +1308,7 @@ usig.MapaInteractivo.defaults = {
 	// OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
 	OpenLayersJS: '//servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
 	NormalizadorDireccionesJS: '//servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js',
-	GeoCoderJS: '//servicios.usig.buenosaires.gob.ar/usig-js/3.0/usig.GeoCoder.min.js',
+	GeoCoderJS: '//servicios.usig.buenosaires.gob.ar/usig-js/3.1/usig.GeoCoder.min.js',
 	piwikBaseUrl: '//usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 3, 
 	preloadImages: [],
