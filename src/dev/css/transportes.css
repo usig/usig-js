@@ -1025,6 +1025,21 @@ border: 1px solid #05482B;}
  .colectivo88 .primero {background:#c5001b; border-bottom: #161616 1px solid} 
  .colectivo88 .segundo {background:#0f72ba;}
 
+.colectivo90 {	
+background: #ffffff;
+background: -moz-linear-gradient(top,  #ffffff 48%, #cdcabf 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(48%,#ffffff), color-stop(100%,#cdcabf));
+background: -webkit-linear-gradient(top,  #ffffff 48%,#cdcabf 100%);
+background: -o-linear-gradient(top,  #ffffff 48%,#cdcabf 100%);
+background: -ms-linear-gradient(top,  #ffffff 48%,#cdcabf 100%);
+background: linear-gradient(to bottom,  #ffffff 48%,#cdcabf 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#178258', endColorstr='#cdcabf',GradientType=0 );
+; 
+border: 1px solid #05482B;}
+
+ .colectivo90 .primero {background:#df2e34; border-bottom: #161616 1px solid} 
+ .colectivo90 .segundo {background:#08a3ff;}
+
 .colectivo91 {	
 background: #ffffff;
 background: -moz-linear-gradient(top,  #ffffff 48%, #cdcabf 100%);
@@ -2192,7 +2207,7 @@ border: 1px solid #05482B; }
 }
 
 .subteH, .colectivo4, .colectivo5, .colectivo7, .colectivo8, .colectivo9, .colectivo20, .colectivo21, .colectivo23, .colectivo24, .colectivo25, .colectivo26, .colectivo28, .colectivo34, .colectivo37, .colectivo41, .colectivo44, .colectivo49, .colectivo50, .colectivo56, .colectivo60, .colectivo65, .colectivo71, .colectivo76, .colectivo84, .colectivo88, .colectivo91, .colectivo98, .colectivo99, .colectivo101, .colectivo105, .colectivo106, .colectivo107, .colectivo108, .colectivo117, .colectivo127, .colectivo132, .colectivo135, .colectivo146, .colectivo151, .colectivo159, .colectivo161, .colectivo175, .colectivo188, .colectivo193, .colectivo194, .colectivo195
-, .colectivo57, .colectivo78, .colectivo87, .colectivo93, .colectivo95, .colectivo111, .colectivo130, .colectivo136, .colectivo148, .colectivo153{
+, .colectivo57, .colectivo78, .colectivo87, .colectivo90, .colectivo93, .colectivo95, .colectivo111, .colectivo130, .colectivo136, .colectivo148, .colectivo153{
 	color:#000!important;
 	text-shadow: 0 0 0 #FFF!important;	
 }
