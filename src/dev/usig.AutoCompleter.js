@@ -11,7 +11,7 @@ if (typeof (usig) == "undefined")
  * ...
  * &lt;script src="http:&#47;&#47;ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * // El usig.AutoCompleterFull.min.js ya tiene todos los componentes necesarios con excepcion de jQuery
- * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/3.0/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
+ * &lt;script src="http:&#47;&#47;servicios.usig.buenosaires.gov.ar/usig-js/3.1/usig.AutoCompleterFull.min.js" type="text/javascript"&gt;&lt;/script&gt;
  * ...
  * var ac = new usig.AutoCompleter('inputField', {
  *              afterSelection: function(option) {
@@ -20,9 +20,9 @@ if (typeof (usig) == "undefined")
  *          });
  * 
  * </code></pre> 
- * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/demos/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/demo/autoCompleter.html</a><br/>
- * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/doc/</a><br/>
- * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/tests/autoCompleter.html</a>
+ * Demo: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/demos/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/demo/autoCompleter.html</a><br/>
+ * Documentaci&oacute;n: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/doc/">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/doc/</a><br/>
+ * Tests de Unidad: <a href="http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/tests/autoCompleter.html">http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/tests/autoCompleter.html</a>
  * @namespace usig
  * @cfg {Integer} inputPause Minima pausa (en milisegundos) que debe realizar el usuario al tipear para que se actualicen las sugerencias. Por defecto: 1000.
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a buscar. Por defecto: 10

@@ -5,7 +5,7 @@ HOST_DIR=/d/usig/www/servicios/Usig-JS
 HOSTS=10.20.1.43 10.20.1.46 10.20.1.91 10.20.1.96 10.20.2.79 10.20.2.80
 APPDIR=/usr/local/usig/servicios/Usig-JS
 
-VERSION=dev
+VERSION=3.1
 USER=usig
 SRC=src/dev
 REL=src/release
