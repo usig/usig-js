@@ -575,7 +575,7 @@ usig.AutoCompleter.defaults = {
 	flushTimeout: 0,
 	hideOnBlur: true,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',
+	rootUrl: '//servicios.usig.buenosaires.gob.ar/usig-js/3.1/',
 	skin: 'bootstrap',
 	idOptionsDiv: undefined,
 	// Opciones generales

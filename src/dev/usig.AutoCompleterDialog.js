@@ -463,6 +463,6 @@ usig.AutoCompleterDialog.defaults = {
 	zIndex: 10000,
 	autoHideTimeout: 5000,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/3.1/',
+	rootUrl: '//servicios.usig.buenosaires.gob.ar/usig-js/3.1/',
 	skin: 'usig4'
 }

@@ -14,7 +14,7 @@ usig.TripTemplate = function(index, color) {
 usig.defaults.Recorridos = {
 	debug: false,
 	trackVisits: true,
-	piwikBaseUrl: '//usig.buenosaires.gov.ar/piwik/',
+	piwikBaseUrl: '//usig.buenosaires.gob.ar/piwik/',
 	piwikSiteId: 4, 
 	server: '//recorridos.usig.buenosaires.gob.ar/2.0/',
 	serverTimeout: 30000,

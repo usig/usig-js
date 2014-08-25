@@ -1302,14 +1302,14 @@ usig.MapaInteractivo.defaults = {
 		mapas: []		
 	},
 	baseLayer:'mapabsas_informacion_basica',
-	rootUrl: '//servicios.usig.buenosaires.gov.ar/usig-js/dev/',	
-	OpenLayersCSS: '//servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/theme/default/style.css',
+	rootUrl: '//servicios.usig.buenosaires.gob.ar/usig-js/dev/',	
+	OpenLayersCSS: '//servicios.usig.buenosaires.gob.ar/OpenLayers/2.13-dev1-1/theme/default/style.css',
 	// OpenLayersCSS: 'http://10.75.0.125/wk/OpenLayers/theme/default/style.css',
 	// OpenLayersJS: 'http://10.75.0.125/wk/OpenLayers/OpenLayers.js',
-	OpenLayersJS: '//servicios.usig.buenosaires.gov.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
+	OpenLayersJS: '//servicios.usig.buenosaires.gob.ar/OpenLayers/2.13-dev1-1/OpenLayers.js',
 	NormalizadorDireccionesJS: '//servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js',
 	GeoCoderJS: '//servicios.usig.buenosaires.gob.ar/usig-js/3.1/usig.GeoCoder.min.js',
-	piwikBaseUrl: '//usig.buenosaires.gov.ar/piwik/',
+	piwikBaseUrl: '//usig.buenosaires.gob.ar/piwik/',
 	piwikSiteId: 3, 
 	preloadImages: [],
 	texts: {
@@ -1384,5 +1384,5 @@ usig.MapaInteractivo.defaults = {
 	goToZoomLevel: 7,
     SHADOW_Z_INDEX: 10,
     MARKER_Z_INDEX: 11,
-	servers: ["//tiles1.mapa.buenosaires.gob.ar/tilecache/", "//tiles2.mapa.buenosaires.gob.ar/tilecache/", "//tiles3.mapa.buenosaires.gob.ar/tilecache/", "//tiles4.mapa.buenosaires.gob.ar/tilecache/", "//tiles5.mapa.buenosaires.gob.ar/tilecache/", "//tiles6.mapa.buenosaires.gob.ar/tilecache/", "//tiles7.mapa.buenosaires.gob.ar/tilecache/"]
+	servers: ["//tiles1.usig.buenosaires.gob.ar/tilecache/", "//tiles2.usig.buenosaires.gob.ar/tilecache/", "//tiles3.usig.buenosaires.gob.ar/tilecache/", "//tiles4.usig.buenosaires.gob.ar/tilecache/", "//tiles5.usig.buenosaires.gob.ar/tilecache/", "//tiles6.usig.buenosaires.gob.ar/tilecache/", "//tiles7.usig.buenosaires.gob.ar/tilecache/"]
 };
