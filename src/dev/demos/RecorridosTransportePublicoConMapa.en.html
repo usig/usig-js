@@ -221,6 +221,7 @@
 
 		$('#mapa').css('width', Math.floor($('body').width()/2)-40).css('height', 450);
 		
+		usig.Recorridos.init({lang: 'en'});
 		miMapa = new usig.MapaInteractivo('mapa', {
 			rootUrl: '../'
 		});		
