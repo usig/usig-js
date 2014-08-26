@@ -137,7 +137,7 @@ return function(datos, options) {
 								current_action = current_action.replace('$calle2', plan[i-1].calle2);
 							}else{ //calle2 puede ser null si el nodo no es una interseccion
 								current_action = currentAction['walking']['startDir'].texto.replace('$calle', plan[i-1].calle1);
-								current_action = current_action.replace('$desde',"");
+								current_action = current_action.replace('$desde',""); //FIX: cuando tenga info nro
 							}
 						}
 						type_action = 'pie';
@@ -154,13 +154,18 @@ return function(datos, options) {
 						var walking_state = walking;
 						if(walking) {
 							if(item.service_type == '3'){ //colectivo
-								current_action += currentAction ['board']['walking'].texto;//.replace('$esquina',item.stop_description);
+								if (item.calle2!=null){
+									current_action += currentAction ['board']['walking_esquina'].texto;
+								}else{
+									current_action += currentAction ['board']['walking_calle_nro'].texto;
+								}
 							}else{
 								current_action += currentAction ['board']['walkingestacion'].texto.replace('$estacion',item.stop_name);							
 							}
 							//current_action = current_action.replace('$esquina',item.stop_description);
 							current_action = current_action.replace('$calle1',item.calle1);
 							current_action = current_action.replace('$calle2',item.calle2);
+							current_action = current_action.replace('$nro',""); //FIX: cuando tenga info nro							
 							//Ponemos un punto al final
 							if(!(current_action.charAt(current_action.length -1) == '.'))
 								current_action += '.';
@@ -204,12 +209,17 @@ return function(datos, options) {
 						}
 								                    
 						if(!walking_state) {
-							current_action += currentAction ['board']['esquina'].texto; //.replace('$esquina',item.stop_description);
+							if (item.calle2!=null){
+								current_action += currentAction ['board']['esquina'].texto; 
+							}else{
+								current_action += currentAction ['board']['calle_nro'].texto; 
+							}
 						}
 						changes +=1;
 						//current_action = current_action.replace('$esquina',item.stop_description);
 						current_action = current_action.replace('$calle1',item.calle1);
 						current_action = current_action.replace('$calle2',item.calle2);
+						current_action = current_action.replace('$nro',""); //FIX: cuando tenga info nro						
 						current_action = current_action.replace('$estacion',item.stop_name);
 						current_action = current_action.replace('$colectivo',item.service);
 						current_action = current_action.replace('$tren',item.service.toUpperCase());
@@ -223,11 +233,16 @@ return function(datos, options) {
 						}else if (item.metrobus){ //item.service_type == '3' // colectivo 
 							current_action += currentAction['alight']['metrobus'].texto;//.replace('$estacion',item.stop_name);
 						}else{
-							current_action += currentAction['alight']['cole'].texto;
+							if (item.calle2!=null){
+								current_action += currentAction['alight']['cole_esquina'].texto;
+							}else{
+								current_action += currentAction['alight']['cole_calle_nro'].texto;
+							}
 						}
 						//current_action = current_action.replace('$esquina',item.stop_description);
 						current_action = current_action.replace('$calle1', item.calle1);
 						current_action = current_action.replace('$calle2', item.calle2);
+						current_action = current_action.replace('$nro',""); //FIX: cuando tenga info nro						
 						current_action = current_action.replace('$estacion',item.stop_name);
 
 						//Ponemos un punto al final
