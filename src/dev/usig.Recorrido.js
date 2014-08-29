@@ -610,7 +610,7 @@ usig.Recorrido.defaults = {
 		recorrido_tren: '//mapa.buenosaires.gob.ar/images/recorrido_tren20x20.png', 	
 		recorrido_colectivo: '//mapa.buenosaires.gob.ar/images/recorrido_colectivo20x20.png', 	
 		recorrido_auto: '//mapa.buenosaires.gob.ar/images/recorrido_auto20x20.png',
-		recorrido_bici: '//servicios.usig.buenosaires.gob.ar/usig-js/dev/images/recorrido_bici20x20.png' 	
+		recorrido_bici: '//servicios.usig.buenosaires.gob.ar/usig-js/3.0/images/recorrido_bici20x20.png' 	
 	},
 	template: new usig.TripTemplate(1,'#8F58C7'),
 	texts: {
