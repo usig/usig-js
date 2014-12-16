@@ -6,6 +6,8 @@
     <title>USIG AutoCompleter</title>
     <link rel="stylesheet" type="text/css" href="css/demos.css" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <!-- DEV --><script src="../usig.Calle.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../usig.Direccion.js" type="text/javascript"></script>
 	<!-- DEV --><script src="//servicios.usig.buenosaires.gob.ar/nd-js/1.4/normalizadorDirecciones.min.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.core.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.util.js" type="text/javascript"></script>
@@ -13,8 +15,6 @@
 	<!-- DEV --><script src="../jquery.class.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.AjaxComponent.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.Punto.js" type="text/javascript"></script>
-	<!-- DEV --><script src="../usig.Calle.js" type="text/javascript"></script>
-	<!-- DEV --><script src="../usig.Direccion.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.GeoCoder.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.inventario.Clase.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.inventario.Objeto.js" type="text/javascript"></script>
@@ -28,10 +28,12 @@
     <!-- DEV --><script src="../usig.SeccionCatastral.js" type="text/javascript"></script>
     <!-- DEV --><script src="../usig.ManzanaCatastral.js" type="text/javascript"></script>
     <!-- DEV --><script src="../usig.ParcelaCatastral.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../usig.NormalizadorAMBA.js" type="text/javascript"></script>
     <!-- DEV --><script src="../usig.Suggester.js" type="text/javascript"></script>
     <!-- DEV --><script src="../usig.SuggesterLugares.js" type="text/javascript"></script>
 	<!-- DEV --><script src="../usig.SuggesterDirecciones.js" type="text/javascript"></script>
     <!-- DEV --><script src="../usig.SuggesterCatastro.js" type="text/javascript"></script>
+    <!-- DEV --><script src="../usig.SuggesterDireccionesAMBA.js" type="text/javascript"></script>
 	
 	<!-- RELEASE <script src="../usig.AutoCompleterFull.min.js" type="text/javascript"></script> -->
 	<!-- RELEASE <script src="../usig.SuggesterCatastro.min.js" type="text/javascript"></script> -->
@@ -71,9 +73,11 @@
 /*
         ac.addSuggester(new usig.SuggesterDirecciones(), { inputPause: 1, showError: true });
        	ac.addSuggester(new usig.SuggesterLugares(), { inputPause: 300, showError: false });
-*/		
+*/
 		ac.addSuggester('Catastro', { inputPause: 200, minTextLength: 1, showError: false });
-		
+        ac.addSuggester('DireccionesAMBA', { inputPause: 500, minTextLength: 3, showError: true });
+
+        
 		$('#mainForm').bind("submit", function () {
 			return false;
 		});

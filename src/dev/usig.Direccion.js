@@ -79,12 +79,16 @@ return function(calle1, calle2OAltura) {
     */		
 	this.toString = function() {
 		if (tipo == usig.Direccion.CALLE_ALTURA) {
-			return calle.toString()+' '+(altura>0?altura:'S/N');
+			res = calle.toString()+' '+(altura>0?altura:'S/N');
 		} else {
-			var nombreCruce = calleCruce.toString();
+			var nombreCruce = calleCruce.nombre;
 			var separador = nombreCruce.match(/^(I|Hi|HI).*/)?' e ':' y ';
-			return calle.toString()+separador+nombreCruce;				
+			res = calle.nombre+separador+calleCruce.nombre;				
 		}
+		if (calle.partido != undefined){
+			res = res+', '+calle.partido;
+		}
+		return res;
 	};
 	
 	/**
