@@ -82,3 +82,12 @@ usig.Punto.fromPunto = function(pt) {
 usig.Punto.fromObj = function(pt) {
 	return new usig.Punto(pt.x, pt.y);
 }
+
+/**
+ * Devuelve un nuevo punto creado a partir de un array
+ * @param {Object} pt Objeto conteniendo coordenadas x e y
+ * @return {usig.Punto} Punto creado
+ */
+usig.Punto.fromArray = function(pt) {
+	return new usig.Punto(pt[0], pt[1]);
+}
