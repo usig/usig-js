@@ -76,7 +76,7 @@ return usig.AjaxComponent.extend({
 				success(newResults);
 			}
 		}
-		
+
 		if (text != ''){
 			this.lastRequest = this.mkRequest(null, onSuccess.createDelegate(this, [success, maxSug], 1), error, this.opts.server + '&maxOptions='+maxSug+'&direccion='+text);
 		}else{
@@ -117,7 +117,7 @@ return usig.AjaxComponent.extend({
 	 * Permite abortar la ultima consulta realizada
 	 */
 	abort: function() {
-		if (this.lastRequest) {
+		if (this.lastRequest && false) {
 			this.lastRequest.abort();
 			this.lastRequest = null;
 	       	if (typeof(this.opts.afterAbort) == "function") {
