@@ -86,6 +86,34 @@ return usig.AjaxComponent.extend({
 	},
 
 	/**
+	 * Realiza una geocodificacion a partir de una instancia de usig.Direccion (NormalizadorDireccionesJS)
+     * @param {usig.Direccion} dir Direccion a geocodificar.  
+     * @param {Function} success Funcion callback que es llamada al concretarse con exito la geocodificacion.
+     * Recibe como parametro una instancia de usig.Punto. 
+     * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
+     * @param {String} metodo (optional) Metodo de geocodificacion a utilizar (solo aplicable a direcciones calle-altura).   
+    */
+	geoCodificarDireccion: function(dir, success, error, metodo) {
+		if (!(dir instanceof usig.Direccion)) {
+			throw('dir debe ser una instancia de usig.Direccion');
+			return;
+		}
+		
+		function onSuccess (results, success, dir){
+			for (i=0; i<results.direccionesNormalizadas.length; i++){
+				res = results.direccionesNormalizadas[i]
+				if ((res.cod_calle == dir.getCalle().codigo) && (res.cod_calle_cruce == dir.getCalleCruce().codigo)){
+					p = new usig.Punto(res.coordenadas.x, res.coordenadas.y);
+					success(p);
+				}
+			}
+		}
+
+		urlServiceCall = this.opts.server+'&geocodificar=True&direccion='+dir.toString();
+		this.lastRequest = this.mkRequest(null, onSuccess.createDelegate(this, [success, dir], 1), error, urlServiceCall);
+	},
+	
+	/**
 	 * Permite abortar la ultima consulta realizada
 	 */
 	abort: function() {
@@ -122,7 +150,7 @@ usig.NormalizadorAMBA.WrongParameters = function() {
 
 usig.NormalizadorAMBA.defaults = {
 	debug: true,
-	server: 'http://10.75.0.112:5000/?exclude=caba&geocodificar=True',
+	server: 'http://10.75.0.112:5000/?exclude=caba',
 	maxSuggestions: 10,
 	serverTimeout: 5000,
 	maxRetries: 3,

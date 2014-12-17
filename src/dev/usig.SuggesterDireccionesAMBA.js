@@ -59,8 +59,12 @@ return usig.Suggester.extend({
 	 * (una instancia de usig.Geometria) 
 	 */
 	getGeoCoding: function(obj, callback) {
-		if ((obj instanceof usig.Direccion) && (obj.getCoordenadas() instanceof usig.Punto)) {
-			callback(obj.getCoordenadas());
+		if (obj instanceof usig.Direccion) {
+			if (obj.getCoordenadas() instanceof usig.Punto) {
+				callback(obj.getCoordenadas());
+			} else {
+				this.opts.normalizadorAMBA.geoCodificarDireccion(obj, callback)
+			}
 		} else {
 			callback(new usig.Suggester.GeoCodingTypeError());
 		}
