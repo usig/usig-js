@@ -53,19 +53,21 @@ return usig.AjaxComponent.extend({
 				if (res.tipo == 'calle'){
 					sug = new usig.Calle(res.cod_calle, res.nombre_calle, [], []);
 					sug.partido = res.nombre_partido;
-					sug.descripcion = res.nombre_partido;
+					sug.descripcion = res.nombre_localidad + ', ' +res.nombre_partido;
 				}else{
 					calle = new usig.Calle(res.cod_calle, res.nombre_calle, [], []);
 					calle.partido = res.nombre_partido;
+					calle.localidad = res.nombre_localidad;
 					cruce = new usig.Calle(res.cod_calle_cruce, res.nombre_calle_cruce, [], []);
 					cruce.partido = res.nombre_partido;
+					cruce.localidad = res.nombre_localidad;
 
 					sug = new usig.Direccion(calle,cruce);
 					if (res.coordenadas!=undefined){
 						p = new usig.Punto(res.coordenadas.x, res.coordenadas.y);
 						sug.setCoordenadas(p);
 					}
-					sug.descripcion = res.nombre_partido;
+					sug.descripcion = res.nombre_localidad + ', ' +res.nombre_partido;
 				}
 				newResults.push(sug);
 				this.showDebug(res);

@@ -86,7 +86,7 @@ return function(calle1, calle2OAltura) {
 			res = calle.nombre+separador+calleCruce.nombre;				
 		}
 		if (calle.partido != undefined){
-			res = res+', '+calle.partido;
+			res = res+', '+calle.localidad;
 		}
 		return res;
 	};
