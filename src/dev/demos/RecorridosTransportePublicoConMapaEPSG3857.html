@@ -5,6 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>USIG - Recorridos</title>
     <link rel="stylesheet" type="text/css" href="css/demos.css" />
+    <link rel="stylesheet" type="text/css" href="../css/transportes.css" />
     <style>
         body {
     		width: 95%;
@@ -116,7 +117,7 @@
 	$.noConflict();
 	jQuery(document).ready(function($) {
 		var origen, destino, recorridos;
-
+		
 		var ac = new usig.AutoCompleter('o', {
        		debug: false,
        		rootUrl: '../',

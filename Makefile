@@ -124,11 +124,13 @@ RECORRIDOS_FULL_FILES=\
       $(SRC)/jquery.class.js \
       $(SRC)/usig.AjaxComponent.js \
       $(SRC)/usig.Recorridos.js \
-      $(SRC)/usig.Recorrido.js
+      $(SRC)/usig.Recorrido.js \
+      $(SRC)/i18n/usig.Recorrido.es.js
       
 RECORRIDOS_FILES=\
       $(SRC)/usig.Recorridos.js \
-      $(SRC)/usig.Recorrido.js
+      $(SRC)/usig.Recorrido.js \
+      $(SRC)/i18n/usig.Recorrido.es.js
 
 PUBLISHER_FILES=\
       $(SRC)/jquery.class.js \
@@ -204,6 +206,7 @@ prepare: docs debug
 	rsync -avz --exclude '.svn' --delete $(SRC)/demos/css $(REL)/demos/
 	rsync -avz --exclude '.svn' --delete $(SRC)/ejemplos $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/css $(REL)/
+	rsync -avz --exclude '.svn' --delete $(SRC)/i18n $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/images $(REL)/
 	rsync -avz --exclude '.svn' --delete $(SRC)/lib $(REL)/
 	rsync -avz --exclude '.svn' $(SRC)/tests/*.js $(REL)/tests/

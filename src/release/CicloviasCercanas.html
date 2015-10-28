@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>USIG - Ciclovias Cercanas</title>
+    <link rel="stylesheet" type="text/css" href="css/demos.css" />
+    <style>
+    	body {
+    		width: 550px;
+    	}	
+    	#recorridos {
+    		margin-top: 10px;
+    	}
+		
+    </style>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script src="../usig.AutoCompleterFull.min.js" type="text/javascript"></script> 
+	<script src="../usig.Recorridos.min.js" type="text/javascript"></script> 
+
+	<script type="text/javascript">
+	$.noConflict();
+	jQuery(document).ready(function($) {
+		var origen;
+
+		var ac = new usig.AutoCompleter('o', {
+       		debug: false,
+       		rootUrl: '../',
+       		onReady: function() {
+       			$('#o').val('').removeAttr('disabled').focus();	        			
+       		},
+       		afterSelection: function(option) {
+       			if (option instanceof usig.Direccion || option instanceof usig.inventario.Objeto) {
+       				origen = option;
+       			}
+       		},
+       		afterGeoCoding: function(pt) {
+    			if (pt instanceof usig.Punto) {
+    				if (origen instanceof usig.Direccion) {
+    					origen.setCoordenadas(pt);
+    				}				
+    			}
+       		} 
+       	});
+		
+		$('#mainForm').bind("submit", function () {
+			return false;
+		});	
+	
+		$('#buscar').click(function(ev) {
+			ev.preventDefault();
+			if (origen) {
+				usig.Recorridos.cicloviasCercanas(origen, function(data) {
+					var html = '<table><thead><tr><th>Distancia&nbsp;(m)</th><th>Nombre</th><th>Tipo</th><th>Dirección</th></thead><tbody>'
+					for (var i=0,l=data.ciclovias.length;i<l;i++) {
+						html+='<tr><td align="center">'+data.ciclovias[i].distancia.toFixed(2)+'</td><td>'+data.ciclovias[i].nombre+'</td><td>'+data.ciclovias[i].tipo+'</td><td>'+data.ciclovias[i].direccion.calle+' '+(data.ciclovias[i].direccion.altura?data.ciclovias[i].direccion.altura:'S/N')+'</td></tr>';
+					}
+					html += '</tbody></table>';
+					$('#recorridos').html(html);
+				}, function() {
+					$('#recorridos').html('Se produjo un error el buscar ciclovias cercanas.');
+				});
+				$('#recorridos').html('Buscando ciclovías cercanas...');
+			} else {
+				$('#recorridos').html('Debe ingresar una direccion/lugar en el campo de origen.');
+			}
+		});
+		
+	});	
+	</script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="header">
+        <div id="logo"><h1>USIG - Ciclovias cercanas </h1></div>
+      </div>
+      <div id="buscador">
+       <form id="mainForm" accept-charset="utf-8">
+      	<label for="o">Direccion</label>
+     	<input type="text" size="30" name="o" id="o" title="Origen del recorrido" class="text"/>
+     	<span id="ejemplo">ej.: Callao y Corrientes, Florida 550, Teatro San Martín, etc.</span>
+	   	<br/>
+     	<a class="button" id="buscar" href="#">Buscar Ciclovias</a>
+	    <div id="recorridos">No hay ciclovias para mostrar</div>
+       </form>
+      </div>
+      <div id="footer">
+        <p>&copy; 2011-2012 USIG - Unidad de Sistemas de Información Geográfica</p>
+      </div>
+    </div>
+  </body>
+</html>
