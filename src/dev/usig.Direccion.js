@@ -185,18 +185,24 @@ usig.Direccion.CALLE_Y_CALLE 	= 1;
  */
 usig.Direccion.fromObj = function(obj) {
 	var dir = null;
-	if (obj.tipo != undefined) {
+	if (obj.tipo != undefined && obj.calle && obj.calle.codigo) {
 		dir = new usig.Direccion(usig.Calle.fromObj(obj.calle), 
 				(obj.tipo==usig.Direccion.CALLE_ALTURA)?obj.altura:usig.Calle.fromObj(obj.calle_cruce));
 	} else {
-		var calle = new usig.Calle(obj.cod_calle, obj.calle);
-		if (obj.cod_calle2 != null) {
+		var calle = usig.Calle.fromObj(obj);
+		if (obj.cod_calle2 || obj.cod_calle_cruce) {
 			// Direccion Calle y Calle
-			dir = new usig.Direccion(calle, new usig.Calle(obj.cod_calle2, obj.calle2));
+			var calle_cruce = new usig.Calle(obj.cod_calle2 || obj.cod_calle_cruce, obj.calle2 || obj.nombre_calle_cruce);
+			calle_cruce.setPartido(obj.nombre_partido);
+			calle_cruce.setLocalidad(obj.nombre_localidad);			
+			dir = new usig.Direccion(calle, calle_cruce);
 		} else {
 			// Direccion Calle Altura
 			dir = new usig.Direccion(calle, obj.altura);
-		}		
+		}
+		if (obj.nombre_partido)	{
+			dir.descripcion = obj.nombre_localidad + ', ' +obj.nombre_partido
+		}
 	}
 	if (obj.smp != undefined && obj.smp != null) {
 		dir.setSmp(obj.smp);

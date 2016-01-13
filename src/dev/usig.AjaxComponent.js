@@ -61,7 +61,7 @@ return jQuery.Class.create({
 	 * utiliza el default seteado en la inicializacion del componente.
 	 */
 	mkRequest: function(data, success, error, url) {
-		var requestTimeout = null, numRetries = 0;
+		var requestTimeout = null, numRetries = 0, promise = $.Deferred();
 		
 		function onAjaxSuccess(data, callback) {
 			clearTimeout(requestTimeout);
@@ -71,6 +71,7 @@ return jQuery.Class.create({
 	       		this.opts.afterServerResponse();
 	       	}
 			callback(data);
+	       	promise.resolve(data);
 		}; 
 		
 		function onAjaxError(data, callback) {
@@ -81,6 +82,7 @@ return jQuery.Class.create({
 	       		if (typeof(callback)=="function") {
 	       			callback(data);
 	       		}
+	       		promise.reject(data);
 	       	} else {
 				if (this.opts.debug) { usig.debug('usig.AjaxComponent('+this.name+') Ajax Request Error. Retrying... ('+numRetries+')'); }			
 	       	}
@@ -142,7 +144,8 @@ return jQuery.Class.create({
        	if (this.opts.serverTimeout > 0)
        		requestTimeout = setTimeout(onAjaxTimeout.createDelegate(this, [ajaxReq, ajaxParams]), this.opts.serverTimeout);
        	
-       	return ajaxReq;
+       	// return ajaxReq;
+       	return promise;
 	},
 		
 	/**

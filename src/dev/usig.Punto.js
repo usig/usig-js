@@ -56,7 +56,7 @@ usig.Punto.fromWkt = function(wkt) {
 /*	wkt = wkt.replace('POINT (', '').replace(')', '');
 	var splited = wkt.split(' ');
 	return new usig.Punto(splited[0], splited[1]);*/
-	var regExpPunto = /^POINT *\(([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+)\)$/;
+	var regExpPunto = /^POINT *\((-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)\)$/;
 	var res = null;
 	
 	if (resMatch = wkt.match(regExpPunto)){

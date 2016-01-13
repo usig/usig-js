@@ -50,13 +50,17 @@ return usig.Suggester.extend({
 		if (this.opts.debug) usig.debug('usig.SuggesterDirecciones.getSuggestions(\'' + text + '\')');
 		var maxSug = maxSuggestions!=undefined?maxSuggestions:this.opts.maxSuggestions;
 		try {
-			callback(this.opts.normalizadorDirecciones.normalizar(text, maxSug));
+			var dirs = this.opts.normalizadorDirecciones.normalizar(text, maxSug);
+			dirs.map(function(d) { d.descripcion='Ciudad Autónoma de Buenos Aires'});
+			callback(dirs);
 		} catch (error) {
 			if (this.opts.ignorarTextoSobrante) {
 				try {
 					var opciones = this.opts.normalizadorDirecciones.buscarDireccion(text);
 					if (opciones!==false) {
-						callback([opciones.match]);
+						var dirs = [opciones.match];
+						dirs.map(function(d) { d.descripcion='Ciudad Autónoma de Buenos Aires'});
+						callback(dirs);
 					} else {
 						callback(error);
 					}
@@ -119,8 +123,8 @@ usig.SuggesterDirecciones.defaults = {
 	maxRetries: 5,
 	maxSuggestions: 10,
 	acceptSN: true,
-	callesEnMinusculas: false,
-	ignorarTextoSobrante: true
+	callesEnMinusculas: true,
+	ignorarTextoSobrante: false
 };
 
 usig.registerSuggester('Direcciones', usig.SuggesterDirecciones);

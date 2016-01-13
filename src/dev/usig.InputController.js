@@ -90,9 +90,11 @@ return function(idField, options) {
 	 * Setea el foco sobre el control
     */	
 	this.setFocus = function() {
+		/*
 		try {
 			$(field).focus();
 		} catch(e) {};
+		*/
 	}
 	
 	if (!field) {

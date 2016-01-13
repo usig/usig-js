@@ -74,7 +74,9 @@ return function(idField, options, viewCtrl) {
 		pendingRequests = {},
 		numPendingRequests = 0,
 		appendResults = false,
-		appendBufferedResults = false;
+		appendBufferedResults = false,
+		autoSelectFirst = false,
+		setAndGoPromise = null;
 		
 	field.setAttribute("autocomplete","off");
 		
@@ -275,6 +277,15 @@ return function(idField, options, viewCtrl) {
 	this.hide = function() {
 		view.hide();
 	}
+
+	/**
+	 * Devuelve una referencia al control que muestra las sugerencias
+	 * @return {Object} Devuelve una referencia al control que muestra las sugerencias
+	 */
+	this.getDialogControl = function() {
+		return view;
+	}
+
 	
 	/**
 	 * Indica si algun suggester esta listo para responder.
@@ -294,10 +305,38 @@ return function(idField, options, viewCtrl) {
 		return retval;
 	}
 
+	/**
+	 * Setea un nuevo valor para el input selecciona la primera sugerencia que aparezca
+	 * @param {String} text Texto a ingresar en el input
+	 * @return {jQuery.Promise} Promesa que se resuelve al seleccionar un elemento.
+	 */	
+	this.setAndGo = function(text) {
+		ic.setValue(text);
+		autoSelectFirst = true;
+		onInputChange(text);
+		setAndGoPromise=$.Deferred();
+		return setAndGoPromise;
+	}
+
+	/**
+	 * Blanquea el input
+	 */	
+	this.clear = function() {
+		ic.setValue('');
+		onInputChange('');
+	}
+
 	function showResults() {
 		if (opts.debug) usig.debug('Flushing buffered results... ('+(appendBufferedResults?'append':'replace')+')');
 		if (field.value != "" && bufferedResults.length > 0) {
 			view.show(bufferedResults, appendBufferedResults);
+		}
+		if (autoSelectFirst) {
+			autoSelectFirst = false;
+			view.selectOption();
+			if (setAndGoPromise) {
+				setAndGoPromise.resolve();
+			}
 		}
 		bufferedResults = [];
 		flushTimer = null;
@@ -341,8 +380,8 @@ return function(idField, options, viewCtrl) {
 					}
 				}else{
 					if (results.length == 0){
-						if (!appendResults && sugOpts.showError) view.showMessage(opts.texts.nothingFound);
-					} else {
+						if (!appendResults && sugOpts.showError && focused) view.showMessage(opts.texts.nothingFound);
+					} else if (results instanceof Array) {
 						if (opts.debug) usig.debug('usig.Autocompleter.sugerir.callback(results)');
 						// Le pongo el nombre del suggester para saber de cual de ellos es el resultado.
 						results = results.map(function(x){ x.suggesterName = suggester.name; return x });
@@ -396,24 +435,25 @@ return function(idField, options, viewCtrl) {
 	function selectionHandler(option) {
 		if (opts.debug) usig.debug('usig.AutoCompleter.selectionHandler('+option+')');
 		if (opts.debug) usig.debug(option);
-
-		abort();
-		var newValue = option.toString();
-		if (opts.debug) usig.debug('usig.AutoCompleter: setting new value '+newValue);
-		ic.setValue(newValue);
-		if (typeof(opts.afterSelection) == "function") {
-			if (opts.debug) usig.debug('usig.AutoCompleter: calling afterSelection');
-			opts.afterSelection(option);
-		}
-		if (typeof(opts.afterGeoCoding) == "function") {
-			if (typeof(opts.beforeGeoCoding) == "function") {
-				if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
-				opts.beforeGeoCoding();
+		if (option) {
+			abort();
+			var newValue = option.toString();
+			if (opts.debug) usig.debug('usig.AutoCompleter: setting new value '+newValue);
+			ic.setValue(newValue);
+			if (typeof(opts.afterSelection) == "function") {
+				if (opts.debug) usig.debug('usig.AutoCompleter: calling afterSelection');
+				opts.afterSelection(option);
 			}
-			if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding '+option.suggesterName);
-			suggestersByName[option.suggesterName].getGeoCoding(option, onAfterGeoCoding);
+			if (typeof(opts.afterGeoCoding) == "function") {
+				if (typeof(opts.beforeGeoCoding) == "function") {
+					if (opts.debug) usig.debug('usig.AutoCompleter: calling beforeGeoCoding');
+					opts.beforeGeoCoding();
+				}
+				if (opts.debug) usig.debug('usig.AutoCompleter: geoCoding '+option.suggesterName);
+				suggestersByName[option.suggesterName].getGeoCoding(option, onAfterGeoCoding);
+			}
+			ic.setFocus();
 		}
-		ic.setFocus();
 	}
 	
 	/*
@@ -575,7 +615,7 @@ usig.AutoCompleter.defaults = {
 	flushTimeout: 0,
 	hideOnBlur: true,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/dev/',
+	rootUrl: '//servicios.usig.buenosaires.gob.ar/usig-js/3.1/',
 	skin: 'bootstrap',
 	idOptionsDiv: undefined,
 	// Opciones generales

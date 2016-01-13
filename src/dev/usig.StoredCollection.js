@@ -159,11 +159,11 @@ return usig.Publisher.extend({
 	buscar: function(needle, comparator, maxSug) {
 		var listFound = [];
 			l = this.collection.length;
-		
+
 		for (var i=0; i<l; i++) {
 			if (comparator(needle, this.collection[i])) {
 				listFound.push(this.collection[i]);
-				if (maxSug && maxSug<=i) break;
+				if (maxSug && maxSug<=listFound.length) break;
 			}
 		}
 		return listFound;

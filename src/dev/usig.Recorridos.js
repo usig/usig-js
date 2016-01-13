@@ -17,8 +17,12 @@ usig.defaults.Recorridos = {
 	piwikBaseUrl: '//usig.buenosaires.gov.ar/piwik/',
 	piwikSiteId: 4, 
 	server: '//recorridos.usig.buenosaires.gob.ar/2.0/',
+	// searchApi: Math.random() > 0?'consultar_gba':'consultar_recorridos',
+	searchApi: 'consultar_gba',
+	// server: '//10.75.0.52:8085/',
+	// server: '//10.20.1.41/2.0/',
 	serverTimeout: 30000,
-	maxRetries: 2,
+	maxRetries: 1,
 	lang: 'es',
 	consultaRecorridos: {
 		tipo: 'transporte',
@@ -34,26 +38,26 @@ usig.defaults.Recorridos = {
 		max_results:10
 	},
 	colorTemplates: [
-		new usig.TripTemplate(1, '#0074FF'),
-		new usig.TripTemplate(2, '#DD0083'),
-		new usig.TripTemplate(3, '#009866'),
-		new usig.TripTemplate(4, '#FF9E29'),
-		new usig.TripTemplate(5, '#FF6633'),
-		new usig.TripTemplate(6, '#5B3BA1'),
-		new usig.TripTemplate(7, '#98C93C'),
-		new usig.TripTemplate(8, '#EE3A39'),
-		new usig.TripTemplate(9, '#4ED5F9'),
-		new usig.TripTemplate(10,'#FFCC05'),
-		new usig.TripTemplate(11, '#84004F'),
-		new usig.TripTemplate(12, '#00A5EB'),
-		new usig.TripTemplate(13, '#016406'),
-		new usig.TripTemplate(14, '#AB62D2'),
-		new usig.TripTemplate(15, '#C49F25'),
-		new usig.TripTemplate(16, '#9F2510'),
-		new usig.TripTemplate(17, '#0003CF'),
-		new usig.TripTemplate(18, '#CBA4FA'),
-		new usig.TripTemplate(19, '#00FFC9'),
-		new usig.TripTemplate(20, '#DC6767')
+		new usig.TripTemplate(0, '#0074FF'),
+		new usig.TripTemplate(1, '#DD0083'),
+		new usig.TripTemplate(2, '#009866'),
+		new usig.TripTemplate(3, '#FF9E29'),
+		new usig.TripTemplate(4, '#FF6633'),
+		new usig.TripTemplate(5, '#5B3BA1'),
+		new usig.TripTemplate(6, '#98C93C'),
+		new usig.TripTemplate(7, '#EE3A39'),
+		new usig.TripTemplate(8, '#4ED5F9'),
+		new usig.TripTemplate(9,'#FFCC05'),
+		new usig.TripTemplate(10, '#84004F'),
+		new usig.TripTemplate(11, '#00A5EB'),
+		new usig.TripTemplate(12, '#016406'),
+		new usig.TripTemplate(13, '#AB62D2'),
+		new usig.TripTemplate(14, '#C49F25'),
+		new usig.TripTemplate(15, '#9F2510'),
+		new usig.TripTemplate(16, '#0003CF'),
+		new usig.TripTemplate(17, '#CBA4FA'),
+		new usig.TripTemplate(18, '#00FFC9'),
+		new usig.TripTemplate(19, '#DC6767')
 	]
 };	
 	
@@ -157,8 +161,30 @@ return new (usig.AjaxComponent.extend({
 		}
 		return ubicacion;
 	},
+
+	_expandirOrigenDestino: function(origen, destino) {
+		var data = {},
+			ubicacionOrigen = this.getUbicacion(origen);
+		if (ubicacionOrigen.coordenadas){
+			
+			data.origen = ubicacionOrigen.coordenadas.x+','+ubicacionOrigen.coordenadas.y;	
+		}
+		data.origen_calles2 = ubicacionOrigen.codigo_calle2;
+		data.origen_calles = ubicacionOrigen.codigo_calle;
+		data.origen_calle_altura = ubicacionOrigen.altura;
+		var ubicacionDestino = this.getUbicacion(destino);
+		if (ubicacionDestino.coordenadas){
+			
+			data.destino = ubicacionDestino.coordenadas.x+','+ubicacionDestino.coordenadas.y;	
+		}
+
+		data.destino_calles2 = ubicacionDestino.codigo_calle2;
+		data.destino_calles = ubicacionDestino.codigo_calle;
+		data.destino_calle_altura = ubicacionDestino.altura;
+		return data;
+	},
 	
-	onBuscarRecorridosSuccess: function(data, callback) {
+	onBuscarRecorridosSuccess: function(data, callback, origen, destino) {
 		var recorridos = [], templates = this.opts.colorTemplates, lang = this.opts.lang;
 		if (this.opts.debug) usig.debug('usig.Recorridos onBuscarRecorridosSuccess');
 		$.each(data.planning, function(i, plan) {			
@@ -170,7 +196,7 @@ return new (usig.AjaxComponent.extend({
 				case 'walk':template = templates[2]; break;//verde
 				case 'transporte_publico': template = templates[i];break;
 			}
-			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: template, lang: lang }));
+			recorridos.push(new usig.Recorrido(JSON.parse(plan), { template: template, lang: lang }, origen, destino));
 			//recorrido.loadPlan
 		});
 		if (typeof(callback) == "function")
@@ -233,7 +259,12 @@ return new (usig.AjaxComponent.extend({
 	 * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 	 */
 	buscarRecorridos: function(origen, destino, success, error, options) {
-		var data = $.extend({}, this.opts.consultaRecorridos, options);
+		var origenDestino = {};
+		if (origen && destino) {
+			origenDestino = this._expandirOrigenDestino(origen, destino);
+		}
+		var data = $.extend({}, this.opts.consultaRecorridos, options, origenDestino);
+		/*
 		var ubicacionOrigen = this.getUbicacion(origen);
 		if (ubicacionOrigen.coordenadas){
 			
@@ -251,18 +282,23 @@ return new (usig.AjaxComponent.extend({
 		data.destino_calles2 = ubicacionDestino.codigo_calle2;
 		data.destino_calles = ubicacionDestino.codigo_calle;
 		data.destino_calle_altura = ubicacionDestino.altura;
+		*/
 		//this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success], 1), error, this.opts.server + 'recorridos_' + data.tipo_recorrido);		
-		this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success], 1), error, this.opts.server + 'consultar_recorridos');
+		this.lastRequest = this.mkRequest(data, this.onBuscarRecorridosSuccess.createDelegate(this, [success, origen, destino], 1), error, this.opts.server + this.opts.searchApi);
 
 	},
 	
-	cargarPlanRecorrido: function(id, success, error, options) {
+	cargarPlanRecorrido: function(id, success, error, options, origen, destino) {
 		//this.lastRequest = this.mkRequest({trip_id: id}, success, error, this.opts.server + 'load_plan');
-		var data = $.extend({}, this.opts.consultaRecorridos, options);
+		var origenDestino = {};
+		if (origen && destino) {
+			origenDestino = this._expandirOrigenDestino(origen, destino);
+		}
+		var data = $.extend({}, this.opts.consultaRecorridos, options, origenDestino);
 		data.trip_id = id;
 		data.tipo = 'loadplan';
 
-		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + 'consultar_recorridos');
+		this.lastRequest = this.mkRequest(data, success, error, this.opts.server + this.opts.searchApi);
 	},
 	
 	/**

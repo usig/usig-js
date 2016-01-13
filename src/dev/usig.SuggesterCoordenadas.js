@@ -3,9 +3,9 @@ if (typeof (usig) == "undefined")
 	usig = {};
 	
 /**
- * @class SuggesterDireccionesAMBA
- * Implementa un suggester de direcciones del AMBA.<br/>
- * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, usig.NormalizadorAMBA<br/>
+ * @class SuggesterCoordenadas
+ * Implementa un suggester de coordenadas usando el geocoder.<br/>
+ * Requiere: jQuery-1.3.2+, jquery.class, usig.Suggester, usig.Geocoder<br/>
  * @namespace usig
  * @cfg {Integer} maxSuggestions Maximo numero de sugerencias a devolver
  * @cfg {Integer} serverTimeout Tiempo maximo de espera (en ms) antes de abortar una busqueda en el servidor
@@ -18,37 +18,37 @@ if (typeof (usig) == "undefined")
  * @constructor 
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */	
-usig.SuggesterDireccionesAMBA = (function($) { // Soporte jQuery noConflict
+usig.SuggesterCoordenadas = (function($) { // Soporte jQuery noConflict
 return usig.Suggester.extend({
-
+	
 	init: function(options){
-		var opts = $.extend({}, usig.SuggesterDireccionesAMBA.defaults, options);
-		
-        this._super('DireccionesAMBA', opts);
-		// El normalizador puede ser opcional para 
-		// permitir overridearlos en los tests de unidad y reemplazarlos por mock objects.
-		if (!this.opts.normalizadorAMBA) {
-			this.opts.normalizadorAMBA = new usig.NormalizadorAMBA(opts);
-			this.cleanList.push(this.opts.normalizadorAMBA);
-		}
+		var opts = $.extend({}, usig.SuggesterCoordenadas.defaults, options);
+		this._geocoder = new usig.GeoCoder();
+        this._super('Coordenadas', opts);
 		if (opts.onReady && typeof(opts.onReady) == "function") {
 			opts.onReady();
 		}
 	},
 	
 	/**
-	 * Dado un string, realiza una busqueda en el normalizador AMBA y llama al callback con las
+	 * Dado un string, realiza una busqueda en el indice catastral y llama al callback con las
 	 * opciones encontradas.
 	 * @param {String} text Texto de input
 	 * @param {Function} callback Funcion que es llamada con la lista de sugerencias
 	 * @param {Integer} maxSuggestions (optional) Maximo numero de sugerencias a devolver
 	 */
 	getSuggestions: function(text, callback, maxSuggestions) {
-		var maxSug = maxSuggestions!=undefined?maxSuggestions:this.opts.maxSuggestions;
-		try {
-			this.opts.normalizadorAMBA.buscar(text, callback, function (){}, maxSug);
-		} catch (error) {
-			callback(error);
+		var maxSug = maxSuggestions!=undefined?maxSuggestions:this.opts.maxSuggestions,
+			re = /(-?\d+\.\d+)\s*,?\s*(-?\d+\.\d+)\s*/g,
+			m = re.exec(text);
+		if (m) {
+			try {
+				$.when(this._geocoder.reverse(m[1], m[2])).then(function(d) {
+					callback([d]);
+				});
+			} catch (error) {
+				callback(error);
+			}
 		}
 	},
 	
@@ -59,14 +59,8 @@ return usig.Suggester.extend({
 	 * (una instancia de usig.Geometria) 
 	 */
 	getGeoCoding: function(obj, callback) {
-		if (obj instanceof usig.Direccion) {
-			if (obj.getCoordenadas() instanceof usig.Punto) {
-				callback(obj.getCoordenadas());
-			} else {
-				this.opts.normalizadorAMBA.geoCodificarDireccion(obj, callback)
-			}
-		} else {
-			callback(new usig.Suggester.GeoCodingTypeError());
+		if (typeof(callback) == "function") {
+			callback(obj.getCoordenadas());
 		}
 	},
 
@@ -74,7 +68,7 @@ return usig.Suggester.extend({
 	 * Permite abortar la ultima consulta realizada 
 	 */
 	abort: function() {
-		this.opts.normalizadorAMBA.abort();
+		
 	},
 	
 	/**
@@ -92,17 +86,15 @@ return usig.Suggester.extend({
 	 */
 	setOptions: function(options) {
 		this._super(options);
-		this.opts.normalizadorAMBA.setOptions(options);
 	}
 });
 //Fin jQuery noConflict support
 })(jQuery);
 
-usig.SuggesterDireccionesAMBA.defaults = {
-	debug: false,
+usig.SuggesterCoordenadas.defaults = {
 	serverTimeout: 30000,
 	maxRetries: 1,
 	maxSuggestions: 10
 };
 
-usig.registerSuggester('DireccionesAMBA', usig.SuggesterDireccionesAMBA);
+usig.registerSuggester('Coordenadas', usig.SuggesterCoordenadas);

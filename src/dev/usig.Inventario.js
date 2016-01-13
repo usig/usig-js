@@ -180,11 +180,11 @@ return usig.AjaxComponent.extend({
 		var id = typeof(obj) == 'object'?obj.id:obj;
 
 		if (typeof(id)=="string") {
-			this.lastRequestEpok = this.mkRequest({ id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.serverEpok + 'getObjectContent/');						
+			this.lastRequestEpok = this.mkRequest({ id: id, srid: this.opts.searchOptions.srid }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.serverEpok + 'getObjectContent/');						
 		} else {
 			id = parseInt(id);
 			if (id > 0) {
-				this.lastRequest = this.mkRequest({ id: id }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.server + 'getObjectContent/');						
+				this.lastRequest = this.mkRequest({ id: id, srid: this.opts.searchOptions.srid }, getObjetoResultsHandler.createDelegate(this, [success, obj], 1), error, this.opts.server + 'getObjectContent/');						
 			}
 		}
 	},
@@ -260,6 +260,7 @@ usig.Inventario.defaults = {
 		extent: undefined,
 		returnRawData: false,
 		searchInventario: false,
-		searchEpok: true
+		searchEpok: true,
+		srid: 4326
 	}
 }

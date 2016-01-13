@@ -31,6 +31,7 @@ return usig.AjaxComponent.extend({
 	
 	init: function(options) {
 		var opts = $.extend({}, usig.GeoCoder.defaults, options);		
+		this._normalizadorCaba = usig.NormalizadorDirecciones.init({ aceptarCallesSinAlturas: false, callesEnMinusculas: true });
 		this._super('GeoCoder', usig.GeoCoder.defaults.server, opts);
 	},
 	
@@ -177,14 +178,14 @@ return usig.AjaxComponent.extend({
      * {parcela: String, puerta: String, puerta_x: Float, puerta_y:Float, calle_alturas: String, 
      * esquina: String, metros_a_esquina: String, altura_par: String, altura_impar: String}
      * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
-	 * @return {Object} 
+	 * @return {jQueryDeferred} 
 	 */
 	reverseGeoCoding: function(x, y, success, error) {
 		var data = {
 				x: x,
 				y: y
 		};
-		this.mkRequest(data, success, error, this.opts.server+'reversegeocoding/')
+		return this.mkRequest(data, success, error, this.opts.server+'reversegeocoding/')
 	},
 	
 	/**
@@ -201,6 +202,64 @@ return usig.AjaxComponent.extend({
 				altura: altura
 		};
 		this.mkRequest(data, success, error, this.opts.server+'smp/')
+	},
+	
+	/**
+	 * Realiza una geocodificacion reversa de una coordenada geografica 
+	 * @param {Float} lat Latitud
+	 * @param {Float} lon Longitud
+     * @param {Function} success Funcion callback que es llamada al concretarse con exito la geocodificacion.
+     * Recibe como parametro un objeto conteniendo los siguientes datos: 
+     * {parcela: String, puerta: String, puerta_x: Float, puerta_y:Float, calle_alturas: String, 
+     * esquina: String, metros_a_esquina: String, altura_par: String, altura_impar: String}
+     * @param {Function} error Funcion callback que es llamada si falla la comunicacion con el servicio de geocodificacion. 
+	 * @return {jQueryDeferred} 
+	 */
+	reverse: function(lat, lon, success, error) {
+		var promise = $.Deferred(),
+			respuestaCaba = null,
+			respuestaAmba = null,
+			err = null,
+			reverseCaba = this.reverseGeoCoding(lon, lat, function(data) {
+				respuestaCaba = data;
+			}, function(e) {
+				err = e;
+			}),
+			reverseAmba = this.mkRequest({
+				lat: lat,
+				lng: lon
+			}, function(data) {
+				respuestaAmba = data;
+			}, function(e) {
+				err = e;
+			}, this.opts.reverseService);
+		var self = this;
+		$.when(reverseCaba, reverseAmba).then(function() {
+			if (respuestaAmba && respuestaAmba['direccion']) {
+				var dir = usig.Direccion.fromObj(respuestaAmba);
+				dir.clase = 'DireccionesAMBA';
+				promise.resolve(dir);
+				if (typeof(success) == "function") {
+					success(dir);
+				}
+			} else if (respuestaCaba) {
+				try {
+					var dir = self._normalizadorCaba.normalizar(respuestaCaba.esquina)[0];
+					dir.setCoordenadas(new usig.Punto(lon, lat));
+					dir.clase = "Direcciones";
+					promise.resolve(dir);
+					if (typeof(success) == "function") {
+						success(dir);
+					}
+				} catch(e) {}
+			} else {
+				promise.fail();
+				if (typeof(error) == "function") {
+					error(e);
+				}
+			}
+		});
+		return promise;
 	}
 	
 });
@@ -211,5 +270,6 @@ usig.GeoCoder.defaults = {
 	debug: false,
 	// server: 'http://10.75.0.59/wk/GeoCoderServer/src/www/server.php/',
 	server: '//ws.usig.buenosaires.gob.ar/geocoder/2.2/',
+	reverseService: '//servicios.usig.buenosaires.gob.ar/normalizar/',
 	metodo: undefined
 }

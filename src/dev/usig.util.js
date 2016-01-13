@@ -2,6 +2,33 @@
 if (typeof (usig) == "undefined")
 	usig = {};
 
+usig.Location = function(lat, lng, desc) {
+	this.lat = lat;
+	this.lng = lng;
+	this.desc = desc;
+
+	this.toString = function() {
+		return this.desc || 'Ubicación actual';
+	}
+
+	this.getCoordenadas = function() {
+		return new usig.Punto(this.lng, this.lat);
+	}
+
+	this.setLatLng = function(lat, lng) {
+		this.lat = lat;
+		this.lng = lng;
+	}
+
+	this.getLatLng = function() {
+		if (L && L.latLng) {
+			return L.latLng(this.lat, this.lng);
+		} else {
+			return this.getCoordenadas();
+		}
+	}
+}
+
 /**
  * @class usig
  * This class defines common public methods for USIG applications
@@ -142,6 +169,42 @@ jQuery.extendIf(usig, {
 		
 		return uri;
 	},
+
+	getQueryParameters : function(str) {
+        str = str || document.location.search;
+        return (!str && {}) || str.replace(/(^\?)/,'').split("&").map(function(n){return n = n.split("="),this[n[0]] = decodeURIComponent(n[1].replace(/\+/g, ' ')),this}.bind({}))[0];
+    },
+
+    geoLocate: function(onSuccess, onError, options) {
+    	var defaults = {
+	    		enableHighAccuracy: false, 
+	    		maximumAge: 0, 
+	    		timeout: 27000 
+	    	},
+	    	promise = $.Deferred(),
+			opts = $.extend({}, defaults, options),
+			self = this;
+
+		if ("geolocation" in navigator) {
+		  /* geolocation is available */
+			navigator.geolocation.getCurrentPosition(function(pos) {
+				var loc = new usig.Location(pos.coords.latitude, pos.coords.longitude);
+				promise.resolve(loc);
+				if (typeof(onSuccess) == "function") {
+					onSuccess(loc);
+				}
+			}, function(err) {
+				promise.fail(err);
+				if (typeof(onError) == "function") {
+					onError(err);
+				}
+			}, opts);
+		} else {
+		  return false;
+		}
+
+		return promise;
+    },
 
 	registeredSuggesters: {},
 	

@@ -88,7 +88,14 @@ usig.Calle = function(cod, nom, alturas, cruces) {
 	this.isEqual = function(calle) {
 		return this.codigo == calle.codigo;
 	};
-	
+
+	this.setPartido = function(partido) {
+		this.partido = partido || 'Ciudad Autónoma de Buenos Aires';
+	};
+
+	this.setLocalidad = function(localidad) {
+		this.localidad = localidad || '';
+	};	
 }
 
 /**
@@ -97,7 +104,10 @@ usig.Calle = function(cod, nom, alturas, cruces) {
  * @return {usig.Calle} Calle creada
  */
 usig.Calle.fromObj = function(obj) {
-	return new usig.Calle(obj.codigo, obj.nombre);
+	var c = new usig.Calle(obj.codigo || obj.cod_calle, obj.nombre || obj.calle || obj.nombre_calle);
+	c.setPartido(obj.nombre_partido);
+	c.setLocalidad(obj.nombre_localidad);
+	return c;
 }
 
 }

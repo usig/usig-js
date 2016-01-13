@@ -12,11 +12,13 @@ if (typeof(usig.Recorrido) == "undefined") {
  * @param {Object} options (optional) Un objeto conteniendo overrides para las opciones disponibles 
 */
 usig.Recorrido = (function($) { // Soporte jQuery noConflict
-return function(datos, options) {
+return function(datos, options, origen, destino) {
 	var id=0,
 		tiempo=0,
-		origen,
-		destino,
+		coordOrigen,
+		_origen,
+		coordDestino,
+		_destino,
 		tipo,
 		resumen,
 		plan,
@@ -184,7 +186,7 @@ return function(datos, options) {
 							}
 							type_action = 'subte';
 						} else if(item.service_type == '3') { //colectivo
-							if (item.trip_description != "" && !item.any_trip){ //hay ramales y no son todos los que te llevan
+							if (item.trip_description && item.trip_description != "" && !item.any_trip){ //hay ramales y no son todos los que te llevan
 								ramal = currentAction ['board']['ramales'].texto.replace('$ramal',item.trip_description.replace(/\$/g,", "));
 							}else{
 								ramal = (!item.any_trip)? ' ('+opts.texts.hayRamales+')':'';
@@ -197,7 +199,7 @@ return function(datos, options) {
 							type_action = 'colectivo';
 						} else if(item.service_type == '2') { //tren
 							if (item.trip_description != ""){ //hay ramales 
-								ramal = ' ('+item.trip_description.replace('$',' y ')+')'; 
+								ramal = ' ('+item.trip_description.replace(/\$/g,", ")+')'; 
 							}else{
 								ramal = (!item.any_trip)? ' ('+opts.texts.hayRamales+')':'';
 							}
@@ -211,12 +213,15 @@ return function(datos, options) {
 						if(!walking_state) {
 							if (item.calle2!=null){
 								current_action += currentAction ['board']['esquina'].texto; 
-							}else{
+							} else if (item.calle1!=null) {
 								current_action += currentAction ['board']['calle_nro'].texto; 
+							}
+							if (changes <=0 && item.stop_name!=null) {
+								current_action += currentAction ['board']['estacion'].texto; 
 							}
 						}
 						changes +=1;
-						//current_action = current_action.replace('$esquina',item.stop_description);
+						// current_action = current_action.replace('$esquina',item.stop_description);
 						current_action = current_action.replace('$calle1',item.calle1);
 						current_action = current_action.replace('$calle2',item.calle2);
 						current_action = current_action.replace('$nro',""); //FIX: cuando tenga info nro						
@@ -226,6 +231,7 @@ return function(datos, options) {
 						current_action = current_action.replace('$subte',item.service.toUpperCase().replace('LÍNEA',''));
 						current_action = current_action.replace('$ramal',ramal);
 						current_action = current_action.replace('$sentido',item.trip_description);
+						// console.log(item, current_action);
 						
 					} else if(item.type == 'Alight') {
 						if(item.service_type != undefined && (item.service_type == '2' || item.service_type == '1')){  
@@ -423,8 +429,8 @@ return function(datos, options) {
 		try {
 			id=datos.id;
 			tiempo=datos.tiempo;
-			origen=datos.origen;
-			destino=datos.destino;
+			coordOrigen=datos.origen;
+			coordDestino=datos.destino;
 			tipo=datos.type;
 			resumen=datos.summary;
 			traveled_distance=datos.traveled_distance;
@@ -597,6 +603,10 @@ return function(datos, options) {
 							}
 							addGeoJsonMarker(g, item.gml);
 						}
+					} else if (item.type == 'Alight') {
+						if ((item.service_type == '2' || item.service_type == '3') && item.gml) {
+							addGeoJsonMarker(g, item.gml);
+						}
 					} else if (item.type == 'Bus' || item.type == 'SubWay' || item.type == 'Street') {
 						addGeoJsonEdges(g, item.gml);
 						// gml.addEdges([item.gml]);
@@ -744,7 +754,7 @@ return function(datos, options) {
 			if (data.plan) {
 				cargarPlan(data, success);
 			}else{
-				usig.Recorridos.cargarPlanRecorrido(id, cargarPlan.createDelegate(this, [success], 1), error, opciones);
+				usig.Recorridos.cargarPlanRecorrido(id, cargarPlan.createDelegate(this, [success], 1), error, opciones, _origen, _destino);
 			}
 		} else {
 			if (typeof(success) == "function")
@@ -790,7 +800,7 @@ return function(datos, options) {
 	 * @return {String} Origen del recorrido
 	 */
 	this.getCoordenadaOrigen = function() {
-		return origen;
+		return coordOrigen;
 	};
 	
 	/**
@@ -798,7 +808,7 @@ return function(datos, options) {
 	 * @return {String} Destino del recorrido
 	 */
 	this.getCoordenadaDestino = function() {
-		return destino;
+		return coordDestino;
 	}
 	
 	/**
@@ -840,6 +850,8 @@ return function(datos, options) {
 	
 	this.setLanguage(opts.lang||'es');
 	
+	_origen = origen;
+	_destino = destino;
 	if (datos) loadData(datos);
 };
 //Fin jQuery noConflict support

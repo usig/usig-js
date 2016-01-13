@@ -29,6 +29,7 @@ return jQuery.Class.create({
 	 */
 	trigger: function(event) {
 		var list = this.eventListeners[event.type];
+		// console.log('Publisher', event.type, list);
 		if(list != undefined) {
 			$.each(list,function(i,listener) {
 				listener(event);
@@ -42,6 +43,7 @@ return jQuery.Class.create({
 	 * @param {Function} listener Funcion que manejara el evento cuando se dispare 
 	 */
 	on: function(eventType, listener) {
+		// console.log('Publisher.on', eventType);
 		if (typeof(eventType) == 'string') {
 			this.register(eventType, listener);
 		} else {
@@ -59,7 +61,7 @@ return jQuery.Class.create({
 			this.eventListeners[eventType] = list;	
 		} else {
 			var list = this.eventListeners[eventType];			
-		}			
+		}
 		list.push(listener);		
 	}
 });

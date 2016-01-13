@@ -391,12 +391,23 @@ return function(idField, options) {
 	 * no haya opciones disponibles o el numero de opcion indicada sea invalido
 	 */
 	this.selectOption = function(num) {
-		if (numOptions > num) {
-			if ($div.css('display') != 'block') {
-				$div.show();
+		if (num) {
+			if (numOptions > num) {
+				if ($div.css('display') != 'block') {
+					$div.show();
+				}
+				highlight(num);
+				selectionHandler(itemsRef[id+highlighted]);
+				return true;
 			}
-			highlight(num);
-			selectionHandler(itemsRef[id+highlighted]);
+		} else if (numOptions > 0) {
+			var found=0;
+			for (var i=0;i<numOptions;i++) {
+				if (fieldValue == itemsRef[id+i].toString()) {
+					found = i;
+				}
+			}
+			selectionHandler(itemsRef[id+found]);
 			return true;
 		}
 		return false;
@@ -463,6 +474,6 @@ usig.AutoCompleterDialog.defaults = {
 	zIndex: 10000,
 	autoHideTimeout: 5000,
 	autoSelect: true,
-	rootUrl: 'http://servicios.usig.buenosaires.gov.ar/usig-js/3.0/',
+	rootUrl: '//servicios.usig.buenosaires.gob.ar/usig-js/3.1/',
 	skin: 'usig4'
 }

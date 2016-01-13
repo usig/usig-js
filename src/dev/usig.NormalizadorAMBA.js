@@ -41,6 +41,7 @@ return usig.AjaxComponent.extend({
 		
 		var text = text;
 		var maxSug = maxSug!=undefined?maxSug:this.opts.maxSuggestions;
+		var options = usig.data.Callejero?this.opts.options:{};
 		
 		this.showDebug('-=-=-= Busqueda: '+text+' =-=-=-');
 		
@@ -51,23 +52,11 @@ return usig.AjaxComponent.extend({
 			for (i=0; i<maxSug; i++){
 				res = results.direccionesNormalizadas[i]
 				if (res.tipo == 'calle'){
-					sug = new usig.Calle(res.cod_calle, res.nombre_calle, [], []);
+					var sug = new usig.Calle(res.cod_calle, res.nombre_calle, [], []);
 					sug.partido = res.nombre_partido;
 					sug.descripcion = res.nombre_localidad + ', ' +res.nombre_partido;
 				}else{
-					calle = new usig.Calle(res.cod_calle, res.nombre_calle, [], []);
-					calle.partido = res.nombre_partido;
-					calle.localidad = res.nombre_localidad;
-					cruce = new usig.Calle(res.cod_calle_cruce, res.nombre_calle_cruce, [], []);
-					cruce.partido = res.nombre_partido;
-					cruce.localidad = res.nombre_localidad;
-
-					sug = new usig.Direccion(calle,cruce);
-					if (res.coordenadas!=undefined){
-						p = new usig.Punto(res.coordenadas.x, res.coordenadas.y);
-						sug.setCoordenadas(p);
-					}
-					sug.descripcion = res.nombre_localidad + ', ' +res.nombre_partido;
+					var sug = usig.Direccion.fromObj(res);
 				}
 				newResults.push(sug);
 				this.showDebug(res);
@@ -80,7 +69,7 @@ return usig.AjaxComponent.extend({
 		}
 
 		if (text != ''){
-			this.lastRequest = this.mkRequest(null, onSuccess.createDelegate(this, [success, maxSug], 1), error, this.opts.server + '&maxOptions='+maxSug+'&direccion='+text);
+			this.lastRequest = this.mkRequest(null, onSuccess.createDelegate(this, [success, maxSug], 1), error, this.opts.server +'?'+$.param(options) + '&maxOptions='+maxSug+'&direccion='+text);
 		}else{
 			throw(new usig.NormalizadorAMBA.WrongParameters());
 		}
@@ -96,6 +85,7 @@ return usig.AjaxComponent.extend({
      * @param {String} metodo (optional) Metodo de geocodificacion a utilizar (solo aplicable a direcciones calle-altura).   
     */
 	geoCodificarDireccion: function(dir, success, error, metodo) {
+		var options = usig.data.Callejero?this.opts.options:{};
 		if (!(dir instanceof usig.Direccion)) {
 			throw('dir debe ser una instancia de usig.Direccion');
 			return;
@@ -104,14 +94,14 @@ return usig.AjaxComponent.extend({
 		function onSuccess (results, success, dir){
 			for (i=0; i<results.direccionesNormalizadas.length; i++){
 				res = results.direccionesNormalizadas[i]
-				if ((res.cod_calle == dir.getCalle().codigo) && (res.cod_calle_cruce == dir.getCalleCruce().codigo)){
+				if ((res.cod_calle == dir.getCalle().codigo) && ((res.cod_calle_cruce!= null && res.cod_calle_cruce == dir.getCalleCruce().codigo) || (res.altura == dir.getAltura()))) {
 					p = new usig.Punto(res.coordenadas.x, res.coordenadas.y);
 					success(p);
 				}
 			}
 		}
 
-		urlServiceCall = this.opts.server+'&geocodificar=True&direccion='+dir.toString();
+		urlServiceCall = this.opts.server+'?'+$.param(options)+'&geocodificar=True&direccion='+dir.toString();
 		this.lastRequest = this.mkRequest(null, onSuccess.createDelegate(this, [success, dir], 1), error, urlServiceCall);
 	},
 	
@@ -139,6 +129,7 @@ return usig.AjaxComponent.extend({
 			usig.debug(toShow);
 		}
 	}
+
 });
 //Fin jQuery noConflict support
 })(jQuery);
@@ -151,8 +142,12 @@ usig.NormalizadorAMBA.WrongParameters = function() {
 };
 
 usig.NormalizadorAMBA.defaults = {
-	debug: true,
-	server: 'http://10.75.0.112:5000/?exclude=caba',
+	debug: false,
+	options: {
+		'exclude': 'caba'
+	},
+	server: '//servicios.usig.buenosaires.gob.ar/normalizar',
+	// server: 'http://10.9.6.112/normalizar?exclude=caba',
 	maxSuggestions: 10,
 	serverTimeout: 5000,
 	maxRetries: 3,
